@@ -1,0 +1,6 @@
+com\conciencia\controllers\MainController.class
+com\conciencia\vertx\VertxConfig.class
+com\conciencia\loaders\MainLoader.class
+com\conciencia\loaders\Loader.class
+com\conciencia\main\MainApp.class
+com\conciencia\vertx\verticles\BooksDatabaseVerticle.class
