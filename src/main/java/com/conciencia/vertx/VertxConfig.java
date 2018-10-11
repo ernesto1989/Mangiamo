@@ -2,8 +2,10 @@ package com.conciencia.vertx;
 
 import com.conciencia.main.MainApp;
 import static com.conciencia.main.MainApp.vertx;
+import com.conciencia.pojos.Customer;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
+import com.conciencia.vertx.codecs.CustomerCodec;
 import com.conciencia.vertx.codecs.MenuCodec;
 import com.conciencia.vertx.codecs.MenuItemCodec;
 import io.vertx.core.Vertx;
@@ -40,6 +42,7 @@ public class VertxConfig {
      */
     private static void deployVerticles() {
         vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");
+        vertx.deployVerticle("com.conciencia.vertx.verticles.CustomersDatabaseVerticle");
     }
     
     /**
@@ -48,5 +51,6 @@ public class VertxConfig {
     public static void registerCodecs(){
         vertx.eventBus().registerDefaultCodec(Item.class, new MenuItemCodec());
         vertx.eventBus().registerDefaultCodec(Menu.class, new MenuCodec());
+        vertx.eventBus().registerDefaultCodec(Customer.class, new CustomerCodec());
     }
 }

@@ -1,13 +1,12 @@
 package com.conciencia.controllers;
 
 import static com.conciencia.main.MainApp.vertx;
+import com.conciencia.pojos.Customer;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Section;
-import com.conciencia.pojos.Ticket;
 import com.conciencia.pojos.TreeContainer;
 import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -29,7 +28,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import static javax.print.attribute.Size2DSyntax.MM;
 
 /**
  * FXML Controller class
@@ -57,7 +55,9 @@ public class MainController implements Initializable {
     @FXML
     private TreeView<TreeContainer> menuTree;
     @FXML
-    private Button printButton1;
+    private Button buscarClienteButton;
+    @FXML
+    private TextField searchTextField;
     
     private void initCols(){
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -160,12 +160,24 @@ public class MainController implements Initializable {
     @FXML
     private void executePrint(ActionEvent event) throws PrinterException {
         String ticket = generateTicket();
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPrintable(new Ticket(ticket));
-        job.print();
+//        PrinterJob job = PrinterJob.getPrinterJob();
+//        job.setPrintable(new Ticket(ticket));
+//        job.print();
         //clear();
     }
 
+    @FXML
+    private void searchCustomer(ActionEvent event) {
+        String phone = searchTextField.getText();
+        vertx.eventBus().send("get_customer",phone,response -> {
+            Customer c = (Customer) response.result().body();
+            System.out.println(c);
+//            Platform.runLater(()->{
+
+//            });
+        });
+        
+    }
     
     /**
      * Initializes the controller class.
@@ -183,4 +195,6 @@ public class MainController implements Initializable {
             ps.setOnHiding(event-> closeApp());
         });
     }        
+
+    
 }
