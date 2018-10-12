@@ -3,13 +3,9 @@ package com.conciencia.vertx.verticles;
 import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import com.conciencia.pojos.Customer;
-import com.conciencia.pojos.Item;
-import com.conciencia.pojos.Menu;
-import com.conciencia.pojos.Section;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  *
@@ -19,10 +15,19 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
     
     private DatabaseUtilities dbConn;
     private final String SEARCH_BY_PHONE = "Select id,nombre,telefono,direccion from customers where telefono = ?";
+    private final String INSERT = "Insert into Customers (nombre,telefono,direccion) values(?,?,?)";
     
     
     private Customer getCustomer(String phone){
         Customer c = (Customer)(dbConn.executeQueryWithParams(SEARCH_BY_PHONE, Customer.class, phone)).get(0);
+        return c;
+    }
+    
+    private Customer insertCustomer(Customer c){
+        Integer id = (dbConn.executeInsert(INSERT, c.getNombre(),
+                                c.getTelefono(),
+                                    c.getDireccion())).intValue();
+        
         return c;
     }
 
@@ -44,11 +49,5 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
             });   
             //</editor-fold>
         });
-    }
-    
-    @Override
-    public void stop(Future<Void> stopFuture) throws Exception {
-        //persist database....
-        System.out.println("bye");
     }
 }

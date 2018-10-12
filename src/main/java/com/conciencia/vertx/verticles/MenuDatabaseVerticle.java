@@ -11,7 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Verticle que contiene el repositorio de menu.
+ * 
+ * 1.- Lee el menu de la base de datos.
+ * 2.- Carga los elementos y las secciones de menu en el objeto Menu.
+ * 3.- La deja en memoria durante el uso de la aplicación.
+ * 
  * @author Ernesto Cantu
  */
 public class MenuDatabaseVerticle extends AbstractVerticle{
@@ -23,7 +28,9 @@ public class MenuDatabaseVerticle extends AbstractVerticle{
     
    /**
     * Método que inicializa el Menu desde la base de datos.
-    * 
+    * 1.- Lee el menu de la base de datos
+    * 2.- Lee las secciones definidas en la base de datos
+    * 3.- Arma el objeto menu por secciones e items.
     */
     private void initMenu(){
         menu = new Menu();
@@ -46,29 +53,31 @@ public class MenuDatabaseVerticle extends AbstractVerticle{
         } 
     }
 
+    /**
+     * Método ejecutado al arranque del verticle.
+     * 1.- Inicializa el objeto de conección a la base de datos.
+     * 2.- Ejecuta la carga inicial del menu
+     * 3.- Define el handler del event bus para solicitud de menu.
+     * @param startFuture
+     * @throws Exception 
+     */
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         dbConn = new SqliteUtilities("db/MangiamoDB.db");
-        initMenu();
-        vertx.eventBus().consumer("get_menu", msg->{
-            // <editor-fold defaultstate="colapsed" desc="handler">
-            vertx.executeBlocking(execute->{
-                //el executeBlocking funciona via 2 handlers. El primero se encarga de ejecutar el codigo e indicar el resultado. 
-                execute.complete(menu);
-            }, executionResult->{
-                //este segundo handler recibe el resultado de la ejecución
-                if(executionResult.succeeded())
-                    msg.reply(executionResult.result());
-                else
-                    msg.fail(0, "Could not get list of books");
-            });   
-            //</editor-fold>
+        vertx.executeBlocking(execution->{
+            try{
+                initMenu();
+            }catch(Exception e){
+                e.toString();
+                execution.fail(e.toString());
+            }
+            execution.complete();
+        }, executionResult->{
+            if(executionResult.failed()){
+                System.out.println("Error al cargar el menu");
+                System.exit(1);
+            }
         });
-    }
-    
-    @Override
-    public void stop(Future<Void> stopFuture) throws Exception {
-        //persist database....
-        System.out.println("bye");
+        vertx.eventBus().consumer("get_menu", msg-> msg.reply(menu) );
     }
 }

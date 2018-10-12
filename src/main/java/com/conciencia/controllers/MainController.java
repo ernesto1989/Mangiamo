@@ -43,8 +43,6 @@ public class MainController implements Initializable {
     @FXML
     private AnchorPane mainAnchor;
     @FXML
-    private Button printButton;
-    @FXML
     private TableColumn<Item, String> nameColumn;
     @FXML
     private TableColumn<Item, BigDecimal> precioColumn;
@@ -57,7 +55,19 @@ public class MainController implements Initializable {
     @FXML
     private Button buscarClienteButton;
     @FXML
-    private TextField searchTextField;
+    private TextField customerSearchTextField;
+    @FXML
+    private Button saveOrderButton;
+    @FXML
+    private TextField orderSearchTextField;
+    @FXML
+    private Button buscarOrdenButton;
+    @FXML
+    private TextField nombreTextField;
+    @FXML
+    private TextField telTextfield;
+    @FXML
+    private TextField DirTextField;
     
     private void initCols(){
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -157,7 +167,6 @@ public class MainController implements Initializable {
         alert.showAndWait();
     }
     
-    @FXML
     private void executePrint(ActionEvent event) throws PrinterException {
         String ticket = generateTicket();
 //        PrinterJob job = PrinterJob.getPrinterJob();
@@ -168,16 +177,28 @@ public class MainController implements Initializable {
 
     @FXML
     private void searchCustomer(ActionEvent event) {
-        String phone = searchTextField.getText();
+        String phone = customerSearchTextField.getText();
         vertx.eventBus().send("get_customer",phone,response -> {
             Customer c = (Customer) response.result().body();
-            System.out.println(c);
-//            Platform.runLater(()->{
-
-//            });
+            if(c!=null)
+                Platform.runLater(()->{
+                    nombreTextField.setText(c.getNombre());
+                    telTextfield.setText(c.getTelefono());
+                    DirTextField.setText(c.getDireccion());
+                });
+            else
+                System.out.println("no encontrado");
         });
-        
     }
+    
+    @FXML
+    private void saveOrder(ActionEvent event) {
+    }
+
+    @FXML
+    private void searchOrder(ActionEvent event) {
+    }
+
     
     /**
      * Initializes the controller class.
@@ -196,5 +217,6 @@ public class MainController implements Initializable {
         });
     }        
 
+    
     
 }

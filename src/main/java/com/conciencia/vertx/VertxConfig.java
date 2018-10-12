@@ -38,7 +38,12 @@ public class VertxConfig {
     }
     
      /**
-     * Método que despliega todos los verticles necesitados por la aplicación
+     * Método que despliega todos los verticles necesitados por la aplicación.
+     * 
+     * Verticles desplegados:
+     * 
+     * 1.- Repositorio de menú
+     * 2.- Repositorio de clientes
      */
     private static void deployVerticles() {
         vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");
@@ -47,6 +52,12 @@ public class VertxConfig {
     
     /**
      * Método que define los codecs para enviar objetos por eventbus.
+     * 
+     * Codecs registrados:
+     * 
+     * 1.- Items de menu.
+     * 2.- Objeto Menu (Lista)
+     * 3.- Objeto cliente
      */
     public static void registerCodecs(){
         vertx.eventBus().registerDefaultCodec(Item.class, new MenuItemCodec());

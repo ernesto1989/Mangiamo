@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author usuario
  */
 public class Customer implements ToJson, SpectedResult {
-    
+   
     private String nombre;
     private String telefono;
     private String direccion;

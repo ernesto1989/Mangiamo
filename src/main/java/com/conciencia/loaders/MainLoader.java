@@ -1,7 +1,7 @@
 package com.conciencia.loaders;
 
 /**
- * Clase que carga la ventana principal de la aplicacion
+ * Clase que carga la ventana principal de la aplicación.
  * @author Ernesto Cantu
  */
 public class MainLoader extends Loader {
