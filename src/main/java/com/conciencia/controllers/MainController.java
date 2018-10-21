@@ -4,12 +4,16 @@ import static com.conciencia.main.MainApp.vertx;
 import com.conciencia.pojos.Customer;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
+import com.conciencia.pojos.Order;
+import com.conciencia.pojos.OrderType;
+import com.conciencia.pojos.OrderedItem;
 import com.conciencia.pojos.Section;
 import com.conciencia.pojos.TreeContainer;
 import java.awt.print.PrinterException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -179,9 +183,9 @@ public class MainController implements Initializable {
     private void searchCustomer(ActionEvent event) {
         String phone = customerSearchTextField.getText();
         vertx.eventBus().send("get_customer",phone,response -> {
-            Customer c = (Customer) response.result().body();
-            if(c!=null)
+            if(response.result() != null)
                 Platform.runLater(()->{
+                    Customer c = (Customer)response.result().body();
                     nombreTextField.setText(c.getNombre());
                     telTextfield.setText(c.getTelefono());
                     DirTextField.setText(c.getDireccion());
@@ -193,6 +197,21 @@ public class MainController implements Initializable {
     
     @FXML
     private void saveOrder(ActionEvent event) {
+        List<Item> selected = resumeTable.getItems();
+        OrderedItem item;
+        List<OrderedItem> ordered = new ArrayList<>();
+        for(Item i: selected){
+            item = new OrderedItem();
+            item.setPersona(1);
+            item.setCantidad(1);
+            item.setItem(i);
+            ordered.add(item);
+        }
+        Order o = new Order();
+        o.setNombre("Un Nombre");
+        o.setOrderType(OrderType.LLEVAR);
+        o.setOrderedItems(ordered);
+        System.out.println(o);
     }
 
     @FXML

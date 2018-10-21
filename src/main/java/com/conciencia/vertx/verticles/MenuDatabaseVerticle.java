@@ -78,6 +78,6 @@ public class MenuDatabaseVerticle extends AbstractVerticle{
                 System.exit(1);
             }
         });
-        vertx.eventBus().consumer("get_menu", msg-> msg.reply(menu) );
+        vertx.eventBus().consumer("get_menu", msg-> msg.reply(menu));
     }
 }

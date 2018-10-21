@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author usuario
  */
 public class Customer implements ToJson, SpectedResult {
-   
+    private Integer id;
     private String nombre;
     private String telefono;
     private String direccion;
@@ -20,11 +20,20 @@ public class Customer implements ToJson, SpectedResult {
     }
     
     public Customer(JsonObject json) {
+        this.id = json.getInteger("id");
         this.nombre = json.getString("nombre");
         this.telefono = json.getString("telefono");
         this.direccion = json.getString("direccion");
     }   
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
     public String getNombre() {
         return nombre;
     }
@@ -52,6 +61,7 @@ public class Customer implements ToJson, SpectedResult {
     @Override
     public JsonObject toJson(){
         JsonObject json = new JsonObject();
+        json.put("id",getId());
         json.put("nombre", getNombre());
         json.put("telefono", getTelefono());
         json.put("direccion", getDireccion());
@@ -61,6 +71,7 @@ public class Customer implements ToJson, SpectedResult {
     @Override
     public void mapResult(ResultSet rs) {
         try{
+            setId(rs.getInt("id"));
             setNombre(rs.getString("nombre"));
             setTelefono(rs.getString("telefono"));
             setDireccion(rs.getString("direccion"));

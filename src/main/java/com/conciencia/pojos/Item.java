@@ -13,10 +13,10 @@ import java.util.Objects;
  */
 public class Item extends TreeContainer implements ToJson,SpectedResult {
     
-    private Integer id;
-    private String seccion;
-    private String nombre;
-    private BigDecimal precioUnitario;
+    protected Integer id;
+    protected String seccion;
+    protected String nombre;
+    protected BigDecimal precioUnitario;
 
     public Item() {
     }
