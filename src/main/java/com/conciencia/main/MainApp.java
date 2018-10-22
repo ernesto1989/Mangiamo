@@ -1,6 +1,6 @@
 package com.conciencia.main;
 
-import com.conciencia.loaders.MainLoader;
+import com.conciencia.loaders.NuevaOrdenLoader;
 import com.conciencia.vertx.VertxConfig;
 import io.vertx.core.Vertx;
 import javafx.application.Application;
@@ -28,7 +28,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         VertxConfig.config();
-        MainLoader.getInstance().load(primaryStage);        
+        NuevaOrdenLoader.getInstance().load(primaryStage);        
     }
     
     /**

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.NuevaOrdenController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="535.0">
+         <children>
+            <MenuBar prefHeight="25.0" prefWidth="600.0">
+               <menus>
+                  <Menu mnemonicParsing="false" text="File">
+                     <items>
+                        <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#salir" text="Salir" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#mostrarAcercaDe" text="Acerca De..." />
+                     </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <AnchorPane prefHeight="380.0" prefWidth="535.0">
+               <children>
+                  <Button fx:id="mesaButton" layoutX="169.0" layoutY="26.0" mnemonicParsing="false" onAction="#crearOrdenEnMesa" prefHeight="100.0" prefWidth="197.0" text="Mesa" textOverrun="LEADING_ELLIPSIS">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="llevaButton" layoutX="169.0" layoutY="138.0" mnemonicParsing="false" onAction="#crearOrdenParaLlevar" prefHeight="100.0" prefWidth="197.0" text="Llevar" textOverrun="LEADING_ELLIPSIS">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="domicilioButton" layoutX="169.0" layoutY="255.0" mnemonicParsing="false" onAction="#crearOrdenADomicilio" prefHeight="100.0" prefWidth="197.0" text="Domicilio" textOverrun="LEADING_ELLIPSIS">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
