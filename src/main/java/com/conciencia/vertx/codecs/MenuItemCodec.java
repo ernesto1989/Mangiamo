@@ -6,7 +6,7 @@ import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonObject;
 
 /**
- *
+ * Clase que permite transmitir un objeto item a traves del event bus
  * @author Ernesto Cantu
  */
 public class MenuItemCodec implements MessageCodec<Item, Item> {

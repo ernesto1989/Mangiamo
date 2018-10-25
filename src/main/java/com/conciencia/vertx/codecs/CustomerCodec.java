@@ -6,7 +6,8 @@ import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonObject;
 
 /**
- *
+ * Clase que permite transmitir un objeto Customer a traves del event bus
+ * 
  * @author Ernesto Cantu
  */
 public class CustomerCodec implements MessageCodec<Customer, Customer> {

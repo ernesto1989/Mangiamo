@@ -1,6 +1,6 @@
 package com.conciencia.controllers;
 
-import static com.conciencia.main.MainApp.vertx;
+import com.conciencia.lookups.OrdenLookup;
 import com.conciencia.pojos.Customer;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
@@ -9,6 +9,7 @@ import com.conciencia.pojos.OrderType;
 import com.conciencia.pojos.OrderedItem;
 import com.conciencia.pojos.Section;
 import com.conciencia.pojos.TreeContainer;
+import static com.conciencia.vertx.VertxConfig.vertx;
 import java.awt.print.PrinterException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -63,15 +64,15 @@ public class OrderCreatorController implements Initializable {
     @FXML
     private Button saveOrderButton;
     @FXML
-    private TextField orderSearchTextField;
-    @FXML
-    private Button buscarOrdenButton;
-    @FXML
     private TextField nombreTextField;
     @FXML
     private TextField telTextfield;
     @FXML
     private TextField DirTextField;
+    @FXML
+    private TextField tipoOrdenTextfield;
+    private Orden orden;
+    
     
     private void initCols(){
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -146,20 +147,11 @@ public class OrderCreatorController implements Initializable {
         builder.append("*********Gracias por su compra*********");
         return builder.toString();
     }
-    
-    /**
-     * Método que será llamado cuando se de click al boton de cerrar de la pantalla
-     */
-    public static void closeApp(){
-        vertx.close();
-        System.exit(0);
-    }  
-    
-    
+        
     
     @FXML
     private void executeClose(ActionEvent event) {
-        closeApp();
+        return;
     }
 
     @FXML
@@ -214,9 +206,6 @@ public class OrderCreatorController implements Initializable {
         System.out.println(o);
     }
 
-    @FXML
-    private void searchOrder(ActionEvent event) {
-    }
 
     
     /**
@@ -232,7 +221,9 @@ public class OrderCreatorController implements Initializable {
         setTableEvent();
         Platform.runLater(()->{
             Stage ps = (Stage)mainAnchor.getScene().getWindow();
-            ps.setOnHiding(event-> closeApp());
+            ps.setOnHiding(event-> ps.hide());
+            this.orden = OrdenLookup.current;
+            tipoOrdenTextfield.setText(this.orden.getOrderType().toString());
         });
     }        
 

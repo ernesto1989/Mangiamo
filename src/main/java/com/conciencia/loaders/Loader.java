@@ -11,6 +11,9 @@ import javafx.stage.Stage;
  */
 public abstract class Loader {
     
+    /**
+     * Atributos necesarios para cargar un fxml.
+     */
     protected String fxmlRoute,styleRoute,title;
         
     /**

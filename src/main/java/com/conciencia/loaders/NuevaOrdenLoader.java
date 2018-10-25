@@ -11,8 +11,15 @@ package com.conciencia.loaders;
  */
 public class NuevaOrdenLoader extends Loader {
     
+    /**
+     * el objeto loader para abrir la pantalla de nueva orden
+     */
     public static NuevaOrdenLoader instance;
     
+    /**
+     * Método estático para obtener una instancia del loader.
+     * @return este objeto loader.
+     */
     public static NuevaOrdenLoader getInstance(){
         if(instance == null){
             instance = new NuevaOrdenLoader();

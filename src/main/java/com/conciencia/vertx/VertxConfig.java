@@ -1,7 +1,5 @@
 package com.conciencia.vertx;
 
-import com.conciencia.main.MainApp;
-import static com.conciencia.main.MainApp.vertx;
 import com.conciencia.pojos.Customer;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
@@ -11,11 +9,18 @@ import com.conciencia.vertx.codecs.MenuItemCodec;
 import io.vertx.core.Vertx;
 
 /**
- * Clase que crea la instancia de vertx y configura todo lo necesario
+ * Clase que crea la instancia de vertx y configura todo lo necesario.
+ * 
+ * 1.-Se crea la instancia de Vertx
+ * 2.- Se registran los verticles de servicio de la aplicación
+ * 3.- Se registran los codecs para transmisión de pojos a traves del event bus
  * 
  * @author Ernesto Cantu
  */
 public class VertxConfig {
+    
+    /* Instancia de vertx que controla la aplicación */
+    public static Vertx vertx;
     
     /**
      * Configuración de Vertx.
@@ -24,7 +29,7 @@ public class VertxConfig {
      * Se registran los codecs
      */
     public static void config(){
-        MainApp.vertx = getVertxInstance();
+        vertx = getVertxInstance();
         deployVerticles();
         registerCodecs();
     }
@@ -44,6 +49,7 @@ public class VertxConfig {
      * 
      * 1.- Repositorio de menú
      * 2.- Repositorio de clientes
+     * 3.- Repositorio de órdenes?
      */
     private static void deployVerticles() {
         vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");

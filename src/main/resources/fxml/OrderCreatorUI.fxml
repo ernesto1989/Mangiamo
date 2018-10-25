@@ -6,23 +6,21 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="632.0" prefWidth="643.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.OrderCreatorController">
+<AnchorPane id="AnchorPane" prefHeight="601.0" prefWidth="628.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.OrderCreatorController">
     <stylesheets>
         <URL value="@/styles/addbook.css" />
     </stylesheets>
     <children>
         <VBox prefHeight="641.0" prefWidth="643.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <MenuBar prefHeight="25.0" prefWidth="600.0">
+                <MenuBar prefHeight="1.0" prefWidth="643.0">
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
@@ -38,56 +36,21 @@
                 </MenuBar>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <TextField fx:id="customerSearchTextField" layoutX="24.0" layoutY="47.0" promptText="Buscar..." />
-                  <Button fx:id="buscarClienteButton" layoutX="33.0" layoutY="94.0" mnemonicParsing="false" onAction="#searchCustomer" prefHeight="25.0" prefWidth="72.0" text="Buscar" />
-                  <Label layoutX="24.0" layoutY="14.0" text="Cliente">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="nombreTextField" layoutX="319.0" layoutY="47.0" prefHeight="25.0" prefWidth="237.0" />
-                  <Label layoutX="245.0" layoutY="51.0" text="Nombre">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="telTextfield" layoutX="319.0" layoutY="83.0" prefHeight="25.0" prefWidth="237.0" />
-                  <Label layoutX="242.0" layoutY="87.0" text="Teléfono">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="DirTextField" layoutX="321.0" layoutY="122.0" prefHeight="25.0" prefWidth="237.0" />
-                  <Label layoutX="243.0" layoutY="126.0" text="Dirección">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Button disable="true" layoutX="498.0" layoutY="161.0" mnemonicParsing="false" text="Guardar" />
+                  <TextField fx:id="tipoOrdenTextfield" editable="false" layoutX="44.0" layoutY="17.0" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="mainAnchor" prefHeight="406.0" prefWidth="643.0">
+            <AnchorPane fx:id="mainAnchor" prefHeight="324.0" prefWidth="628.0">
                <children>
-                  <TableView fx:id="resumeTable" layoutX="219.0" layoutY="125.0" prefHeight="193.0" prefWidth="375.0">
+                  <TableView fx:id="resumeTable" layoutX="219.0" layoutY="57.0" prefHeight="193.0" prefWidth="375.0">
                     <columns>
                       <TableColumn fx:id="nameColumn" prefWidth="241.0" text="Platillo" />
                         <TableColumn fx:id="precioColumn" prefWidth="133.0" text="Precio Unitario" />
                     </columns>
                   </TableView>
-                  <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="489.0" layoutY="328.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
-                  <Label layoutX="429.0" layoutY="332.0" text="TOTAL" />
-                  <Button fx:id="saveOrderButton" layoutX="506.0" layoutY="367.0" mnemonicParsing="false" onAction="#saveOrder" text="Guardar" />
-                  <TreeView fx:id="menuTree" layoutX="14.0" layoutY="126.0" prefHeight="193.0" prefWidth="200.0" />
-                  <Label layoutX="36.0" layoutY="11.0" text="Orden">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="orderSearchTextField" layoutX="36.0" layoutY="40.0" prefHeight="25.0" prefWidth="149.0" promptText="Buscar..." />
-                  <Button fx:id="buscarOrdenButton" layoutX="40.0" layoutY="75.0" mnemonicParsing="false" onAction="#searchOrder" prefHeight="25.0" prefWidth="72.0" text="Buscar" />
-                  <RadioButton layoutX="252.0" layoutY="32.0" mnemonicParsing="false" text="Restaurant" />
-                  <RadioButton layoutX="354.0" layoutY="32.0" mnemonicParsing="false" text="P. Llevar" />
-                  <RadioButton layoutX="446.0" layoutY="32.0" mnemonicParsing="false" text="Domicilio" />
+                  <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="489.0" layoutY="275.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
+                  <Label layoutX="429.0" layoutY="279.0" text="TOTAL" />
+                  <Button fx:id="saveOrderButton" layoutX="508.0" layoutY="308.0" mnemonicParsing="false" onAction="#saveOrder" text="Guardar" />
+                  <TreeView fx:id="menuTree" layoutX="14.0" layoutY="58.0" prefHeight="193.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
             </children>
