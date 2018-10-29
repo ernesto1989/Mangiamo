@@ -22,9 +22,9 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
 /**
- * Controlador de la pantalla NuevaOrdenFXML
+ * Controlador de la pantalla NuevaOrdenUI.
  *
- * @author usuario
+ * @author Ernesto Cantú
  */
 public class NuevaOrdenController implements Initializable {
 
@@ -53,10 +53,8 @@ public class NuevaOrdenController implements Initializable {
      * Método que define el tipo de orden a crear
      * @param type Tipo de Orden Seleccionado
      */    
-    private void crearOrden(OrderType type){
+    private void crearOrden(Orden orden){
         Stage ps = new Stage();
-        Orden orden = new Orden();
-        orden.setOrderType(type);
         OrdenLookup.current = orden;
         try {
             OrderCreatorLoader.getInstance().load(ps);
@@ -72,18 +70,22 @@ public class NuevaOrdenController implements Initializable {
      */
     @FXML
     private void crearOrdenEnMesa(ActionEvent event) {
-        //Integer mesa = 
+        Integer mesa = null;
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Orden en Mesa");
         dialog.setHeaderText("Orden en Mesa");
         dialog.setContentText("No. de Mesa:");
         
-        Optional<String> result = dialog.showAndWait();
-        Integer mesa = Integer.parseInt(result.get());
-        if (result.isPresent()){
-            System.out.println("Mesa " + mesa);
+        while(mesa == null || mesa == 0){
+            Optional<String> result = dialog.showAndWait();
+            try{mesa = Integer.parseInt(result.get());
+            }catch(NumberFormatException e){mesa = 0;}
+            catch(Exception e){return;}
         }
-        //crearOrden(OrderType.MESA);
+        Orden orden = new Orden();
+        orden.setMesa(mesa);
+        orden.setOrderType(OrderType.MESA);
+        crearOrden(orden);
     }
     
     /**
@@ -92,18 +94,23 @@ public class NuevaOrdenController implements Initializable {
      */
     @FXML
     private void crearOrdenParaLlevar(ActionEvent event) {
-        //nombreCliente = 
+        String nombreCliente = null;
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Orden para llevar");
         dialog.setHeaderText("Orden para llevar");
         dialog.setContentText("Nombre:");
         
-        Optional<String> result = dialog.showAndWait();
-        String nombre = result.get();
-        if (result.isPresent()){
-            System.out.println("nombre " + nombre);
+        while(nombreCliente == null || nombreCliente.isEmpty()){
+            Optional<String> result = dialog.showAndWait();
+            try{
+                nombreCliente = result.get();
+            }catch(Exception e){return;}
+            
         }
-        crearOrden(OrderType.LLEVAR);
+        Orden orden = new Orden();
+        orden.setNombre(nombreCliente);
+        orden.setOrderType(OrderType.LLEVAR);
+        crearOrden(orden);
     }
 
     /**
@@ -115,7 +122,6 @@ public class NuevaOrdenController implements Initializable {
         Stage ps = new Stage();
         try {
             BuscarClienteLoader.getInstance().load(ps);
-            //crearOrden(OrderType.DOMICILIO);
         } catch (Exception ex) {
             Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -153,9 +159,10 @@ public class NuevaOrdenController implements Initializable {
     }
 
     /**
-     * Método que inicializa el controlador. 
-     * 
-     * Se define la acción a tomar al cerrar la ventana.
+     * Método que inicializa el controlador.Se define la acción a tomar al cerrar la ventana. 
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

@@ -2,7 +2,6 @@ package com.conciencia.main;
 
 import com.conciencia.loaders.NuevaOrdenLoader;
 import com.conciencia.vertx.VertxConfig;
-import io.vertx.core.Vertx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

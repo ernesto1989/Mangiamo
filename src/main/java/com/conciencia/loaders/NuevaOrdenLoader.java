@@ -1,7 +1,7 @@
 package com.conciencia.loaders;
 
 /**
- * Clase que carga la ventana principal de la aplicación.
+ * Clase que carga la ventana de inicio de la aplicación.
  * 
  * Se define como pantalla principal el menú principal para:
  *  1.- Selección de un tipo de orden a crear
@@ -27,6 +27,9 @@ public class NuevaOrdenLoader extends Loader {
         return instance;
     }
     
+    /**
+     * Constructor que define los campos default del Loader
+     */
     private NuevaOrdenLoader(){
         this.fxmlRoute = "/fxml/NuevaOrdenUI.fxml";
         this.styleRoute = "/styles/addbook.css";
