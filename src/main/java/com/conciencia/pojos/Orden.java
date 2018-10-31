@@ -10,7 +10,7 @@ public class Orden {
     private OrderType orderType;
     private Integer mesa;
     private String nombre;
-    private Customer cliente;
+    private Cliente cliente;
     List<OrderedItem> orderedItems;
 
     public Orden() {
@@ -40,11 +40,11 @@ public class Orden {
         this.nombre = nombre;
     }
 
-    public Customer getCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
-    public void setCliente(Customer cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 

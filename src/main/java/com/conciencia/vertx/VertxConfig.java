@@ -1,6 +1,6 @@
 package com.conciencia.vertx;
 
-import com.conciencia.pojos.Customer;
+import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
 import com.conciencia.vertx.codecs.CustomerCodec;
@@ -47,13 +47,13 @@ public class VertxConfig {
      * 
      * Verticles desplegados:
      * 
-     * 1.- Repositorio de menú
-     * 2.- Repositorio de clientes
+     * 1.- Repositorio de clientes
+     * 2.- Repositorio de menú
      * 3.- Repositorio de órdenes?
      */
     private static void deployVerticles() {
-        vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");
         vertx.deployVerticle("com.conciencia.vertx.verticles.CustomersDatabaseVerticle");
+        vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");        
     }
     
     /**
@@ -66,8 +66,8 @@ public class VertxConfig {
      * 3.- Objeto cliente
      */
     public static void registerCodecs(){
+        vertx.eventBus().registerDefaultCodec(Cliente.class, new CustomerCodec());
         vertx.eventBus().registerDefaultCodec(Item.class, new MenuItemCodec());
         vertx.eventBus().registerDefaultCodec(Menu.class, new MenuCodec());
-        vertx.eventBus().registerDefaultCodec(Customer.class, new CustomerCodec());
     }
 }

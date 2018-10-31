@@ -1,7 +1,7 @@
 package com.conciencia.controllers;
 
 import com.conciencia.lookups.OrdenLookup;
-import com.conciencia.pojos.Customer;
+import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
@@ -177,7 +177,7 @@ public class OrderCreatorController implements Initializable {
         vertx.eventBus().send("get_customer",phone,response -> {
             if(response.result() != null)
                 Platform.runLater(()->{
-                    Customer c = (Customer)response.result().body();
+                    Cliente c = (Cliente)response.result().body();
                     nombreTextField.setText(c.getNombre());
                     telTextfield.setText(c.getTelefono());
                     DirTextField.setText(c.getDireccion());

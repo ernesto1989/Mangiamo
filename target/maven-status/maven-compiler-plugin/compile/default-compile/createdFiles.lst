@@ -1,4 +1,4 @@
-com\conciencia\loaders\BuscarClienteLoader.class
+com\conciencia\loaders\NuevoClienteLoader.class
 com\conciencia\vertx\codecs\MenuCodec.class
 com\conciencia\loaders\NuevaOrdenLoader.class
 com\conciencia\pojos\OrderedItem.class
@@ -6,10 +6,10 @@ com\conciencia\vertx\codecs\CustomerCodec.class
 com\conciencia\pojos\TreeContainer.class
 com\conciencia\vertx\verticles\CustomersDatabaseVerticle.class
 com\conciencia\controllers\NuevaOrdenController.class
-com\conciencia\controllers\BuscarClienteController.class
 com\conciencia\pojos\OrderType.class
 com\conciencia\pojos\Section.class
 com\conciencia\pojos\Item.class
+com\conciencia\controllers\NuevoClienteController.class
 com\conciencia\loaders\OrderCreatorLoader.class
 com\conciencia\pojos\Menu.class
 com\conciencia\main\MainApp.class
