@@ -1,18 +1,19 @@
 package com.conciencia.vertx.codecs;
 
-import com.conciencia.pojos.Customer;
+import com.conciencia.pojos.Cliente;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonObject;
 
 /**
- *
+ * Clase que permite transmitir un objeto Customer a traves del event bus
+ * 
  * @author Ernesto Cantu
  */
-public class CustomerCodec implements MessageCodec<Customer, Customer> {
+public class CustomerCodec implements MessageCodec<Cliente, Cliente> {
 
     @Override
-    public void encodeToWire(Buffer buffer, Customer menuCustomer) {
+    public void encodeToWire(Buffer buffer, Cliente menuCustomer) {
         // Easiest ways is using JSON object
         JsonObject jsonToEncode = menuCustomer.toJson();
 
@@ -28,7 +29,7 @@ public class CustomerCodec implements MessageCodec<Customer, Customer> {
     }
 
     @Override
-    public Customer decodeFromWire(int position, Buffer buffer) {
+    public Cliente decodeFromWire(int position, Buffer buffer) {
         // My custom message starting from this *position* of buffer
         int _pos = position;
 
@@ -40,11 +41,11 @@ public class CustomerCodec implements MessageCodec<Customer, Customer> {
         String jsonStr = buffer.getString(_pos += 4, _pos += length);
         JsonObject contentJson = new JsonObject(jsonStr);     
         
-        return new Customer(contentJson);
+        return new Cliente(contentJson);
     }
 
     @Override
-    public Customer transform(Customer menuCustomer) {
+    public Cliente transform(Cliente menuCustomer) {
         // If a message is sent *locally* across the event bus.
         // This example sends message just as is
         return menuCustomer;
