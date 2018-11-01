@@ -53,7 +53,8 @@ public class VertxConfig {
      */
     private static void deployVerticles() {
         vertx.deployVerticle("com.conciencia.vertx.verticles.CustomersDatabaseVerticle");
-        vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");        
+        vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");  
+        vertx.deployVerticle("com.conciencia.vertx.verticles.OrdenesRepositoryVerticle");  
     }
     
     /**

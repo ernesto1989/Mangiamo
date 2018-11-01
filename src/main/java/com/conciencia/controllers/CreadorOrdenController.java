@@ -40,7 +40,7 @@ import javafx.stage.Stage;
  *
  * @author usuario
  */
-public class OrderCreatorController implements Initializable {
+public class CreadorOrdenController implements Initializable {
 
     @FXML
     private MenuItem closeMenuItem;
@@ -194,6 +194,14 @@ public class OrderCreatorController implements Initializable {
         getMenu();
         setTreeViewEvent();
         setTableEvent();
+        
+        vertx.eventBus().send("get_order_num",null,response -> {
+            Long numOrden = (long) response.result().body();
+            Platform.runLater(()->{
+                numOrdenTextField.setText(numOrden.toString());
+            });
+        });
+        
         Platform.runLater(()->{
             Stage ps = (Stage)mainAnchor.getScene().getWindow();
             ps.setOnHiding(event-> ps.hide());

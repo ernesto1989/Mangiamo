@@ -1,7 +1,7 @@
 package com.conciencia.controllers;
 
 import com.conciencia.loaders.NuevoClienteLoader;
-import com.conciencia.loaders.OrderCreatorLoader;
+import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.OrdenLookup;
 import com.conciencia.pojos.Cliente;
 import static com.conciencia.vertx.VertxConfig.vertx;
@@ -78,7 +78,7 @@ public class NuevaOrdenController implements Initializable {
         Stage ps = new Stage();
         OrdenLookup.current = orden;
         try {
-            OrderCreatorLoader.getInstance().load(ps);
+            CreadorOrdenLoader.getInstance().load(ps);
         } catch (Exception ex) {
             Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
         } 

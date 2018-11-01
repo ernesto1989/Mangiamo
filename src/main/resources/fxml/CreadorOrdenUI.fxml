@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="601.0" prefWidth="628.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.OrderCreatorController">
+<AnchorPane id="AnchorPane" prefHeight="601.0" prefWidth="628.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.CreadorOrdenController">
     <stylesheets>
         <URL value="@/styles/addbook.css" />
     </stylesheets>
@@ -41,12 +41,12 @@
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
-                  <Label layoutX="24.0" layoutY="25.0" text="# Orden">
+                  <Label layoutX="13.0" layoutY="25.0" text="# Orden">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="numOrdenTextField" alignment="CENTER" editable="false" layoutX="113.0" layoutY="26.0" prefHeight="25.0" prefWidth="96.0">
+                  <TextField fx:id="numOrdenTextField" editable="false" layoutX="84.0" layoutY="26.0" prefHeight="30.0" prefWidth="137.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
