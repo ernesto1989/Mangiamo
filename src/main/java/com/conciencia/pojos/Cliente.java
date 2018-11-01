@@ -98,7 +98,7 @@ public class Cliente implements ToJson, SpectedResult {
 
     @Override
     public String toString() {
-        return "Customer{" + "nombre=" + nombre + ", telefono=" + telefono + ", direccion=" + direccion + '}';
+        return direccion;
     }
 
     @Override

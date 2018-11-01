@@ -28,6 +28,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -58,20 +59,17 @@ public class OrderCreatorController implements Initializable {
     @FXML
     private TreeView<TreeContainer> menuTree;
     @FXML
-    private Button buscarClienteButton;
-    @FXML
-    private TextField customerSearchTextField;
-    @FXML
     private Button saveOrderButton;
     @FXML
-    private TextField nombreTextField;
-    @FXML
-    private TextField telTextfield;
-    @FXML
-    private TextField DirTextField;
-    @FXML
     private TextField tipoOrdenTextfield;
+    @FXML
+    private TextField numOrdenTextField;
+    @FXML
+    private TextField descripcionTextField;
+    
     private Orden orden;
+    
+    private int persona = 1;
     
     
     private void initCols(){
@@ -163,29 +161,6 @@ public class OrderCreatorController implements Initializable {
         alert.showAndWait();
     }
     
-    private void executePrint(ActionEvent event) throws PrinterException {
-        String ticket = generateTicket();
-//        PrinterJob job = PrinterJob.getPrinterJob();
-//        job.setPrintable(new Ticket(ticket));
-//        job.print();
-        //clear();
-    }
-
-    @FXML
-    private void searchCustomer(ActionEvent event) {
-        String phone = customerSearchTextField.getText();
-        vertx.eventBus().send("get_customer",phone,response -> {
-            if(response.result() != null)
-                Platform.runLater(()->{
-                    Cliente c = (Cliente)response.result().body();
-                    nombreTextField.setText(c.getNombre());
-                    telTextfield.setText(c.getTelefono());
-                    DirTextField.setText(c.getDireccion());
-                });
-            else
-                System.out.println("no encontrado");
-        });
-    }
     
     @FXML
     private void saveOrder(ActionEvent event) {
@@ -224,6 +199,20 @@ public class OrderCreatorController implements Initializable {
             ps.setOnHiding(event-> ps.hide());
             this.orden = OrdenLookup.current;
             tipoOrdenTextfield.setText(this.orden.getOrderType().toString());
+            
+            if(this.orden.getOrderType() == OrderType.MESA){
+                descripcionTextField.setText("MESA: " + this.orden.getMesa().toString());
+            }
+            
+            if(this.orden.getOrderType() == OrderType.LLEVAR){
+                descripcionTextField.setText(this.orden.getNombre().toString());
+            }
+            
+            if(this.orden.getOrderType() == OrderType.DOMICILIO){
+                descripcionTextField.setText(this.orden.getCliente().toString());
+            }
+            descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
+            
         });
     }        
 

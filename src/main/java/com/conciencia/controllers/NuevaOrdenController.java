@@ -96,7 +96,6 @@ public class NuevaOrdenController implements Initializable {
     private Optional<String> solicitarDatoEntrada(String title, 
                                                     String headText,
                                                         String contentText){
-        
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(title);
         dialog.setHeaderText(headText);

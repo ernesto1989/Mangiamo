@@ -36,12 +36,20 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
     /**
      * Método eu permite insertar en la bd un nuevo cliente.
      * @param c cliente a insertar.
+     * @return id si el cliente fue generado,-1 si el cliente existía, 0 si fue
+     * error interno de insersión
      */
-    private void insertCustomer(Cliente c){
+    private int insertCustomer(Cliente c){
+        Cliente clienteExistente =  getCustomer(c.getTelefono());
+        if(clienteExistente != null)
+            return -1;
         Integer id = (dbConn.executeInsert(SAVE_CUSTOMER, c.getNombre(),
                                 c.getTelefono(),
                                     c.getDireccion())).intValue();
+        if(id == null)
+            return 0;
         c.setId(id);
+        return id;
     }
 
     /**
@@ -77,14 +85,21 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
             // <editor-fold defaultstate="colapsed" desc="handler">
             Cliente customer = (Cliente)msg.body();
             vertx.executeBlocking(execute->{
-                insertCustomer(customer);
-                if(customer.getId() != null)
-                    execute.complete(customer);
+                int result = insertCustomer(customer);
+                if(customer.getId() != null && customer.getId() == result)
+                    execute.complete(result);
+                else{
+                    if(result == -1)
+                        execute.fail(new Throwable("Teléfono existente"));
+                    else{
+                        execute.fail(new Throwable("Error en registro de cliente.Contacte al administrador"));
+                    }
+                }
             }, executionResult->{
                 if(executionResult.succeeded())
                     msg.reply(executionResult.result());
                 else
-                    msg.fail(0, SAVE_CUSTOMER);
+                    msg.fail(0, executionResult.cause().getMessage());
             });
             //</editor-fold>
         });
