@@ -49,11 +49,15 @@ public class CreadorOrdenController implements Initializable {
     @FXML
     private AnchorPane mainAnchor;
     @FXML
-    private TableColumn<Item, String> nameColumn;
+    private TableColumn<OrderedItem, String> descripcionColumn;
     @FXML
-    private TableColumn<Item, BigDecimal> precioColumn;
+    private TableColumn<OrderedItem, Integer> personaColumn;
     @FXML
-    private TableView<Item> resumeTable;
+    private TableColumn<OrderedItem,Integer> cantidadColumn;
+    @FXML
+    private TableColumn<OrderedItem, BigDecimal> totalColumn;
+    @FXML
+    private TableView<OrderedItem> resumeTable;
     @FXML
     private TextField totalTextBox;
     @FXML
@@ -66,17 +70,46 @@ public class CreadorOrdenController implements Initializable {
     private TextField numOrdenTextField;
     @FXML
     private TextField descripcionTextField;
+    @FXML
+    private Button subTotalButton;
     
     private Orden orden;
     
     private int persona = 1;
     
+    private BigDecimal curSubtotal = new BigDecimal("0.0");
     
-    private void initCols(){
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        precioColumn.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
+    /**
+     * Método que inicializa los headers de la pantalla de creación de órdenes.
+     */
+    private void initOrderHeaders(){
+        this.orden = OrdenLookup.current;
+        tipoOrdenTextfield.setText(this.orden.getOrderType().toString());
+
+        if(this.orden.getOrderType() == OrderType.MESA){
+            descripcionTextField.setText("MESA: " + this.orden.getMesa().toString());
+        }if(this.orden.getOrderType() == OrderType.LLEVAR){
+            descripcionTextField.setText(this.orden.getNombre().toString());
+        }if(this.orden.getOrderType() == OrderType.DOMICILIO){
+            descripcionTextField.setText(this.orden.getCliente().toString());
+        }
+        descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
     }
     
+    /**
+     * Método para inicializar las columnas de la tabla de elementos ordenados.
+     */
+    private void initCols(){
+        personaColumn.setCellValueFactory(new PropertyValueFactory<>("persona"));
+        descripcionColumn.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        cantidadColumn.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
+    }
+    
+    /**
+     * Método que inicializa el menú en la pantalla
+     * @param menu 
+     */
     private void createTree(Menu menu){
         Section root = new Section();
         root.setNombre("Menu");
@@ -97,30 +130,50 @@ public class CreadorOrdenController implements Initializable {
         menuTree.setShowRoot(false);
     }
     
+    /**
+     * Método que se ejecuta cuando se selecciona un elemento del menu
+     */
     private void setTreeViewEvent(){
         menuTree.setOnMouseClicked(e->{
             if(e.getClickCount() == 2){
                 if(menuTree.getSelectionModel().getSelectedItem().getValue() instanceof Section)
                     return;
                 Item item = (Item) (menuTree.getSelectionModel().getSelectedItem().getValue());
-                resumeTable.getItems().add(item);
-                
+                OrderedItem oItem = new OrderedItem();
+                oItem.setPersona(this.persona);
+                oItem.setDescripcion(item.getNombre());
+                oItem.setTotal(item.getTotal());
+                if(item.getEsOrden()){
+                    oItem.setCantidad(item.getCantidadOrden());
+                }else{
+                    oItem.setCantidad(1);
+                }
+                resumeTable.getItems().add(oItem);
+                curSubtotal = curSubtotal.add(oItem.getTotal());
                 BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
-                totalTextBox.setText(currentTotal.add(item.getPrecioUnitario()).toString());
+                totalTextBox.setText(currentTotal.add(oItem.getTotal()).toString());
             }
         });
     }
     
+    /**
+     * Método que se ejecuta cuando se selecciona un elemento de la lista de elementos ordenados
+     */
     private void setTableEvent(){
         resumeTable.setOnMouseClicked(e->{
-            int selected = resumeTable.getSelectionModel().getSelectedIndex();
-            Item selectedItem = resumeTable.getSelectionModel().getSelectedItem();
-            BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
-            totalTextBox.setText(currentTotal.subtract(selectedItem.getPrecioUnitario()).toString());
-            resumeTable.getItems().remove(selected);
+            if(e.getClickCount() == 2){
+                int selected = resumeTable.getSelectionModel().getSelectedIndex();
+                OrderedItem selectedItem = resumeTable.getSelectionModel().getSelectedItem();
+                BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
+                totalTextBox.setText(currentTotal.subtract(selectedItem.getTotal()).toString());
+                resumeTable.getItems().remove(selected);
+            }
         });
     }
     
+    /**
+     * Método que trae el menú desde la bd
+     */
     private void getMenu() {
         vertx.eventBus().send("get_menu",null,response -> {
             Menu menu = (Menu) response.result().body();
@@ -130,26 +183,10 @@ public class CreadorOrdenController implements Initializable {
         });
     }
     
-    private String generateTicket(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        List<Item> orderedItems = resumeTable.getItems();
-        StringBuilder builder = new StringBuilder();
-        builder.append("*********Tacos Güerononón**************\n" +
-                       "*********Fecha:"+dateFormat.format(new Date())+"**************\n");
-                       //"*********Orden No. ######**************");
-        
-        for(Item item:orderedItems){
-            builder.append(item.getNombre() + " - " + item.getPrecioUnitario()+"\n");
-        }
-        builder.append("Total: " + totalTextBox.getText() + "\n");
-        builder.append("*********Gracias por su compra*********");
-        return builder.toString();
-    }
-        
-    
     @FXML
     private void executeClose(ActionEvent event) {
-        return;
+        Stage ps = (Stage)mainAnchor.getScene().getWindow();
+        ps.close();
     }
 
     @FXML
@@ -161,27 +198,20 @@ public class CreadorOrdenController implements Initializable {
         alert.showAndWait();
     }
     
+    @FXML
+    private void generarSubtotal(ActionEvent event) {
+//        OrderedItem oItem = new OrderedItem();
+//        oItem.setPersona(this.persona);
+//        oItem.setDescripcion("SUBTOTAL");
+//        resumeTable.getItems().add(oItem);
+//        oItem.setTotal(curSubtotal);
+//        curSubtotal = new BigDecimal("0");
+//        this.persona++;
+    }
     
     @FXML
     private void saveOrder(ActionEvent event) {
-        List<Item> selected = resumeTable.getItems();
-        OrderedItem item;
-        List<OrderedItem> ordered = new ArrayList<>();
-        for(Item i: selected){
-            item = new OrderedItem();
-            item.setPersona(1);
-            item.setCantidad(1);
-            item.setItem(i);
-            ordered.add(item);
-        }
-        Orden o = new Orden();
-        o.setNombre("Un Nombre");
-        o.setOrderType(OrderType.LLEVAR);
-        o.setOrderedItems(ordered);
-        System.out.println(o);
     }
-
-
     
     /**
      * Initializes the controller class.
@@ -190,10 +220,11 @@ public class CreadorOrdenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        initOrderHeaders();
         initCols();
-        getMenu();
         setTreeViewEvent();
         setTableEvent();
+        getMenu();
         
         vertx.eventBus().send("get_order_num",null,response -> {
             Long numOrden = (long) response.result().body();
@@ -204,26 +235,8 @@ public class CreadorOrdenController implements Initializable {
         
         Platform.runLater(()->{
             Stage ps = (Stage)mainAnchor.getScene().getWindow();
-            ps.setOnHiding(event-> ps.hide());
-            this.orden = OrdenLookup.current;
-            tipoOrdenTextfield.setText(this.orden.getOrderType().toString());
-            
-            if(this.orden.getOrderType() == OrderType.MESA){
-                descripcionTextField.setText("MESA: " + this.orden.getMesa().toString());
-            }
-            
-            if(this.orden.getOrderType() == OrderType.LLEVAR){
-                descripcionTextField.setText(this.orden.getNombre().toString());
-            }
-            
-            if(this.orden.getOrderType() == OrderType.DOMICILIO){
-                descripcionTextField.setText(this.orden.getCliente().toString());
-            }
-            descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
-            
+            ps.setOnHiding(event-> ps.close());           
         });
+        subTotalButton.setVisible(false);
     }        
-
-    
-    
 }
