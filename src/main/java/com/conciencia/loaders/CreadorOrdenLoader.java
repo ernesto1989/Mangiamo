@@ -4,19 +4,19 @@ package com.conciencia.loaders;
  * Clase que carga la ventana principal de la aplicación.
  * @author Ernesto Cantu
  */
-public class OrderCreatorLoader extends Loader {
+public class CreadorOrdenLoader extends Loader {
     
-    public static OrderCreatorLoader instance;
+    public static CreadorOrdenLoader instance;
     
-    public static OrderCreatorLoader getInstance(){
+    public static CreadorOrdenLoader getInstance(){
         if(instance == null){
-            instance = new OrderCreatorLoader();
+            instance = new CreadorOrdenLoader();
         }
         return instance;
     }
     
-    private OrderCreatorLoader(){
-        this.fxmlRoute = "/fxml/OrderCreatorUI.fxml";
+    private CreadorOrdenLoader(){
+        this.fxmlRoute = "/fxml/CreadorOrdenUI.fxml";
         this.styleRoute = "/styles/addbook.css";
         this.title = "Mangiamo";
     }

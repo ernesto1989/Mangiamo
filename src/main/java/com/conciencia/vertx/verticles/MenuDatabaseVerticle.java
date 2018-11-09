@@ -22,7 +22,7 @@ import java.util.List;
 public class MenuDatabaseVerticle extends AbstractVerticle{
     
     private DatabaseUtilities dbConn;
-    private final String SEARCH_ALL = "Select id,seccion,nombre,precio_unitario from menu order by seccion asc";
+    private final String SEARCH_ALL = "Select id,seccion,nombre,precio_unitario,es_orden,cantidad_orden from menu order by seccion asc";
     private final String GET_SECTIONS = "Select distinct seccion from menu order by seccion asc";
     private Menu menu;
     

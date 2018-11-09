@@ -1,6 +1,7 @@
 package com.conciencia.pojos;
 
 import io.vertx.core.json.JsonObject;
+import java.math.BigDecimal;
 
 /**
  * Item de menu
@@ -9,16 +10,20 @@ import io.vertx.core.json.JsonObject;
 public class OrderedItem implements ToJson{
     
     private Integer persona;
-    private Item item;
+    private Integer idItem;
+    private String descripcion;
     private Integer cantidad;
+    private BigDecimal total;
 
     public OrderedItem() {
     }
     
     public OrderedItem(JsonObject object) {
         this.persona = object.getInteger("persona");
-        this.item = new Item(object);
+        this.idItem = object.getInteger("idItem");
+        this.descripcion = object.getString("descripcion");
         this.cantidad = object.getInteger("cantidad");
+        new BigDecimal(object.getDouble("total"));
     }
 
     public Integer getPersona() {
@@ -28,13 +33,21 @@ public class OrderedItem implements ToJson{
     public void setPersona(Integer persona) {
         this.persona = persona;
     }
-    
-    public Item getItem() {
-        return item;
+
+    public Integer getIdItem() {
+        return idItem;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setIdItem(Integer idItem) {
+        this.idItem = idItem;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Integer getCantidad() {
@@ -43,17 +56,31 @@ public class OrderedItem implements ToJson{
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
-    }    
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    
     
     @Override
     public JsonObject toJson(){
-        JsonObject json = this.item.toJson();
+        JsonObject json = new JsonObject();
+        json.put("persona",this.persona);
+        json.put("idItem",this.idItem);
+        json.put("descripcion",this.descripcion);
         json.put("cantidad", this.cantidad);
+        json.put("total", this.total);
         return json;
     }
 
     @Override
     public String toString() {
-        return this.item.getNombre();
+        return this.getDescripcion();
     }    
 }

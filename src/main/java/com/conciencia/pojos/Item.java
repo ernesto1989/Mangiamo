@@ -17,6 +17,8 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
     protected String seccion;
     protected String nombre;
     protected BigDecimal precioUnitario;
+    protected Boolean esOrden;
+    protected Integer cantidadOrden;
 
     public Item() {
     }
@@ -26,6 +28,8 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         this.seccion = object.getString("seccion");
         this.nombre = object.getString("nombre");
         this.precioUnitario = new BigDecimal(object.getDouble("precioUnitario"));
+        this.esOrden = object.getBoolean("esOrden");
+        this.cantidadOrden = object.getInteger("cantidadOrden");
     }
 
     public Integer getId() {
@@ -59,6 +63,26 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
     public void setPrecioUnitario(BigDecimal precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
+
+    public Boolean getEsOrden() {
+        return esOrden;
+    }
+
+    public void setEsOrden(Boolean esOrden) {
+        this.esOrden = esOrden;
+    }
+
+    public Integer getCantidadOrden() {
+        return cantidadOrden;
+    }
+
+    public void setCantidadOrden(Integer cantidadOrden) {
+        this.cantidadOrden = cantidadOrden;
+    }
+    
+    public BigDecimal getTotal(){
+        return this.precioUnitario.multiply(new BigDecimal(cantidadOrden));
+    }
     
     @Override
     public JsonObject toJson(){
@@ -67,6 +91,8 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         json.put("seccion", getSeccion());
         json.put("nombre", getNombre());
         json.put("precioUnitario", getPrecioUnitario());
+        json.put("esOrden", getEsOrden());
+        json.put("cantidadOrden", getCantidadOrden());
         return json;
     }
 
@@ -111,7 +137,8 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
             setSeccion(rs.getString("seccion"));
             setNombre(rs.getString("nombre"));
             setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
-            
+            setEsOrden(rs.getBoolean("es_orden"));
+            setCantidadOrden(rs.getInt("cantidad_orden"));
         }catch(SQLException ex){
             //handle exceptions...
         }
