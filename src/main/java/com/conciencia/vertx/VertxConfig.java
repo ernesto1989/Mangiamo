@@ -3,9 +3,11 @@ package com.conciencia.vertx;
 import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
+import com.conciencia.pojos.Orden;
 import com.conciencia.vertx.codecs.CustomerCodec;
 import com.conciencia.vertx.codecs.MenuCodec;
 import com.conciencia.vertx.codecs.MenuItemCodec;
+import com.conciencia.vertx.codecs.OrdenCodec;
 import io.vertx.core.Vertx;
 
 /**
@@ -70,5 +72,6 @@ public class VertxConfig {
         vertx.eventBus().registerDefaultCodec(Cliente.class, new CustomerCodec());
         vertx.eventBus().registerDefaultCodec(Item.class, new MenuItemCodec());
         vertx.eventBus().registerDefaultCodec(Menu.class, new MenuCodec());
+        vertx.eventBus().registerDefaultCodec(Orden.class, new OrdenCodec());
     }
 }

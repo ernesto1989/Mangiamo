@@ -1,7 +1,6 @@
 package com.conciencia.controllers;
 
 import com.conciencia.lookups.OrdenLookup;
-import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
@@ -10,12 +9,10 @@ import com.conciencia.pojos.OrderedItem;
 import com.conciencia.pojos.Section;
 import com.conciencia.pojos.TreeContainer;
 import static com.conciencia.vertx.VertxConfig.vertx;
-import java.awt.print.PrinterException;
+import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -24,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -72,6 +70,8 @@ public class CreadorOrdenController implements Initializable {
     private TextField descripcionTextField;
     @FXML
     private Button subTotalButton;
+    @FXML
+    private CheckBox pagadoCheckBox;
     
     private Orden orden;
     
@@ -211,6 +211,24 @@ public class CreadorOrdenController implements Initializable {
     
     @FXML
     private void saveOrder(ActionEvent event) {
+        this.orden.setPagado(this.pagadoCheckBox.isSelected());
+        List<OrderedItem> items = resumeTable.getItems();
+        this.orden.setOrderedItems(items);
+        this.orden.setHoraRegistro(LocalTime.now());
+        vertx.eventBus().send("save_order", this.orden,result->{
+            if(result.succeeded()){
+                Boolean stored = ((JsonObject)result.result().body()).getBoolean("success");
+                if(stored){
+                    System.out.println("Orden generada");
+                    Platform.runLater(()->{
+                        Stage ps = (Stage)mainAnchor.getScene().getWindow();
+                        ps.close();
+                    });
+                }
+            }else{
+                System.out.println("error!!!");
+            }
+        });
     }
     
     /**
@@ -227,7 +245,8 @@ public class CreadorOrdenController implements Initializable {
         getMenu();
         
         vertx.eventBus().send("get_order_num",null,response -> {
-            Long numOrden = (long) response.result().body();
+            Long numOrden = (Long) response.result().body();
+            this.orden.setNumeroOrden(numOrden);
             Platform.runLater(()->{
                 numOrdenTextField.setText(numOrden.toString());
             });
