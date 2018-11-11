@@ -1,10 +1,13 @@
 package com.conciencia.pojos;
 
 import com.conciencia.db.SpectedResult;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -19,6 +22,7 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
     protected BigDecimal precioUnitario;
     protected Boolean esOrden;
     protected Integer cantidadOrden;
+    protected List<Item> relacionados;
 
     public Item() {
     }
@@ -30,6 +34,14 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         this.precioUnitario = new BigDecimal(object.getDouble("precioUnitario"));
         this.esOrden = object.getBoolean("esOrden");
         this.cantidadOrden = object.getInteger("cantidadOrden");
+        JsonArray rel = object.getJsonArray("relacionados");
+        if(rel != null && !rel.isEmpty()){
+            relacionados = new ArrayList<>();
+            for(Object o:rel){
+                relacionados.add(new Item((JsonObject)o));
+            }
+        }
+        
     }
 
     public Integer getId() {
@@ -83,6 +95,14 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
     public BigDecimal getTotal(){
         return this.precioUnitario.multiply(new BigDecimal(cantidadOrden));
     }
+
+    public List<Item> getRelacionados() {
+        return relacionados;
+    }
+
+    public void setRelacionados(List<Item> relacionados) {
+        this.relacionados = relacionados;
+    }    
     
     @Override
     public JsonObject toJson(){
@@ -93,6 +113,13 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         json.put("precioUnitario", getPrecioUnitario());
         json.put("esOrden", getEsOrden());
         json.put("cantidadOrden", getCantidadOrden());
+        if(relacionados != null && relacionados.size() > 0){
+            JsonArray rel = new JsonArray();
+            for(Item i: relacionados){
+                rel.add(i.toJson());
+            }
+            json.put("relacionados", rel);
+        }
         return json;
     }
 

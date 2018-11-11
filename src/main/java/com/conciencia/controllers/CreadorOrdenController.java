@@ -130,6 +130,23 @@ public class CreadorOrdenController implements Initializable {
         menuTree.setShowRoot(false);
     }
     
+    private OrderedItem addItem(Item item){
+        OrderedItem oItem = new OrderedItem();
+        oItem.setPersona(this.persona);
+        oItem.setDescripcion(item.getNombre());
+        oItem.setTotal(item.getTotal());
+        if(item.getEsOrden()){
+            oItem.setCantidad(item.getCantidadOrden());
+        }else{
+            oItem.setCantidad(1);
+        }
+        resumeTable.getItems().add(oItem);
+        curSubtotal = curSubtotal.add(oItem.getTotal());
+        BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
+        totalTextBox.setText(currentTotal.add(oItem.getTotal()).toString());
+        return oItem;
+    }
+    
     /**
      * Método que se ejecuta cuando se selecciona un elemento del menu
      */
@@ -139,19 +156,11 @@ public class CreadorOrdenController implements Initializable {
                 if(menuTree.getSelectionModel().getSelectedItem().getValue() instanceof Section)
                     return;
                 Item item = (Item) (menuTree.getSelectionModel().getSelectedItem().getValue());
-                OrderedItem oItem = new OrderedItem();
-                oItem.setPersona(this.persona);
-                oItem.setDescripcion(item.getNombre());
-                oItem.setTotal(item.getTotal());
-                if(item.getEsOrden()){
-                    oItem.setCantidad(item.getCantidadOrden());
-                }else{
-                    oItem.setCantidad(1);
+                OrderedItem o = addItem(item);
+                for(Item i:item.getRelacionados()){
+                    addItem(i);
+                    o.setNumRelacionados(o.getNumRelacionados() + 1);
                 }
-                resumeTable.getItems().add(oItem);
-                curSubtotal = curSubtotal.add(oItem.getTotal());
-                BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
-                totalTextBox.setText(currentTotal.add(oItem.getTotal()).toString());
             }
         });
     }
@@ -163,10 +172,14 @@ public class CreadorOrdenController implements Initializable {
         resumeTable.setOnMouseClicked(e->{
             if(e.getClickCount() == 2){
                 int selected = resumeTable.getSelectionModel().getSelectedIndex();
+                OrderedItem o = resumeTable.getSelectionModel().getSelectedItem();
                 OrderedItem selectedItem = resumeTable.getSelectionModel().getSelectedItem();
                 BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
                 totalTextBox.setText(currentTotal.subtract(selectedItem.getTotal()).toString());
                 resumeTable.getItems().remove(selected);
+                for(int i = selected; i< selected + o.getNumRelacionados();i++){
+                    resumeTable.getItems().remove(i);
+                }
             }
         });
     }
