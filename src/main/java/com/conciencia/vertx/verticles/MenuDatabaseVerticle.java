@@ -24,6 +24,8 @@ public class MenuDatabaseVerticle extends AbstractVerticle{
     private DatabaseUtilities dbConn;
     private final String SEARCH_ALL = "Select id,seccion,nombre,precio_unitario,es_orden,cantidad_orden from menu order by seccion asc";
     private final String GET_SECTIONS = "Select distinct seccion from menu order by seccion asc";
+    private final String GET_RELATED_ITEMS = "Select id,seccion,nombre,0.0 as precio_unitario,es_orden,cantidad_orden from menu "
+                                           + "where id in(Select item_relacionado from items_relacionados where item_ordenado = ?)";
     private Menu menu;
     
    /**
@@ -37,6 +39,7 @@ public class MenuDatabaseVerticle extends AbstractVerticle{
         List<Section> sections = dbConn.executeQueryNoParams(GET_SECTIONS, Section.class);
         List<Item> items = dbConn.executeQueryNoParams(SEARCH_ALL, Item.class);
         List<Item> sectionItems;
+        List <Item> relacionados;
         int i = 0;
         for(Section s: sections){
             sectionItems = new ArrayList<>();
@@ -44,6 +47,10 @@ public class MenuDatabaseVerticle extends AbstractVerticle{
             menu.add(s);
             for(int j = i; j<items.size(); j++){
                 if(items.get(j).getSeccion().equals(s.getNombre())){
+                    if(s.getNombre() == "Tacos")
+                        System.out.println("hola");
+                    relacionados = dbConn.executeQueryWithParams(GET_RELATED_ITEMS, Item.class, items.get(j).getId());
+                    items.get(j).setRelacionados(relacionados);
                     s.getItems().add(items.get(j));
                 }else{
                     i = j;

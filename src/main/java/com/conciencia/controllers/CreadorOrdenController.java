@@ -72,12 +72,31 @@ public class CreadorOrdenController implements Initializable {
     private Button subTotalButton;
     @FXML
     private CheckBox pagadoCheckBox;
+    @FXML
+    private TextField cantidadTextField;
+    @FXML
+    private Button incrementoButton;
+    @FXML
+    private Button decrementoButton;
+    @FXML
+    private Button modificarButton;
     
     private Orden orden;
+    
+    private OrderedItem selected;
     
     private int persona = 1;
     
     private BigDecimal curSubtotal = new BigDecimal("0.0");
+    
+    
+    private void setCurrentTotal(){
+        BigDecimal currentTotal = BigDecimal.ZERO;
+        for(OrderedItem o : resumeTable.getItems()){
+            currentTotal = currentTotal.add(o.getTotal());
+        }
+        totalTextBox.setText(currentTotal.toString());
+    }
     
     /**
      * Método que inicializa los headers de la pantalla de creación de órdenes.
@@ -130,6 +149,25 @@ public class CreadorOrdenController implements Initializable {
         menuTree.setShowRoot(false);
     }
     
+    private OrderedItem addItem(Item item){
+        OrderedItem oItem = new OrderedItem();
+        oItem.setPersona(this.persona);
+        oItem.setDescripcion(item.getNombre());
+        oItem.setPrecioUnitario(item.getPrecioUnitario());
+        oItem.setTotal(item.getTotal());
+        if(item.getEsOrden()){
+            oItem.setCantidad(item.getCantidadOrden());
+        }else{
+            oItem.setCantidad(1);
+        }
+        oItem.setEsOrden(item.getEsOrden());
+        resumeTable.getItems().add(oItem);
+        curSubtotal = curSubtotal.add(oItem.getTotal());
+        BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
+        setCurrentTotal();
+        return oItem;
+    }
+    
     /**
      * Método que se ejecuta cuando se selecciona un elemento del menu
      */
@@ -139,19 +177,11 @@ public class CreadorOrdenController implements Initializable {
                 if(menuTree.getSelectionModel().getSelectedItem().getValue() instanceof Section)
                     return;
                 Item item = (Item) (menuTree.getSelectionModel().getSelectedItem().getValue());
-                OrderedItem oItem = new OrderedItem();
-                oItem.setPersona(this.persona);
-                oItem.setDescripcion(item.getNombre());
-                oItem.setTotal(item.getTotal());
-                if(item.getEsOrden()){
-                    oItem.setCantidad(item.getCantidadOrden());
-                }else{
-                    oItem.setCantidad(1);
+                OrderedItem o = addItem(item);
+                for(Item i:item.getRelacionados()){
+                    addItem(i);
+                    o.setNumRelacionados(o.getNumRelacionados() + 1);
                 }
-                resumeTable.getItems().add(oItem);
-                curSubtotal = curSubtotal.add(oItem.getTotal());
-                BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
-                totalTextBox.setText(currentTotal.add(oItem.getTotal()).toString());
             }
         });
     }
@@ -161,13 +191,41 @@ public class CreadorOrdenController implements Initializable {
      */
     private void setTableEvent(){
         resumeTable.setOnMouseClicked(e->{
+            if(e.getClickCount() == 1) {
+                selected = resumeTable.getSelectionModel().getSelectedItem();
+                if(selected.getEsOrden()){
+                    cantidadTextField.setText(selected.getCantidad().toString());
+                    incrementoButton.setDisable(false);
+                    decrementoButton.setDisable(false);
+                    modificarButton.setDisable(false);
+                }else{
+                    cantidadTextField.setText("");
+                    incrementoButton.setDisable(true);
+                    decrementoButton.setDisable(true);
+                    modificarButton.setDisable(true);
+                }
+            }
             if(e.getClickCount() == 2){
                 int selected = resumeTable.getSelectionModel().getSelectedIndex();
+                OrderedItem o = resumeTable.getSelectionModel().getSelectedItem();
                 OrderedItem selectedItem = resumeTable.getSelectionModel().getSelectedItem();
                 BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
                 totalTextBox.setText(currentTotal.subtract(selectedItem.getTotal()).toString());
                 resumeTable.getItems().remove(selected);
+                if(o.getEsOrden()){
+                    cantidadTextField.setText("");
+                    incrementoButton.setDisable(true);
+                    decrementoButton.setDisable(true);
+                    modificarButton.setDisable(true);
+                }
+                for(int i = selected; i< selected + o.getNumRelacionados();i++){
+                    if(resumeTable.getItems().size() > 0)
+                        resumeTable.getItems().remove(i);
+                    else
+                        break;
+                }
             }
+            setCurrentTotal();
         });
     }
     
@@ -231,6 +289,32 @@ public class CreadorOrdenController implements Initializable {
         });
     }
     
+    @FXML
+    private void incrementarCantidad(ActionEvent event) {
+        Integer cantidadActual = Integer.parseInt(cantidadTextField.getText());
+        Integer cantidadNueva = cantidadActual+1;
+        cantidadTextField.setText(cantidadNueva.toString());
+    }
+
+    @FXML
+    private void decrementarCantidad(ActionEvent event) {
+        Integer cantidadActual = Integer.parseInt(cantidadTextField.getText());
+        if(cantidadActual==1)
+            return;
+        Integer cantidadNueva = cantidadActual-1;
+        cantidadTextField.setText(cantidadNueva.toString());
+    }
+    
+    @FXML
+    private void modificarCantidad(ActionEvent event) {
+        selected.setCantidad(Integer.parseInt(cantidadTextField.getText()));
+        BigDecimal cantidad = new BigDecimal(selected.getCantidad().doubleValue());
+        BigDecimal total = selected.getPrecioUnitario().multiply(cantidad);
+        selected.setTotal(total);
+        setCurrentTotal();
+        resumeTable.refresh();
+    }
+    
     /**
      * Initializes the controller class.
      * @param url
@@ -243,7 +327,9 @@ public class CreadorOrdenController implements Initializable {
         setTreeViewEvent();
         setTableEvent();
         getMenu();
-        
+        incrementoButton.setDisable(true);
+        decrementoButton.setDisable(true);
+        modificarButton.setDisable(true);
         vertx.eventBus().send("get_order_num",null,response -> {
             Long numOrden = (Long) response.result().body();
             this.orden.setNumeroOrden(numOrden);
