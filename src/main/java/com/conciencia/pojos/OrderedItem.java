@@ -13,7 +13,9 @@ public class OrderedItem implements ToJson{
     private Integer idItem;
     private String descripcion;
     private Integer cantidad;
+    private BigDecimal precioUnitario;
     private BigDecimal total;
+    private Boolean esOrden;
     private Integer numRelacionados = 0;
 
     public OrderedItem() {
@@ -24,7 +26,9 @@ public class OrderedItem implements ToJson{
         this.idItem = object.getInteger("idItem");
         this.descripcion = object.getString("descripcion");
         this.cantidad = object.getInteger("cantidad");
-        new BigDecimal(object.getDouble("total"));
+        this.precioUnitario = new BigDecimal(object.getDouble("precioUnitario"));
+        this.total = new BigDecimal(object.getDouble("total"));
+        this.esOrden = object.getBoolean("esOrden");
         this.numRelacionados = object.getInteger("numRelacionados");
     }
 
@@ -60,6 +64,14 @@ public class OrderedItem implements ToJson{
         this.cantidad = cantidad;
     }
 
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+
     public BigDecimal getTotal() {
         return total;
     }
@@ -68,6 +80,14 @@ public class OrderedItem implements ToJson{
         this.total = total;
     }
 
+    public Boolean getEsOrden() {
+        return esOrden;
+    }
+
+    public void setEsOrden(Boolean esOrden) {
+        this.esOrden = esOrden;
+    }
+    
     public Integer getNumRelacionados() {
         return numRelacionados;
     }
@@ -83,7 +103,9 @@ public class OrderedItem implements ToJson{
         json.put("idItem",this.idItem);
         json.put("descripcion",this.descripcion);
         json.put("cantidad", this.cantidad);
+        json.put("precioUnitario",this.precioUnitario);
         json.put("total", this.total);
+        json.put("esOrden",this.esOrden);
         json.put("numRelacionados",this.numRelacionados);
         return json;
     }
