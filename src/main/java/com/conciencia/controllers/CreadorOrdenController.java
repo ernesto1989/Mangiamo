@@ -13,6 +13,7 @@ import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -22,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -80,6 +82,10 @@ public class CreadorOrdenController implements Initializable {
     private Button decrementoButton;
     @FXML
     private Button modificarButton;
+    @FXML
+    private TextField horaOrdenTextfield;
+    @FXML
+    private Label horaLabel;
     
     private Orden orden;
     
@@ -88,6 +94,8 @@ public class CreadorOrdenController implements Initializable {
     private int persona = 1;
     
     private BigDecimal curSubtotal = new BigDecimal("0.0");
+    
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
     
     
     private void setCurrentTotal(){
@@ -113,6 +121,14 @@ public class CreadorOrdenController implements Initializable {
             descripcionTextField.setText(this.orden.getCliente().toString());
         }
         numOrdenTextField.setText(this.orden.getNumeroOrden().toString());
+        if(!this.orden.isEsNueva()){
+            horaLabel.setVisible(true);
+            horaOrdenTextfield.setVisible(true);
+            horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
+        }else{
+            horaLabel.setVisible(false);
+            horaOrdenTextfield.setVisible(false);
+        }
         descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
     }
     
