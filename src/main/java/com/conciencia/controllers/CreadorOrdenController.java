@@ -1,6 +1,6 @@
 package com.conciencia.controllers;
 
-import com.conciencia.lookups.OrdenLookup;
+import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
@@ -110,7 +110,7 @@ public class CreadorOrdenController implements Initializable {
      * Método que inicializa los headers de la pantalla de creación de órdenes.
      */
     private void initOrderHeaders(){
-        this.orden = OrdenLookup.current;
+        this.orden = LookupClass.current;
         tipoOrdenTextfield.setText(this.orden.getOrderType().toString());
 
         if(this.orden.getOrderType() == OrderType.MESA){

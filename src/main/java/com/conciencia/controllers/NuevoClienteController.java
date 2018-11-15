@@ -1,7 +1,7 @@
 package com.conciencia.controllers;
 
 import com.conciencia.loaders.CreadorOrdenLoader;
-import com.conciencia.lookups.OrdenLookup;
+import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.OrderType;
@@ -47,7 +47,7 @@ public class NuevoClienteController implements Initializable {
      */    
     private void crearOrden(Orden orden){
         Stage ps = new Stage();
-        OrdenLookup.current = orden;
+        LookupClass.current = orden;
         try {
             CreadorOrdenLoader.getInstance().load(ps);
         } catch (Exception ex) {
@@ -115,6 +115,8 @@ public class NuevoClienteController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        if(LookupClass.telefono != null && LookupClass.telefono != "")
+            telTextfield.setText(LookupClass.telefono);
         crearOrdenButton.setDisable(true);
     }    
 }

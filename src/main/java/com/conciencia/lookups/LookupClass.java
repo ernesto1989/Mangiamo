@@ -6,8 +6,8 @@ import com.conciencia.pojos.Orden;
  *
  * @author Ernesto Cantu
  */
-public class OrdenLookup {
+public class LookupClass {
     
     public static Orden current;
-
+    public static String telefono;
 }

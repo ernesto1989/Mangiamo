@@ -2,7 +2,7 @@ package com.conciencia.controllers;
 
 import com.conciencia.loaders.NuevoClienteLoader;
 import com.conciencia.loaders.CreadorOrdenLoader;
-import com.conciencia.lookups.OrdenLookup;
+import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import com.conciencia.pojos.Orden;
@@ -98,7 +98,7 @@ public class NuevaOrdenController implements Initializable {
             orden.setOrderType(tipo);
             orden.setNumeroOrden(numOrden);
             orden.setEsNueva(true);
-            OrdenLookup.current = orden;
+            LookupClass.current = orden;
         });
     }
     
@@ -178,7 +178,7 @@ public class NuevaOrdenController implements Initializable {
                 Orden o = (Orden)response.result().body();
                 if(o != null){
                     Platform.runLater(()->{
-                        OrdenLookup.current = o;
+                        LookupClass.current = o;
                         Stage ps = new Stage();
                         try {
                             CreadorOrdenLoader.getInstance().load(ps);
@@ -220,6 +220,7 @@ public class NuevaOrdenController implements Initializable {
      */
     @FXML
     private void registrarNuevoCliente(ActionEvent event) {
+        LookupClass.telefono = "";
         abrirNuevoClienteUI();
     }
     
@@ -293,6 +294,7 @@ public class NuevaOrdenController implements Initializable {
             }catch(Exception e){return;}
             
         }
+        LookupClass.telefono = telefono;
         VertxConfig.vertx.eventBus().send("get_customer",telefono,response->{
             if(response.succeeded()){
                 Cliente c = (Cliente) response.result().body();

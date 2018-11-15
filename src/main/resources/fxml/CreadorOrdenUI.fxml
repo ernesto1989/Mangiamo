@@ -92,9 +92,9 @@
                         <TableColumn fx:id="totalColumn" prefWidth="130.0" text="Total" />
                     </columns>
                   </TableView>
-                  <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="620.0" layoutY="281.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
-                  <Label layoutX="560.0" layoutY="285.0" text="TOTAL" />
-                  <Button fx:id="saveOrderButton" layoutX="639.0" layoutY="314.0" mnemonicParsing="false" onAction="#saveOrder" text="Guardar" />
+                  <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="688.0" layoutY="281.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
+                  <Label layoutX="641.0" layoutY="285.0" text="TOTAL" />
+                  <Button fx:id="saveOrderButton" layoutX="715.0" layoutY="319.0" mnemonicParsing="false" onAction="#saveOrder" text="Guardar" />
                   <TreeView fx:id="menuTree" layoutX="14.0" layoutY="61.0" prefHeight="193.0" prefWidth="236.0" />
                   <Button fx:id="subTotalButton" layoutX="43.0" layoutY="14.0" mnemonicParsing="false" onAction="#generarSubtotal" text="Subtotal">
                      <font>
