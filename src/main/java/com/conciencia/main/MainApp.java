@@ -6,13 +6,17 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- * Mangiamo Restaurant Software.
+ * Mangiamo Restaurant Software. Clase principal de arranque
  * 
  * 1.- Se arranca y configura vertx
  * 2.- Se inicia el Javafx API.
  * 3.- Se muestra la pantalla principal
  * 
- * @author Ernesto Cantu
+ * @author Ernesto Cantu Valle
+ * Conciencia 2018
+ * ernesto.cantu1989@live.com
+ * Versión 0.9
+ * Octubre 10
  */
 public class MainApp extends Application {
     

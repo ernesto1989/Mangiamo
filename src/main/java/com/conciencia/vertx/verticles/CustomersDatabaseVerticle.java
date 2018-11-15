@@ -104,4 +104,11 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
             //</editor-fold>
         });
     }
+
+    @Override
+    public void stop() throws Exception {
+        System.out.println("Customers Verticle undeploy");
+    }
+    
+    
 }

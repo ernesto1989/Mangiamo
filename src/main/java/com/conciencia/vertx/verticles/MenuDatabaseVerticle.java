@@ -87,4 +87,9 @@ public class MenuDatabaseVerticle extends AbstractVerticle{
         });
         vertx.eventBus().consumer("get_menu", msg-> msg.reply(menu));
     }
+    
+    @Override
+    public void stop() throws Exception {
+        System.out.println("Menu Database  Verticle undeploy");
+    }
 }

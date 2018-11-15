@@ -112,6 +112,7 @@ public class CreadorOrdenController implements Initializable {
         }if(this.orden.getOrderType() == OrderType.DOMICILIO){
             descripcionTextField.setText(this.orden.getCliente().toString());
         }
+        numOrdenTextField.setText(this.orden.getNumeroOrden().toString());
         descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
     }
     
@@ -272,7 +273,10 @@ public class CreadorOrdenController implements Initializable {
         this.orden.setPagado(this.pagadoCheckBox.isSelected());
         List<OrderedItem> items = resumeTable.getItems();
         this.orden.setOrderedItems(items);
-        this.orden.setHoraRegistro(LocalTime.now());
+        if(this.orden.isEsNueva()){
+            this.orden.setHoraRegistro(LocalTime.now());
+            this.orden.setEsNueva(false);
+        }
         vertx.eventBus().send("save_order", this.orden,result->{
             if(result.succeeded()){
                 Boolean stored = ((JsonObject)result.result().body()).getBoolean("success");
@@ -330,13 +334,8 @@ public class CreadorOrdenController implements Initializable {
         incrementoButton.setDisable(true);
         decrementoButton.setDisable(true);
         modificarButton.setDisable(true);
-        vertx.eventBus().send("get_order_num",null,response -> {
-            Long numOrden = (Long) response.result().body();
-            this.orden.setNumeroOrden(numOrden);
-            Platform.runLater(()->{
-                numOrdenTextField.setText(numOrden.toString());
-            });
-        });
+        if(this.orden.getOrderedItems() != null)
+            resumeTable.getItems().addAll(this.orden.getOrderedItems());
         
         Platform.runLater(()->{
             Stage ps = (Stage)mainAnchor.getScene().getWindow();

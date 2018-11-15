@@ -5,8 +5,6 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +28,11 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String today = sdf.format(new Date());
+        
         ordenes = new HashMap<>();
         vertx.eventBus().consumer("get_order_num", msg-> {
             Long currOrder;
+            String today = sdf.format(new Date());
             if(NUMERO_ORDEN < 10)
                 currOrder = Long.parseLong(today + "00" + NUMERO_ORDEN);
             else
@@ -50,6 +49,20 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             //</editor-fold>
         });
         
+        vertx.eventBus().consumer("find_order", msg->{
+            // <editor-fold defaultstate="colapsed" desc="handler">
+            Long orderNum = (Long) msg.body();
+            Long searchOrder;
+            String today = sdf.format(new Date());
+            if(orderNum < 10)
+                searchOrder = Long.parseLong(today + "00" + orderNum);
+            else
+                searchOrder = Long.parseLong(today + orderNum);
+            Orden o = ordenes.get(searchOrder);
+            msg.reply(o);
+            //</editor-fold>
+        });
+        
         vertx.setPeriodic(/*300000*/10000, hndlr->{
             for(Orden o:ordenes.values()){
 //                LocalTime ahora = LocalTime.now();
@@ -57,5 +70,10 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
 //                System.out.println(minutos);
             }
         });
+    }
+    
+    @Override
+    public void stop() throws Exception {
+        System.out.println("Ordenes Repository Verticle undeploy");
     }
 }

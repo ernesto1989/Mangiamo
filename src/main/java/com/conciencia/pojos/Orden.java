@@ -19,6 +19,7 @@ public class Orden implements ToJson {
     private Boolean pagado;
     List<OrderedItem> orderedItems;
     private LocalTime horaRegistro;
+    private boolean esNueva;
 
     public Orden() {
     }
@@ -31,6 +32,7 @@ public class Orden implements ToJson {
         this.cliente = new Cliente(obj);
         this.pagado = obj.getBoolean("pagado");
         this.orderedItems = getItems(obj);
+        this.esNueva = obj.getBoolean("esNueva");
     }
 
     private List<OrderedItem> getItems(JsonObject obj){
@@ -106,6 +108,14 @@ public class Orden implements ToJson {
         this.horaRegistro = horaRegistro;
     }
 
+    public boolean isEsNueva() {
+        return esNueva;
+    }
+
+    public void setEsNueva(boolean esNueva) {
+        this.esNueva = esNueva;
+    }
+    
     @Override
     public JsonObject toJson() {
         JsonObject obj = new JsonObject();
@@ -119,6 +129,7 @@ public class Orden implements ToJson {
         obj.put("telefono", this.getCliente().getTelefono());
         obj.put("direccion", this.getCliente().getDireccion());
         obj.put("pagado",this.getPagado());
+        obj.put("esNueva",this.esNueva);
         
         JsonArray a = new JsonArray();
 
