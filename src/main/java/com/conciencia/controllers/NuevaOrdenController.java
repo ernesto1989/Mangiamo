@@ -9,8 +9,6 @@ import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.OrderType;
 import com.conciencia.vertx.VertxConfig;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
