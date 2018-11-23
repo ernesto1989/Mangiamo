@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="554.0" prefWidth="807.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.CreadorOrdenController">
+<AnchorPane id="AnchorPane" prefHeight="595.0" prefWidth="807.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.CreadorOrdenController">
     <stylesheets>
         <URL value="@/styles/addbook.css" />
     </stylesheets>
@@ -36,9 +36,9 @@
                         </Menu>
                     </menus>
                 </MenuBar>
-            <AnchorPane prefHeight="127.0" prefWidth="767.0">
+            <AnchorPane prefHeight="176.0" prefWidth="807.0">
                <children>
-                  <TextField fx:id="tipoOrdenTextfield" alignment="CENTER" editable="false" layoutX="421.0" layoutY="74.0" prefHeight="25.0" prefWidth="137.0">
+                  <TextField fx:id="tipoOrdenTextfield" alignment="CENTER" editable="false" layoutX="421.0" layoutY="74.0" prefHeight="30.0" prefWidth="149.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
@@ -65,7 +65,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <CheckBox fx:id="pagadoCheckBox" layoutX="587.0" layoutY="76.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="Pagada">
+                  <CheckBox fx:id="pagadoCheckBox" layoutX="689.0" layoutY="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="Pagada">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -76,6 +76,16 @@
                      </font>
                   </TextField>
                   <Label fx:id="horaLabel" layoutX="34.0" layoutY="73.0" text="Hora">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="estatusTextField" alignment="CENTER" editable="false" layoutX="421.0" layoutY="122.0" prefHeight="30.0" prefWidth="149.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label fx:id="estatusLabel" layoutX="320.0" layoutY="121.0" text="Estatus">
                      <font>
                         <Font size="18.0" />
                      </font>

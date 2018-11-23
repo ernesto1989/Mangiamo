@@ -11,13 +11,14 @@ import java.util.List;
  * @author usuario
  */
 public class Orden implements ToJson {
-    private OrderType orderType;
+    private TipoOrden orderType;
+    private EstatusOrden estatusOrden;
     private Long numeroOrden;
     private Integer mesa;
     private String nombre;
     private Cliente cliente;
     private Boolean pagado;
-    List<OrderedItem> orderedItems;
+    List<ItemOrdenado> orderedItems;
     private LocalTime horaRegistro;
     private boolean esNueva;
 
@@ -25,7 +26,8 @@ public class Orden implements ToJson {
     }
     
     public Orden(JsonObject obj) {
-        this.orderType = OrderType.getType(obj.getString("tipo"));
+        this.orderType = TipoOrden.getTipo(obj.getString("tipo"));
+        this.estatusOrden = estatusOrden.getStatus(obj.getString("estatus"));
         this.numeroOrden =obj.getLong("numeroOrden");
         this.mesa = obj.getInteger("mesa");
         this.nombre = obj.getString("nombre");
@@ -35,22 +37,30 @@ public class Orden implements ToJson {
         this.esNueva = obj.getBoolean("esNueva");
     }
 
-    private List<OrderedItem> getItems(JsonObject obj){
-        List<OrderedItem> items = new ArrayList<>();
+    private List<ItemOrdenado> getItems(JsonObject obj){
+        List<ItemOrdenado> items = new ArrayList<>();
         JsonArray itemsJson = obj.getJsonArray("items");
         for(Object i : itemsJson){
-            items.add(new OrderedItem((JsonObject)i));
+            items.add(new ItemOrdenado((JsonObject)i));
         }
         return items;
     }
     
-    public OrderType getOrderType() {
+    public TipoOrden getTipoOrden() {
         return orderType;
     }
 
-    public void setOrderType(OrderType orderType) {
+    public void setTipoOrden(TipoOrden orderType) {
         this.orderType = orderType;
     }
+
+    public EstatusOrden getEstatusOrden() {
+        return estatusOrden;
+    }
+
+    public void setEstatusOrden(EstatusOrden estatusOrden) {
+        this.estatusOrden = estatusOrden;
+    }    
 
     public Long getNumeroOrden() {
         return numeroOrden;
@@ -92,11 +102,11 @@ public class Orden implements ToJson {
         this.pagado = pagado;
     }
 
-    public List<OrderedItem> getOrderedItems() {
+    public List<ItemOrdenado> getOrderedItems() {
         return orderedItems;
     }
 
-    public void setOrderedItems(List<OrderedItem> orderedItems) {
+    public void setOrderedItems(List<ItemOrdenado> orderedItems) {
         this.orderedItems = orderedItems;
     }
 
@@ -120,7 +130,8 @@ public class Orden implements ToJson {
     public JsonObject toJson() {
         JsonObject obj = new JsonObject();
         
-        obj.put("tipo", this.getOrderType().toString());
+        obj.put("tipo", this.getTipoOrden().toString());
+        obj.put("estatus", this.getEstatusOrden().toString());
         obj.put("numeroOrden", this.getNumeroOrden());
         obj.put("mesa", this.getMesa());
         obj.put("nombre", this.getNombre());
@@ -133,7 +144,7 @@ public class Orden implements ToJson {
         
         JsonArray a = new JsonArray();
 
-        for(OrderedItem i:this.getOrderedItems()){
+        for(ItemOrdenado i:this.getOrderedItems()){
             a.add(i.toJson());
         }
         obj.put("items", a);

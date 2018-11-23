@@ -16,6 +16,7 @@ import java.util.Objects;
  */
 public class Item extends TreeContainer implements ToJson,SpectedResult {
     
+    /* PROPIEDADES DEL ITEM */
     protected Integer id;
     protected String seccion;
     protected String nombre;
@@ -27,6 +28,10 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
     public Item() {
     }
 
+    /**
+     * Constructor que permite crear un objeto item a partir de un objeto json
+     * @param json objeto Json de entrada
+     */
     public Item(JsonObject object) {
         this.id = object.getInteger("id");
         this.seccion = object.getString("seccion");
@@ -44,6 +49,8 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         
     }
 
+    /* MÉTODOS DE ACCESO */
+    
     public Integer getId() {
         return id;
     }
@@ -104,6 +111,10 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         this.relacionados = relacionados;
     }    
     
+    /**
+     * Método que permite convertir un cliente a Json
+     * @return cliente en formato json
+     */    
     @Override
     public JsonObject toJson(){
         JsonObject json = new JsonObject();
@@ -123,6 +134,24 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         return json;
     }
 
+    /**
+     * Método que permite extraer de un ResultSet un Item.
+     * @param rs 
+     */
+    @Override
+    public void mapResult(ResultSet rs) {
+        try{
+            setId(rs.getInt("id"));
+            setSeccion(rs.getString("seccion"));
+            setNombre(rs.getString("nombre"));
+            setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
+            setEsOrden(rs.getBoolean("es_orden"));
+            setCantidadOrden(rs.getInt("cantidad_orden"));
+        }catch(SQLException ex){
+            //handle exceptions...
+        }
+    }
+    
     @Override
     public String toString() {
         return this.nombre;
@@ -156,19 +185,4 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         }
         return true;
     }
-
-    @Override
-    public void mapResult(ResultSet rs) {
-        try{
-            setId(rs.getInt("id"));
-            setSeccion(rs.getString("seccion"));
-            setNombre(rs.getString("nombre"));
-            setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
-            setEsOrden(rs.getBoolean("es_orden"));
-            setCantidadOrden(rs.getInt("cantidad_orden"));
-        }catch(SQLException ex){
-            //handle exceptions...
-        }
-    }
-    
 }

@@ -4,10 +4,10 @@ import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 
 /**
- * Item de menu
+ * Item de menu ordenado.
  * @author usuario
  */
-public class OrderedItem implements ToJson{
+public class ItemOrdenado implements ToJson{
     
     private Integer persona;
     private Integer idItem;
@@ -18,10 +18,10 @@ public class OrderedItem implements ToJson{
     private Boolean esOrden;
     private Integer numRelacionados = 0;
 
-    public OrderedItem() {
+    public ItemOrdenado() {
     }
     
-    public OrderedItem(JsonObject object) {
+    public ItemOrdenado(JsonObject object) {
         this.persona = object.getInteger("persona");
         this.idItem = object.getInteger("idItem");
         this.descripcion = object.getString("descripcion");

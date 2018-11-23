@@ -4,11 +4,11 @@ package com.conciencia.pojos;
  * Define los tipos de ordenes que existen
  * @author usuario
  */
-public enum OrderType {
+public enum TipoOrden {
     
     MESA,LLEVAR,DOMICILIO;
     
-    public static OrderType getType(String type){
+    public static TipoOrden getTipo(String type){
         if(type.equals("MESA"))
             return MESA;
         if(type.equals("LLEVAR"))

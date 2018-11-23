@@ -1,5 +1,6 @@
 package com.conciencia.vertx.verticles;
 
+import com.conciencia.controllers.VisorOrdenCocinaController;
 import com.conciencia.pojos.Orden;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 public class OrdenesRepositoryVerticle extends AbstractVerticle{
 
-        private Integer NUMERO_ORDEN = 1;
+        private Long NUMERO_ORDEN = 1L;
         private Map<Long,Orden> ordenes;
 
     /**
@@ -31,13 +32,13 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
         
         ordenes = new HashMap<>();
         vertx.eventBus().consumer("get_order_num", msg-> {
-            Long currOrder;
-            String today = sdf.format(new Date());
-            if(NUMERO_ORDEN < 10)
-                currOrder = Long.parseLong(today + "00" + NUMERO_ORDEN);
-            else
-                currOrder = Long.parseLong(today + NUMERO_ORDEN);
-            msg.reply(currOrder);
+//            Long currOrder;
+//            String today = sdf.format(new Date());
+//            if(NUMERO_ORDEN < 10)
+//                currOrder = Long.parseLong(today + "00" + NUMERO_ORDEN);
+//            else
+//                currOrder = Long.parseLong(today + NUMERO_ORDEN);
+            msg.reply(NUMERO_ORDEN);
         });
         
         vertx.eventBus().consumer("save_order", msg->{
@@ -45,6 +46,11 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             Orden o = (Orden) msg.body();
             NUMERO_ORDEN++;
             ordenes.put(o.getNumeroOrden(), o);
+            
+            if(VisorOrdenCocinaController.espacioDisponible){
+                vertx.eventBus().send("display_order", o);
+            }
+            
             msg.reply(new JsonObject().put("success", Boolean.TRUE));
             //</editor-fold>
         });
@@ -52,13 +58,13 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
         vertx.eventBus().consumer("find_order", msg->{
             // <editor-fold defaultstate="colapsed" desc="handler">
             Long orderNum = (Long) msg.body();
-            Long searchOrder;
-            String today = sdf.format(new Date());
-            if(orderNum < 10)
-                searchOrder = Long.parseLong(today + "00" + orderNum);
-            else
-                searchOrder = Long.parseLong(today + orderNum);
-            Orden o = ordenes.get(searchOrder);
+//            Long searchOrder;
+//            String today = sdf.format(new Date());
+//            if(orderNum < 10)
+//                searchOrder = Long.parseLong(today + "00" + orderNum);
+//            else
+//                searchOrder = Long.parseLong(today + orderNum);
+            Orden o = ordenes.get(orderNum);
             msg.reply(o);
             //</editor-fold>
         });

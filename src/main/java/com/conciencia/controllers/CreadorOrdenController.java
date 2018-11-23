@@ -4,9 +4,9 @@ import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.OrderType;
-import com.conciencia.pojos.OrderedItem;
-import com.conciencia.pojos.Section;
+import com.conciencia.pojos.TipoOrden;
+import com.conciencia.pojos.ItemOrdenado;
+import com.conciencia.pojos.Seccion;
 import com.conciencia.pojos.TreeContainer;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import io.vertx.core.json.JsonObject;
@@ -36,12 +36,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * Controlador de pantalla CreadorOrdenUI.
  *
- * @author usuario
+ * @author Ernesto Cantu
  */
 public class CreadorOrdenController implements Initializable {
 
+    /* ELEMENTOS DE LA PANTALLA */
+    
     @FXML
     private MenuItem closeMenuItem;
     @FXML
@@ -49,15 +51,15 @@ public class CreadorOrdenController implements Initializable {
     @FXML
     private AnchorPane mainAnchor;
     @FXML
-    private TableColumn<OrderedItem, String> descripcionColumn;
+    private TableColumn<ItemOrdenado, String> descripcionColumn;
     @FXML
-    private TableColumn<OrderedItem, Integer> personaColumn;
+    private TableColumn<ItemOrdenado, Integer> personaColumn;
     @FXML
-    private TableColumn<OrderedItem,Integer> cantidadColumn;
+    private TableColumn<ItemOrdenado,Integer> cantidadColumn;
     @FXML
-    private TableColumn<OrderedItem, BigDecimal> totalColumn;
+    private TableColumn<ItemOrdenado, BigDecimal> totalColumn;
     @FXML
-    private TableView<OrderedItem> resumeTable;
+    private TableView<ItemOrdenado> resumeTable;
     @FXML
     private TextField totalTextBox;
     @FXML
@@ -86,10 +88,16 @@ public class CreadorOrdenController implements Initializable {
     private TextField horaOrdenTextfield;
     @FXML
     private Label horaLabel;
+    @FXML
+    private TextField estatusTextField;
+    @FXML
+    private Label estatusLabel;
+    
+    /* OBJETOS DE LA CLASE */
     
     private Orden orden;
     
-    private OrderedItem selected;
+    private ItemOrdenado selected;
     
     private int persona = 1;
     
@@ -97,10 +105,16 @@ public class CreadorOrdenController implements Initializable {
     
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
     
+    /**************************************************************************/
     
+    /* METODOS UTILITARIOS*/
+    
+    /**
+     * Método que establece el total para la orden actual
+     */
     private void setCurrentTotal(){
         BigDecimal currentTotal = BigDecimal.ZERO;
-        for(OrderedItem o : resumeTable.getItems()){
+        for(ItemOrdenado o : resumeTable.getItems()){
             currentTotal = currentTotal.add(o.getTotal());
         }
         totalTextBox.setText(currentTotal.toString());
@@ -111,13 +125,13 @@ public class CreadorOrdenController implements Initializable {
      */
     private void initOrderHeaders(){
         this.orden = LookupClass.current;
-        tipoOrdenTextfield.setText(this.orden.getOrderType().toString());
+        tipoOrdenTextfield.setText(this.orden.getTipoOrden().toString());
 
-        if(this.orden.getOrderType() == OrderType.MESA){
+        if(this.orden.getTipoOrden() == TipoOrden.MESA){
             descripcionTextField.setText("MESA: " + this.orden.getMesa().toString());
-        }if(this.orden.getOrderType() == OrderType.LLEVAR){
+        }if(this.orden.getTipoOrden() == TipoOrden.LLEVAR){
             descripcionTextField.setText(this.orden.getNombre().toString());
-        }if(this.orden.getOrderType() == OrderType.DOMICILIO){
+        }if(this.orden.getTipoOrden() == TipoOrden.DOMICILIO){
             descripcionTextField.setText(this.orden.getCliente().toString());
         }
         numOrdenTextField.setText(this.orden.getNumeroOrden().toString());
@@ -125,9 +139,14 @@ public class CreadorOrdenController implements Initializable {
             horaLabel.setVisible(true);
             horaOrdenTextfield.setVisible(true);
             horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
+            estatusLabel.setVisible(true);
+            estatusTextField.setVisible(true);
+            estatusTextField.setText(orden.getEstatusOrden().toString());
         }else{
             horaLabel.setVisible(false);
             horaOrdenTextfield.setVisible(false);
+            estatusLabel.setVisible(false);
+            estatusTextField.setVisible(false);
         }
         descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
     }
@@ -147,12 +166,12 @@ public class CreadorOrdenController implements Initializable {
      * @param menu 
      */
     private void createTree(Menu menu){
-        Section root = new Section();
+        Seccion root = new Seccion();
         root.setNombre("Menu");
         TreeItem<TreeContainer> rootNode = new TreeItem<>(root);
         TreeItem<TreeContainer> node;
         TreeItem<TreeContainer> leaf;
-        for(Section s:menu){
+        for(Seccion s:menu){
             node = new TreeItem<>(s);
             node.setExpanded(true);
             for(Item i:s.getItems()){
@@ -166,8 +185,8 @@ public class CreadorOrdenController implements Initializable {
         menuTree.setShowRoot(false);
     }
     
-    private OrderedItem addItem(Item item){
-        OrderedItem oItem = new OrderedItem();
+    private ItemOrdenado addItem(Item item){
+        ItemOrdenado oItem = new ItemOrdenado();
         oItem.setPersona(this.persona);
         oItem.setDescripcion(item.getNombre());
         oItem.setPrecioUnitario(item.getPrecioUnitario());
@@ -191,10 +210,10 @@ public class CreadorOrdenController implements Initializable {
     private void setTreeViewEvent(){
         menuTree.setOnMouseClicked(e->{
             if(e.getClickCount() == 2){
-                if(menuTree.getSelectionModel().getSelectedItem().getValue() instanceof Section)
+                if(menuTree.getSelectionModel().getSelectedItem().getValue() instanceof Seccion)
                     return;
                 Item item = (Item) (menuTree.getSelectionModel().getSelectedItem().getValue());
-                OrderedItem o = addItem(item);
+                ItemOrdenado o = addItem(item);
                 for(Item i:item.getRelacionados()){
                     addItem(i);
                     o.setNumRelacionados(o.getNumRelacionados() + 1);
@@ -224,8 +243,8 @@ public class CreadorOrdenController implements Initializable {
             }
             if(e.getClickCount() == 2){
                 int selected = resumeTable.getSelectionModel().getSelectedIndex();
-                OrderedItem o = resumeTable.getSelectionModel().getSelectedItem();
-                OrderedItem selectedItem = resumeTable.getSelectionModel().getSelectedItem();
+                ItemOrdenado o = resumeTable.getSelectionModel().getSelectedItem();
+                ItemOrdenado selectedItem = resumeTable.getSelectionModel().getSelectedItem();
                 BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
                 totalTextBox.setText(currentTotal.subtract(selectedItem.getTotal()).toString());
                 resumeTable.getItems().remove(selected);
@@ -258,12 +277,24 @@ public class CreadorOrdenController implements Initializable {
         });
     }
     
+    /**************************************************************************/
+    
+    /* METODOS INVOCADOS POR JAVAFX */
+    
+    /**
+     * Método que cierra la ventana
+     * @param event 
+     */
     @FXML
     private void executeClose(ActionEvent event) {
         Stage ps = (Stage)mainAnchor.getScene().getWindow();
         ps.close();
     }
 
+    /**
+     * Método que muestra el about
+     * @param event 
+     */
     @FXML
     private void executeAbout(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -273,6 +304,11 @@ public class CreadorOrdenController implements Initializable {
         alert.showAndWait();
     }
     
+    /**
+     * Método que genera el subtotal por persona.
+     * NOT USED YET
+     * @param event 
+     */
     @FXML
     private void generarSubtotal(ActionEvent event) {
 //        OrderedItem oItem = new OrderedItem();
@@ -284,10 +320,14 @@ public class CreadorOrdenController implements Initializable {
 //        this.persona++;
     }
     
+    /**
+     * Método que guarda la orden en el repositorio de órdenes
+     * @param event 
+     */
     @FXML
     private void saveOrder(ActionEvent event) {
         this.orden.setPagado(this.pagadoCheckBox.isSelected());
-        List<OrderedItem> items = resumeTable.getItems();
+        List<ItemOrdenado> items = resumeTable.getItems();
         this.orden.setOrderedItems(items);
         if(this.orden.isEsNueva()){
             this.orden.setHoraRegistro(LocalTime.now());
@@ -309,6 +349,10 @@ public class CreadorOrdenController implements Initializable {
         });
     }
     
+    /**
+     * Método que modifica la cantidad de un objeto tipo orden.
+     * @param event 
+     */
     @FXML
     private void incrementarCantidad(ActionEvent event) {
         Integer cantidadActual = Integer.parseInt(cantidadTextField.getText());
@@ -316,6 +360,10 @@ public class CreadorOrdenController implements Initializable {
         cantidadTextField.setText(cantidadNueva.toString());
     }
 
+    /**
+     * Método que modifica la cantidad de un objeto tipo orden.
+     * @param event 
+     */
     @FXML
     private void decrementarCantidad(ActionEvent event) {
         Integer cantidadActual = Integer.parseInt(cantidadTextField.getText());
@@ -325,6 +373,10 @@ public class CreadorOrdenController implements Initializable {
         cantidadTextField.setText(cantidadNueva.toString());
     }
     
+    /**
+     * Método que guarda la cantidad de un objeto tipo orden.
+     * @param event 
+     */
     @FXML
     private void modificarCantidad(ActionEvent event) {
         selected.setCantidad(Integer.parseInt(cantidadTextField.getText()));

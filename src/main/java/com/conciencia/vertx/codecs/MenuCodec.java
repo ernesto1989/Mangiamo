@@ -1,7 +1,7 @@
 package com.conciencia.vertx.codecs;
 
 import com.conciencia.pojos.Menu;
-import com.conciencia.pojos.Section;
+import com.conciencia.pojos.Seccion;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonArray;
@@ -20,7 +20,7 @@ public class MenuCodec implements MessageCodec<Menu, Menu> {
         JsonArray jsonMenu = new JsonArray();
         JsonObject jsonToEncode;
         
-        for(Section section: menu){
+        for(Seccion section: menu){
             jsonToEncode = section.toJson();            
             jsonMenu.add(jsonToEncode);
         }
@@ -50,7 +50,7 @@ public class MenuCodec implements MessageCodec<Menu, Menu> {
         JsonArray contentJson = new JsonArray(jsonStr);
         Menu menu = new Menu();
         for(Object obj:contentJson){
-            menu.add(new Section((JsonObject) obj));
+            menu.add(new Seccion((JsonObject) obj));
         }
         
         return menu;

@@ -8,6 +8,7 @@ import java.util.Objects;
 
 /**
  * Clase que representa a un cliente del restaurante.
+ * 
  * @author Ernesto Cantú
  */
 public class Cliente implements ToJson, SpectedResult {

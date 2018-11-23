@@ -4,7 +4,7 @@ import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.OrderType;
+import com.conciencia.pojos.TipoOrden;
 import com.conciencia.vertx.VertxConfig;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import java.net.URL;
@@ -56,14 +56,14 @@ public class NuevoClienteController implements Initializable {
      * @param c cliente a domicilio
      * @param tipo tipo de orden
      */
-    private void crearOrden(Integer mesa, String nombre, Cliente c, OrderType tipo){
+    private void crearOrden(Integer mesa, String nombre, Cliente c, TipoOrden tipo){
         vertx.eventBus().send("get_order_num",null,response -> {
             Long numOrden = (Long) response.result().body();
             Orden orden = new Orden();
             orden.setMesa(mesa);
             orden.setNombre(nombre);
             orden.setCliente(c);
-            orden.setOrderType(tipo);
+            orden.setTipoOrden(tipo);
             orden.setNumeroOrden(numOrden);
             orden.setEsNueva(true);
             LookupClass.current = orden;
@@ -153,7 +153,7 @@ public class NuevoClienteController implements Initializable {
     
     @FXML
     private void crearOrden(ActionEvent event) {
-        crearOrden(null, null, cliente, OrderType.DOMICILIO);
+        crearOrden(null, null, cliente, TipoOrden.DOMICILIO);
         abrirCreadorOrdenUI();
     }
 

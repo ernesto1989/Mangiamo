@@ -4,9 +4,10 @@ import com.conciencia.loaders.NuevoClienteLoader;
 import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
+import com.conciencia.pojos.EstatusOrden;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.OrderType;
+import com.conciencia.pojos.TipoOrden;
 import com.conciencia.vertx.VertxConfig;
 import java.net.URL;
 import java.util.Optional;
@@ -86,14 +87,15 @@ public class NuevaOrdenController implements Initializable {
      * @param c cliente a domicilio
      * @param tipo tipo de orden
      */
-    private void crearOrden(Integer mesa, String nombre, Cliente c, OrderType tipo){
+    private void crearOrden(Integer mesa, String nombre, Cliente c, TipoOrden tipo){
         vertx.eventBus().send("get_order_num",null,response -> {
             Long numOrden = (Long) response.result().body();
             Orden orden = new Orden();
             orden.setMesa(mesa);
             orden.setNombre(nombre);
             orden.setCliente(c);
-            orden.setOrderType(tipo);
+            orden.setTipoOrden(tipo);
+            orden.setEstatusOrden(EstatusOrden.ESPERA);
             orden.setNumeroOrden(numOrden);
             orden.setEsNueva(true);
             LookupClass.current = orden;
@@ -257,7 +259,7 @@ public class NuevaOrdenController implements Initializable {
            }catch(NumberFormatException e){mesa = 0;}
            catch(Exception e){return;}
         }
-        crearOrden(mesa, null, null, OrderType.MESA);
+        crearOrden(mesa, null, null, TipoOrden.MESA);
         abrirCreadorOrdenUI();
     }
     
@@ -274,7 +276,7 @@ public class NuevaOrdenController implements Initializable {
             try{nombreCliente = result.get();
             }catch(Exception e){return;}
         }
-        crearOrden(null, nombreCliente, null, OrderType.LLEVAR);
+        crearOrden(null, nombreCliente, null, TipoOrden.LLEVAR);
         abrirCreadorOrdenUI();
     }
 
@@ -306,7 +308,7 @@ public class NuevaOrdenController implements Initializable {
                     alert.getButtonTypes().setAll(ok,cancel);
                     Optional<ButtonType> result = alert.showAndWait();
                     if(result.get() == ok){
-                        crearOrden(null, null, c, OrderType.DOMICILIO);
+                        crearOrden(null, null, c, TipoOrden.DOMICILIO);
                         abrirCreadorOrdenUI();
                     }else{
                         abrirNuevoClienteUI();

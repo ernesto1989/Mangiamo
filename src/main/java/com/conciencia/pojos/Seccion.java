@@ -12,15 +12,15 @@ import java.util.List;
  * Seccion de menu con sus items.
  * @author usuario
  */
-public class Section extends TreeContainer implements ToJson,SpectedResult {
+public class Seccion extends TreeContainer implements ToJson,SpectedResult {
     
     private String nombre;
     private List<Item> items;
 
-    public Section() {
+    public Seccion() {
     }
     
-    public Section(JsonObject object){
+    public Seccion(JsonObject object){
         this.nombre = object.getString("nombre");
         List<Item> items = new ArrayList();
         for(Object json:object.getJsonArray("items")){

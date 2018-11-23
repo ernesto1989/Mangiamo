@@ -4,7 +4,7 @@ import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
-import com.conciencia.pojos.Section;
+import com.conciencia.pojos.Seccion;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import java.util.ArrayList;
@@ -36,12 +36,12 @@ public class MenuDatabaseVerticle extends AbstractVerticle{
     */
     private void initMenu(){
         menu = new Menu();
-        List<Section> sections = dbConn.executeQueryNoParams(GET_SECTIONS, Section.class);
+        List<Seccion> sections = dbConn.executeQueryNoParams(GET_SECTIONS, Seccion.class);
         List<Item> items = dbConn.executeQueryNoParams(SEARCH_ALL, Item.class);
         List<Item> sectionItems;
         List <Item> relacionados;
         int i = 0;
-        for(Section s: sections){
+        for(Seccion s: sections){
             sectionItems = new ArrayList<>();
             s.setItems(sectionItems);
             menu.add(s);
