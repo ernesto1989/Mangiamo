@@ -110,44 +110,18 @@ public class CreadorOrdenController implements Initializable {
     /* METODOS UTILITARIOS*/
     
     /**
-     * Método que establece el total para la orden actual
-     */
-    private void setCurrentTotal(){
-        BigDecimal currentTotal = BigDecimal.ZERO;
-        for(ItemOrdenado o : resumeTable.getItems()){
-            currentTotal = currentTotal.add(o.getTotal());
-        }
-        totalTextBox.setText(currentTotal.toString());
-    }
-    
-    /**
      * Método que inicializa los headers de la pantalla de creación de órdenes.
      */
     private void initOrderHeaders(){
-        this.orden = LookupClass.current;
         tipoOrdenTextfield.setText(this.orden.getTipoOrden().toString());
-
-        if(this.orden.getTipoOrden() == TipoOrden.MESA){
-            descripcionTextField.setText("MESA: " + this.orden.getMesa().toString());
-        }if(this.orden.getTipoOrden() == TipoOrden.LLEVAR){
-            descripcionTextField.setText(this.orden.getNombre().toString());
-        }if(this.orden.getTipoOrden() == TipoOrden.DOMICILIO){
-            descripcionTextField.setText(this.orden.getCliente().toString());
-        }
+        descripcionTextField.setText(this.orden.toString());
         numOrdenTextField.setText(this.orden.getNumeroOrden().toString());
-        if(!this.orden.isEsNueva()){
-            horaLabel.setVisible(true);
-            horaOrdenTextfield.setVisible(true);
-            horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
-            estatusLabel.setVisible(true);
-            estatusTextField.setVisible(true);
-            estatusTextField.setText(orden.getEstatusOrden().toString());
-        }else{
-            horaLabel.setVisible(false);
-            horaOrdenTextfield.setVisible(false);
-            estatusLabel.setVisible(false);
-            estatusTextField.setVisible(false);
-        }
+        horaLabel.setVisible(!this.orden.isEsNueva());
+        horaOrdenTextfield.setVisible(!this.orden.isEsNueva());
+        estatusLabel.setVisible(!this.orden.isEsNueva());
+        estatusTextField.setVisible(!this.orden.isEsNueva());
+        if(!this.orden.isEsNueva())horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
+        estatusTextField.setText(orden.getEstatusOrden().toString());
         descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
     }
     
@@ -159,6 +133,18 @@ public class CreadorOrdenController implements Initializable {
         descripcionColumn.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         cantidadColumn.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
+    }
+    
+    /**
+     * Método que trae el menú desde la bd
+     */
+    private void getMenu() {
+        vertx.eventBus().send("get_menu",null,response -> {
+            Menu menu = (Menu) response.result().body();
+            Platform.runLater(()->{
+                createTree(menu);
+            });
+        });
     }
     
     /**
@@ -183,25 +169,6 @@ public class CreadorOrdenController implements Initializable {
         rootNode.setExpanded(true);
         menuTree.setRoot(rootNode);
         menuTree.setShowRoot(false);
-    }
-    
-    private ItemOrdenado addItem(Item item){
-        ItemOrdenado oItem = new ItemOrdenado();
-        oItem.setPersona(this.persona);
-        oItem.setDescripcion(item.getNombre());
-        oItem.setPrecioUnitario(item.getPrecioUnitario());
-        oItem.setTotal(item.getTotal());
-        if(item.getEsOrden()){
-            oItem.setCantidad(item.getCantidadOrden());
-        }else{
-            oItem.setCantidad(1);
-        }
-        oItem.setEsOrden(item.getEsOrden());
-        resumeTable.getItems().add(oItem);
-        curSubtotal = curSubtotal.add(oItem.getTotal());
-        BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
-        setCurrentTotal();
-        return oItem;
     }
     
     /**
@@ -266,15 +233,38 @@ public class CreadorOrdenController implements Initializable {
     }
     
     /**
-     * Método que trae el menú desde la bd
+     * Método que establece el total para la orden actual
      */
-    private void getMenu() {
-        vertx.eventBus().send("get_menu",null,response -> {
-            Menu menu = (Menu) response.result().body();
-            Platform.runLater(()->{
-                createTree(menu);
-            });
-        });
+    private void setCurrentTotal(){
+        BigDecimal currentTotal = BigDecimal.ZERO;
+        for(ItemOrdenado o : resumeTable.getItems()){
+            currentTotal = currentTotal.add(o.getTotal());
+        }
+        totalTextBox.setText(currentTotal.toString());
+    }
+    
+    /**
+     * Agrega el item seleccionado como un Item Ordenado a la lista de pedidos
+     * @param item
+     * @return 
+     */
+    private ItemOrdenado addItem(Item item){
+        ItemOrdenado oItem = new ItemOrdenado();
+        oItem.setPersona(this.persona);
+        oItem.setDescripcion(item.getNombre());
+        oItem.setPrecioUnitario(item.getPrecioUnitario());
+        oItem.setTotal(item.getTotal());
+        if(item.getEsOrden()){
+            oItem.setCantidad(item.getCantidadOrden());
+        }else{
+            oItem.setCantidad(1);
+        }
+        oItem.setEsOrden(item.getEsOrden());
+        resumeTable.getItems().add(oItem);
+        curSubtotal = curSubtotal.add(oItem.getTotal());
+        BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
+        setCurrentTotal();
+        return oItem;
     }
     
     /**************************************************************************/
@@ -394,6 +384,7 @@ public class CreadorOrdenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        this.orden = LookupClass.current;
         initOrderHeaders();
         initCols();
         setTreeViewEvent();

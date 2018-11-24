@@ -153,6 +153,13 @@ public class Orden implements ToJson {
 
     @Override
     public String toString() {
-        return "Orden{" + "orderType=" + orderType + ", numeroOrden=" + numeroOrden + ", mesa=" + mesa + ", nombre=" + nombre + ", cliente=" + cliente + ", pagado=" + pagado + ", orderedItems=" + orderedItems + '}';
+        if(getTipoOrden() == TipoOrden.MESA){
+            return "MESA: " + getMesa().toString();
+        }if(getTipoOrden() == TipoOrden.LLEVAR){
+            return getNombre();
+        }if(getTipoOrden() == TipoOrden.DOMICILIO){
+            return getCliente().toString();
+        }
+        return "";
     }
 }
