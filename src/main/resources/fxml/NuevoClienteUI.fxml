@@ -7,35 +7,59 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="218.0" prefWidth="375.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.NuevoClienteController">
+<AnchorPane id="AnchorPane" prefHeight="342.0" prefWidth="496.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.NuevoClienteController">
     <stylesheets>
         <URL value="@/styles/addbook.css" />
     </stylesheets>
    <children>
-      <Label layoutX="23.0" layoutY="12.0" text="Nuevo Cliente">
+      <Label layoutX="43.0" layoutY="43.0" text="Nuevo Cliente">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="nombreTextField" layoutX="97.0" layoutY="57.0" prefHeight="25.0" prefWidth="237.0" />
-      <Label layoutX="23.0" layoutY="61.0" text="Nombre">
+      <TextField fx:id="nombreTextField" layoutX="101.0" layoutY="95.0" prefHeight="25.0" prefWidth="147.0" />
+      <Label layoutX="44.0" layoutY="99.0" text="Nombre">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="telTextfield" layoutX="97.0" layoutY="93.0" prefHeight="25.0" prefWidth="237.0" />
-      <Label layoutX="20.0" layoutY="97.0" text="Teléfono">
+      <TextField fx:id="telTextfield" layoutX="344.0" layoutY="95.0" prefHeight="25.0" prefWidth="113.0" />
+      <Label layoutX="267.0" layoutY="99.0" text="Teléfono">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="dirTextField" layoutX="99.0" layoutY="132.0" prefHeight="25.0" prefWidth="237.0" />
-      <Label layoutX="21.0" layoutY="136.0" text="Dirección">
+      <TextField fx:id="calleTextField" layoutX="99.0" layoutY="132.0" prefHeight="25.0" prefWidth="227.0" />
+      <Label layoutX="55.0" layoutY="137.0" text="Calle">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="guardarClienteButton" layoutX="196.0" layoutY="170.0" mnemonicParsing="false" onAction="#agregarCliente" text="Guardar" />
-      <Button fx:id="crearOrdenButton" disable="true" layoutX="264.0" layoutY="170.0" mnemonicParsing="false" onAction="#crearOrden" text="Ordenar" />
+      <Button fx:id="guardarClienteButton" layoutX="322.0" layoutY="286.0" mnemonicParsing="false" onAction="#agregarCliente" text="Guardar" />
+      <Button fx:id="crearOrdenButton" disable="true" layoutX="390.0" layoutY="286.0" mnemonicParsing="false" onAction="#crearOrden" text="Ordenar" />
+      <Label layoutX="343.0" layoutY="137.0" text="No.">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="noTextField" layoutX="375.0" layoutY="135.0" prefHeight="25.0" prefWidth="60.0" />
+      <TextField fx:id="ec1TextField" layoutX="99.0" layoutY="205.0" prefHeight="25.0" prefWidth="227.0" />
+      <Label layoutX="55.0" layoutY="204.0" text="Entre">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="67.0" layoutY="238.0" text="Y">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="ec2TextField" layoutX="99.0" layoutY="239.0" prefHeight="25.0" prefWidth="227.0" />
+      <TextField fx:id="coloniaTextField" layoutX="99.0" layoutY="171.0" prefHeight="25.0" prefWidth="227.0" />
+      <Label layoutX="45.0" layoutY="174.0" text="Colonia">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

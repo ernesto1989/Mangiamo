@@ -138,7 +138,11 @@ public class Orden implements ToJson {
         obj.put("id",this.getCliente().getId());
         obj.put("nombre", this.getCliente().getNombre());
         obj.put("telefono", this.getCliente().getTelefono());
-        obj.put("direccion", this.getCliente().getDireccion());
+        obj.put("calle",this.getCliente().getCalle());
+        obj.put("numero",this.getCliente().getNumero());
+        obj.put("colonia",this.getCliente().getColonia());
+        obj.put("eCalle1",this.getCliente().geteCalle1());
+        obj.put("eCalle2",this.getCliente().geteCalle2());
         obj.put("pagado",this.getPagado());
         obj.put("esNueva",this.esNueva);
         

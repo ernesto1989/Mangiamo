@@ -5,6 +5,7 @@
  */
 package com.conciencia.controllers;
 
+import com.conciencia.datastructures.queue.Queue;
 import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.ItemOrdenado;
 import com.conciencia.pojos.Orden;
@@ -62,9 +63,7 @@ public class VisorOrdenCocinaController implements Initializable {
     
     private Orden o1, o2, o3;
     
-    private Boolean hayEn1, hayEn2, hayEn3;
-    
-    //private Integer mostrarEn = 1;
+    private Queue<Orden> listaEspera;
     
     private void initCols(){
         descripcionColumn1.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
@@ -75,52 +74,38 @@ public class VisorOrdenCocinaController implements Initializable {
         cantidadColumn3.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
     }
     
-    private void eliminarOrden(Integer eliminarEn){
-        if(eliminarEn == 1){
+    private void borrarOrden(Integer borrarEn){
+        if(borrarEn == 1){
             numOrden1TextField.setText("");
             tipoOrden1Textfield.setText("");
             resumeTable1.getItems().removeAll(o1.getOrderedItems());
-            if(hayEn2){
-                hayEn2 = false;
-                eliminarOrden(2);
-                mostrarOrden(o2, 1);
-            }
-            if(hayEn3){
-                hayEn3 = false;
-                eliminarOrden(3);
-                mostrarOrden(o3, 2);
-            }
+            o1 = null;
         }
-        if(eliminarEn == 2){
+        
+        if(borrarEn == 2){
             numOrden2TextField.setText("");
             tipoOrden2Textfield.setText("");
             resumeTable2.getItems().removeAll(o2.getOrderedItems());
-            if(hayEn3){
-                hayEn3 = false;
-                eliminarOrden(3);
-                mostrarOrden(o3, 2);
-            }
+            o2 = null;
         }
-        if(eliminarEn == 3){
+        
+        if(borrarEn == 3){
             numOrden3TextField.setText("");
             tipoOrden3Textfield.setText("");
             resumeTable3.getItems().removeAll(o3.getOrderedItems());
-            vertx.eventBus().consumer("get_next_order", msg-> {
-                Orden o = (Orden) msg.body();
-                Platform.runLater(()->{
-                    mostrarOrden(o, 3);
-                });
-            });
+            o3 = null;
         }
     }
     
-    private void mostrarOrden(Orden o,Integer mostrarEn){
+    private void mostrarOrden(Orden o, Integer mostrarEn){
+        if(o == null)
+            return;
+        
         if(mostrarEn == 1){
             o1 = o;
             numOrden1TextField.setText(o.getNumeroOrden().toString());
             tipoOrden1Textfield.setText(o.getTipoOrden().toString());
             resumeTable1.getItems().setAll(o.getOrderedItems());
-            hayEn1 = true;
         }
         
         if(mostrarEn == 2){
@@ -128,7 +113,6 @@ public class VisorOrdenCocinaController implements Initializable {
             numOrden2TextField.setText(o.getNumeroOrden().toString());
             tipoOrden2Textfield.setText(o.getTipoOrden().toString());
             resumeTable2.getItems().setAll(o.getOrderedItems());
-            hayEn2 = true;
         }
         
         if(mostrarEn == 3){
@@ -136,29 +120,46 @@ public class VisorOrdenCocinaController implements Initializable {
             numOrden3TextField.setText(o.getNumeroOrden().toString());
             tipoOrden3Textfield.setText(o.getTipoOrden().toString());
             resumeTable3.getItems().setAll(o.getOrderedItems());
-            hayEn3 = true;
         }
     }
     
     @FXML
     private void finalizarOrden1(ActionEvent event) {
-        hayEn1 = false;
-        o1.setEstatusOrden(EstatusOrden.ENTREGADA);
-        eliminarOrden(1);
+        borrarOrden(1);
+        if(o2 != null){
+            mostrarOrden(o2,1);
+            borrarOrden(2);
+        }
+        if(o3 != null){
+            mostrarOrden(o3,2);
+            borrarOrden(3);
+            if(!listaEspera.isEmpty()){
+                Orden next = listaEspera.remove();
+                mostrarOrden(next,3);
+            }
+        }
     }
 
     @FXML
     private void finalizarOrden2(ActionEvent event) {
-        hayEn2 = false;
-        o2.setEstatusOrden(EstatusOrden.ENTREGADA);
-        eliminarOrden(2);
+        borrarOrden(2);
+        if(o3 != null){
+            mostrarOrden(o3,2);
+            borrarOrden(3);
+            if(!listaEspera.isEmpty()){
+                Orden next = listaEspera.remove();
+                mostrarOrden(next,3);
+            }
+        }
     }
 
     @FXML
     private void finalizarOrden3(ActionEvent event) {
-        hayEn3 = false;
-        o3.setEstatusOrden(EstatusOrden.ENTREGADA);
-        eliminarOrden(3);
+        borrarOrden(3);
+        if(!listaEspera.isEmpty()){
+            Orden next = listaEspera.remove();
+            mostrarOrden(next,3);
+        }
     }
 
     /**
@@ -167,30 +168,23 @@ public class VisorOrdenCocinaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initCols();
+        listaEspera = new Queue();
         espacioDisponible = true;
-        hayEn1 = false;
-        hayEn2 = false;
-        hayEn3 = false;
         vertx.eventBus().consumer("display_order", msg-> {
             Orden o = (Orden) msg.body();
-            o.setEstatusOrden(EstatusOrden.COCINA);
-            if(!hayEn1){
-                mostrarOrden(o,1);
-                return;
+            if(o1 != null && o2 != null & o3 != null) {
+                listaEspera.insert(o);
             }else{
-                if(!hayEn2){
-                    mostrarOrden(o,2);
-                    return;
-                }else{
-                    if(!hayEn3){
-                        mostrarOrden(o, 3);
-                        return;
-                    }
-                }
+                o.setEstatusOrden(EstatusOrden.COCINA);
+                int mostrarEn = 0;
+                if(o1 == null) 
+                    mostrarEn = 1;
+                else if(o2 == null)
+                    mostrarEn = 2;
+                    else if(o3 == null)
+                        mostrarEn = 3;
+                mostrarOrden(o,mostrarEn);
             }
-            if(hayEn1 && hayEn2 && hayEn3){
-                espacioDisponible = false;
-            }            
         });
     }    
 }

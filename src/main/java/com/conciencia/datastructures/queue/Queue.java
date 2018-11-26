@@ -31,7 +31,7 @@ public class Queue<E extends Object> {
      * @return True si existe un elemento en la cima del stack. False si no.
      */
     public boolean isEmpty(){
-        return (peek == null);
+        return (this.size <= 0);
     }
     
     /**
@@ -52,10 +52,11 @@ public class Queue<E extends Object> {
         if(!isEmpty()){
             this.rear.setNext(e);
             this.rear = e;
+            e.setNext(null);
         }else{
             this.peek = e;
             this.rear = e;
-            this.peek.setNext(this.rear);
+//            this.peek.setNext(this.rear);
         }   
         this.size++;
     }
@@ -66,7 +67,7 @@ public class Queue<E extends Object> {
      */
     public E getPeek(){
         if(isEmpty())
-            throw new EmptyDataStructureException();
+            return null;
         return peek.getEntity();
     }
     

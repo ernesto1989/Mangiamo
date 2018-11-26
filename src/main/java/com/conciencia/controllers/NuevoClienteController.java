@@ -36,13 +36,23 @@ public class NuevoClienteController implements Initializable {
     @FXML
     private TextField telTextfield;
     @FXML
-    private TextField dirTextField;
+    private TextField calleTextField;
+    @FXML
+    private TextField noTextField;
+    @FXML
+    private TextField coloniaTextField;
+    @FXML
+    private TextField ec1TextField;
+    @FXML
+    private TextField ec2TextField;
     @FXML
     private Button guardarClienteButton;
     @FXML
     private Button crearOrdenButton;
     
     private Cliente cliente;
+    
+    
     
     /**************************************************************************/
     
@@ -113,12 +123,20 @@ public class NuevoClienteController implements Initializable {
     private void agregarCliente(ActionEvent event) {
         String nombre = nombreTextField.getText();
         String telefono = telTextfield.getText();
-        String dirección = dirTextField.getText();
+        String calle = calleTextField.getText();
+        String no = noTextField.getText();
+        String colonia = coloniaTextField.getText();
+        String eCalle1 = ec1TextField.getText();
+        String eCalle2 = ec2TextField.getText();
         
         cliente = new Cliente();
         cliente.setNombre(nombre);
         cliente.setTelefono(telefono);
-        cliente.setDireccion(dirección);
+        cliente.setCalle(calle);
+        cliente.setNumero(no);
+        cliente.setColonia(colonia);
+        cliente.seteCalle1(eCalle1);
+        cliente.seteCalle2(eCalle2);
         
         VertxConfig.vertx.eventBus().send("save_customer",cliente,response->{
             if(response.succeeded()){
@@ -157,6 +175,9 @@ public class NuevoClienteController implements Initializable {
     private void crearOrden(ActionEvent event) {
         crearOrden(null, null, cliente, TipoOrden.DOMICILIO);
         abrirCreadorOrdenUI();
+        Button b = (Button)event.getSource();
+        Stage s = (Stage)b.getScene().getWindow();
+        s.close();
     }
 
     /**

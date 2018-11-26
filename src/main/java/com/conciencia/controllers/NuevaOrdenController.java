@@ -302,7 +302,7 @@ public class NuevaOrdenController implements Initializable {
                     Alert alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Confirmar Cliente");
                     alert.setHeaderText("Confirmar Cliente");
-                    alert.setContentText("Dirección: " + c.getDireccion());
+                    alert.setContentText("Dirección: " + c.toString());
                     ButtonType ok = new ButtonType("Ordenar");
                     ButtonType cancel = new ButtonType("Cancel");
                     alert.getButtonTypes().setAll(ok,cancel);

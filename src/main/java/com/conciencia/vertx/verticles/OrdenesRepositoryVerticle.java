@@ -21,7 +21,7 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
         private Long NUMERO_ORDEN = 1L;
         private Long DIA_NUMERO;
         private Map<Long,Orden> ordenes;
-        private Queue<Orden> listaEspera;
+        
 
     /**
      * Método ejecutado al arranque del verticle.
@@ -35,7 +35,6 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
         DIA_NUMERO = Long.parseLong(sdf.format(new Date()));
         
         ordenes = new HashMap<>();
-        listaEspera = new Queue();
         vertx.eventBus().consumer("get_order_num", msg-> {
             Long currOrder;
             if(NUMERO_ORDEN < 10)
@@ -52,11 +51,7 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             ordenes.put(o.getNumeroOrden(), o);
             if(o.isEsNueva()){
                 o.setEsNueva(false);
-                if(VisorOrdenCocinaController.espacioDisponible){
-                    vertx.eventBus().send("display_order", o);
-                }else{
-                    listaEspera.insert(o);
-                }
+                vertx.eventBus().send("display_order", o);
             }else{
                 //actualizar en pantalla
             }
@@ -78,12 +73,6 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             //</editor-fold>
         });
         
-        vertx.eventBus().consumer("get_next_order", msg->{
-            // <editor-fold defaultstate="colapsed" desc="handler">
-            Orden o = listaEspera.remove();
-            msg.reply(o);
-            //</editor-fold>
-        });
         
         vertx.setPeriodic(/*300000*/10000, hndlr->{
             for(Orden o:ordenes.values()){

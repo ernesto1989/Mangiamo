@@ -17,8 +17,8 @@ import java.util.List;
 public class CustomersDatabaseVerticle extends AbstractVerticle{
     
     private DatabaseUtilities dbConn;
-    private final String SEARCH_BY_PHONE = "Select id,nombre,telefono,direccion from Clientes where telefono = ?";
-    private final String SAVE_CUSTOMER = "Insert into Clientes (nombre,telefono,direccion) values(?,?,?)";
+    private final String SEARCH_BY_PHONE = "Select id,nombre,telefono,calle,numero,colonia,ecalle1,ecalle2 from Clientes where telefono = ?";
+    private final String SAVE_CUSTOMER = "Insert into Clientes (nombre,telefono,calle,numero,colonia,ecalle1,ecalle2) values(?,?,?,?,?,?,?)";
     
     /**
      * Método que busca a un cliente por su teléfono
@@ -45,7 +45,7 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
             return -1;
         Integer id = (dbConn.executeInsert(SAVE_CUSTOMER, c.getNombre(),
                                 c.getTelefono(),
-                                    c.getDireccion())).intValue();
+                                    c.getCalle(),c.getNumero(),c.getColonia(),c.geteCalle1(),c.geteCalle2())).intValue();
         if(id == null)
             return 0;
         c.setId(id);
