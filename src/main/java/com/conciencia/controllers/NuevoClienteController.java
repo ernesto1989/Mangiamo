@@ -3,6 +3,7 @@ package com.conciencia.controllers;
 import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
+import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
 import com.conciencia.vertx.VertxConfig;
@@ -66,6 +67,7 @@ public class NuevoClienteController implements Initializable {
             orden.setTipoOrden(tipo);
             orden.setNumeroOrden(numOrden);
             orden.setEsNueva(true);
+            orden.setEstatusOrden(EstatusOrden.ESPERA);
             LookupClass.current = orden;
         });
     }

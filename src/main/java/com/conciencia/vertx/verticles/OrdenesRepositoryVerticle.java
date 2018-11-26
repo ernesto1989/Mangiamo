@@ -50,11 +50,15 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             Orden o = (Orden) msg.body();
             NUMERO_ORDEN++;
             ordenes.put(o.getNumeroOrden(), o);
-            
-            if(VisorOrdenCocinaController.espacioDisponible){
-                vertx.eventBus().send("display_order", o);
+            if(o.isEsNueva()){
+                o.setEsNueva(false);
+                if(VisorOrdenCocinaController.espacioDisponible){
+                    vertx.eventBus().send("display_order", o);
+                }else{
+                    listaEspera.insert(o);
+                }
             }else{
-                listaEspera.insert(o);
+                //actualizar en pantalla
             }
             
             msg.reply(new JsonObject().put("success", Boolean.TRUE));
@@ -69,7 +73,14 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
                 searchOrder = Long.parseLong(DIA_NUMERO + "00" + orderNum);
             else
                 searchOrder = Long.parseLong(DIA_NUMERO + "" + orderNum);
-            Orden o = ordenes.get(orderNum);
+            Orden o = ordenes.get(searchOrder);
+            msg.reply(o);
+            //</editor-fold>
+        });
+        
+        vertx.eventBus().consumer("get_next_order", msg->{
+            // <editor-fold defaultstate="colapsed" desc="handler">
+            Orden o = listaEspera.remove();
             msg.reply(o);
             //</editor-fold>
         });

@@ -321,7 +321,7 @@ public class CreadorOrdenController implements Initializable {
         this.orden.setOrderedItems(items);
         if(this.orden.isEsNueva()){
             this.orden.setHoraRegistro(LocalTime.now());
-            this.orden.setEsNueva(false);
+//            this.orden.setEsNueva(false);
         }
         vertx.eventBus().send("save_order", this.orden,result->{
             if(result.succeeded()){
@@ -385,6 +385,7 @@ public class CreadorOrdenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.orden = LookupClass.current;
+        LookupClass.current = null; //limpio la orden que se quedó "preseteada"
         initOrderHeaders();
         initCols();
         setTreeViewEvent();
