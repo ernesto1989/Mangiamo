@@ -101,6 +101,8 @@ public class CreadorOrdenController implements Initializable {
     
     private int persona = 1;
     
+    private int idItem = 1;
+    
     private BigDecimal curSubtotal = new BigDecimal("0.0");
     
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
@@ -181,6 +183,7 @@ public class CreadorOrdenController implements Initializable {
                     return;
                 Item item = (Item) (menuTree.getSelectionModel().getSelectedItem().getValue());
                 ItemOrdenado o = addItem(item);
+                
                 for(Item i:item.getRelacionados()){
                     addItem(i);
                     o.setNumRelacionados(o.getNumRelacionados() + 1);
@@ -194,6 +197,8 @@ public class CreadorOrdenController implements Initializable {
      */
     private void setTableEvent(){
         resumeTable.setOnMouseClicked(e->{
+            selected = resumeTable.getSelectionModel().getSelectedItem();
+            if(selected.getIdItem() == 0) return;
             if(e.getClickCount() == 1) {
                 selected = resumeTable.getSelectionModel().getSelectedItem();
                 if(selected.getEsOrden()){
@@ -250,6 +255,7 @@ public class CreadorOrdenController implements Initializable {
      */
     private ItemOrdenado addItem(Item item){
         ItemOrdenado oItem = new ItemOrdenado();
+        oItem.setIdItem(idItem++);
         oItem.setPersona(this.persona);
         oItem.setDescripcion(item.getNombre());
         oItem.setPrecioUnitario(item.getPrecioUnitario());
@@ -396,6 +402,17 @@ public class CreadorOrdenController implements Initializable {
         modificarButton.setDisable(true);
         if(this.orden.getOrderedItems() != null)
             resumeTable.getItems().addAll(this.orden.getOrderedItems());
+        
+        if(this.orden.isEsNueva() && this.orden.getTipoOrden()== TipoOrden.DOMICILIO){
+            ItemOrdenado envio = new ItemOrdenado();
+            envio.setPersona(1);
+            envio.setDescripcion("Envío");
+            envio.setCantidad(1);
+            envio.setTotal(new BigDecimal("12.0"));
+            envio.setIdItem(0);  
+            resumeTable.getItems().add(envio);
+            setCurrentTotal();
+        }
         
         Platform.runLater(()->{
             Stage ps = (Stage)mainAnchor.getScene().getWindow();
