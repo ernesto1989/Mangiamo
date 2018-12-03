@@ -8,6 +8,7 @@ import com.conciencia.pojos.TipoOrden;
 import com.conciencia.pojos.ItemOrdenado;
 import com.conciencia.pojos.Seccion;
 import com.conciencia.pojos.TreeContainer;
+import com.conciencia.utilities.GeneralUtilities;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
@@ -293,11 +294,10 @@ public class CreadorOrdenController implements Initializable {
      */
     @FXML
     private void executeAbout(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("About...");
-        alert.setHeaderText("About Mangiamo...");
-        alert.setContentText("Mangiamo Restaurant Software for JavaFX8");
-        alert.showAndWait();
+         GeneralUtilities.mostrarAlertDialog("About...", 
+                "About Mangiamo...",
+                "Mangiamo Restaurant Software for JavaFX8", 
+                Alert.AlertType.INFORMATION);
     }
     
     /**

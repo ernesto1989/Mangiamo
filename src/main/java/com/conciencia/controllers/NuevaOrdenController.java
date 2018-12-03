@@ -1,16 +1,14 @@
 package com.conciencia.controllers;
 
-import com.conciencia.loaders.NuevoClienteLoader;
 import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.EstatusOrden;
-import com.conciencia.pojos.ItemOrdenado;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
+import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -56,107 +54,6 @@ public class NuevaOrdenController implements Initializable {
     
     /**************************************************************************/
     
-    /* METODOS UTILITARIOS*/
-    
-    /**
-     * Método usado para cerrar completamente la aplicación
-     */
-    private static void cerrarApp(){
-        vertx.close();
-        System.exit(0);
-    }      
-    
-    /**
-     * Método que permite abrir la pantalla para registrar un cliente nuevo
-     */
-    private void abrirNuevoClienteUI(){
-        Platform.runLater(()->{
-            Stage ps = new Stage();
-            try {
-                NuevoClienteLoader.getInstance().load(ps);
-            } catch (Exception ex) {
-                Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
-    
-    /**
-     * Método que crea un objeto orden. Este método NO regresa el objeto órden,
-     * más lo pone en el lookup.
-     * 
-     * @param mesa mesa a asignar a la orden
-     * @param nombre nombre de la persona que ordena
-     * @param c cliente a domicilio
-     * @param tipo tipo de orden
-     */
-    private void crearOrden(Integer mesa, String nombre, Cliente c, TipoOrden tipo){
-        vertx.eventBus().send("get_order_num",null,response -> {
-            Long numOrden = (Long) response.result().body();
-            Orden orden = new Orden();
-            orden.setMesa(mesa);
-            orden.setNombre(nombre);
-            orden.setCliente(c);
-            orden.setTipoOrden(tipo);
-            orden.setEstatusOrden(EstatusOrden.ESPERA);
-            orden.setNumeroOrden(numOrden);
-            orden.setEsNueva(true);
-            LookupClass.current = orden;
-        });
-    }
-    
-    /**
-     * Método que crea el objeto Orden segun el tipo de orden a crear y carga la
-     * pantalla para agregar elementos del menu a la orden
-     * @param type Tipo de Orden Seleccionado
-     */    
-    private void abrirCreadorOrdenUI(){
-        Stage ps = new Stage();
-        try {
-            CreadorOrdenLoader.getInstance().load(ps);
-        } catch (Exception ex) {
-            Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    /**
-     * Método que crea un input text dialog genérico para solicitar un dato de entrada.
-     * 
-     * @param title titulo del input dialog
-     * @param headText head text del input dialog
-     * @param contentText contenido del input dialog
-     * @return dato insertado por el usuario
-     */
-    private Optional<String> mostrarInputDialog(String title, 
-                                                    String headText,
-                                                        String contentText){
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle(title);
-        dialog.setHeaderText(headText);
-        dialog.setContentText(contentText);
-        return dialog.showAndWait();
-    }
-    
-    /**
-     * Método que crea un alert dialog genérico para mostrar un msg.
-     * 
-     * @param title titulo del input dialog
-     * @param headText head text del input dialog
-     * @param contentText contenido del input dialog
-     * @return dato insertado por el usuario
-     */
-    private void mostrarAlertDialog(String title, 
-                                    String headText,
-                                    String contentText, 
-                                    AlertType type){
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(headText);
-        alert.setContentText(contentText);
-        alert.showAndWait();
-    }
-    
-    /**************************************************************************/
-    
     /* METODOS INVOCADOS POR JAVAFX */
     
     /**
@@ -169,7 +66,7 @@ public class NuevaOrdenController implements Initializable {
         Long numeroOrden = null;
         while(numeroOrden == null || numeroOrden == 0){
            Optional<String> result = 
-                mostrarInputDialog("No. Orden", "Buscar por No. Orden", "No. de Orden:");
+                GeneralUtilities.mostrarInputDialog("No. Orden", "Buscar por No. Orden", "No. de Orden:");
            try{numeroOrden = Long.parseLong(result.get());
            }catch(NumberFormatException e){numeroOrden = 0L;}
            catch(Exception e){return;}
@@ -190,7 +87,7 @@ public class NuevaOrdenController implements Initializable {
                     });
                 }else{
                     Platform.runLater(()->{
-                        mostrarAlertDialog("Orden no encontrada...", 
+                        GeneralUtilities.mostrarAlertDialog("Orden no encontrada...", 
                             "No se encontró la orden",
                             "No se encontró la orden. Favor de validar", 
                             AlertType.INFORMATION);
@@ -198,7 +95,7 @@ public class NuevaOrdenController implements Initializable {
                 }
             } else{
                 Platform.runLater(()->{
-                    mostrarAlertDialog("Error en la busqueda", 
+                    GeneralUtilities.mostrarAlertDialog("Error en la busqueda", 
                         "Error en la busqueda",
                         "Favor de contactar a soporte", 
                         AlertType.ERROR);
@@ -223,7 +120,7 @@ public class NuevaOrdenController implements Initializable {
     @FXML
     private void registrarNuevoCliente(ActionEvent event) {
         LookupClass.telefono = "";
-        abrirNuevoClienteUI();
+        GeneralUtilities.abrirNuevoClienteUI();
     }
     
     /**
@@ -232,7 +129,8 @@ public class NuevaOrdenController implements Initializable {
      */
     @FXML
     private void salir(ActionEvent event) {
-        cerrarApp();
+        vertx.close();
+        System.exit(0);
     }
 
     /**
@@ -241,7 +139,7 @@ public class NuevaOrdenController implements Initializable {
      */
     @FXML
     private void mostrarAcercaDe(ActionEvent event) {
-        mostrarAlertDialog("About...", 
+        GeneralUtilities.mostrarAlertDialog("About...", 
                 "About Mangiamo...",
                 "Mangiamo Restaurant Software for JavaFX8", 
                 AlertType.INFORMATION);
@@ -256,13 +154,13 @@ public class NuevaOrdenController implements Initializable {
         Integer mesa = null;
         while(mesa == null || mesa == 0){
            Optional<String> result = 
-                mostrarInputDialog("Orden en Mesa", "Orden en Mesa", "No. de Mesa:");
+                GeneralUtilities.mostrarInputDialog("Orden en Mesa", "Orden en Mesa", "No. de Mesa:");
            try{mesa = Integer.parseInt(result.get());
            }catch(NumberFormatException e){mesa = 0;}
            catch(Exception e){return;}
         }
-        crearOrden(mesa, null, null, TipoOrden.MESA);
-        abrirCreadorOrdenUI();
+        GeneralUtilities.crearOrden(mesa, null, null, TipoOrden.MESA);
+        GeneralUtilities.abrirCreadorOrdenUI();
     }
     
     /**
@@ -274,12 +172,12 @@ public class NuevaOrdenController implements Initializable {
         String nombreCliente = null;
         while(nombreCliente == null || nombreCliente.isEmpty()){
             Optional<String> result = 
-                mostrarInputDialog("Orden para Llevar", "Orden para Llevar", "Nombre:");
+                GeneralUtilities.mostrarInputDialog("Orden para Llevar", "Orden para Llevar", "Nombre:");
             try{nombreCliente = result.get();
             }catch(Exception e){return;}
         }
-        crearOrden(null, nombreCliente, null, TipoOrden.LLEVAR);
-        abrirCreadorOrdenUI();
+        GeneralUtilities.crearOrden(null, nombreCliente, null, TipoOrden.LLEVAR);
+        GeneralUtilities.abrirCreadorOrdenUI();
     }
 
     /**
@@ -291,7 +189,7 @@ public class NuevaOrdenController implements Initializable {
         String telefono = null;
         while(telefono == null || telefono.isEmpty()){
             Optional<String> result = 
-                    mostrarInputDialog("Buscar Cliente", "Buscar Cliente", "Teléfono:");
+                    GeneralUtilities.mostrarInputDialog("Buscar Cliente", "Buscar Cliente", "Teléfono:");
             try{telefono = result.get();
             }catch(Exception e){return;}
             
@@ -310,14 +208,14 @@ public class NuevaOrdenController implements Initializable {
                     alert.getButtonTypes().setAll(ok,cancel);
                     Optional<ButtonType> result = alert.showAndWait();
                     if(result.get() == ok){
-                        crearOrden(null, null, c, TipoOrden.DOMICILIO);
-                        abrirCreadorOrdenUI();
+                        GeneralUtilities.crearOrden(null, null, c, TipoOrden.DOMICILIO);
+                        GeneralUtilities.abrirCreadorOrdenUI();
                     }else{
-                        abrirNuevoClienteUI();
+                        GeneralUtilities.abrirNuevoClienteUI();
                     }
                 });      
             }else{
-                abrirNuevoClienteUI();
+                GeneralUtilities.abrirNuevoClienteUI();
             }
         });
     }
@@ -332,7 +230,10 @@ public class NuevaOrdenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         Platform.runLater(()->{
             Stage ps = (Stage)mesaButton.getScene().getWindow();
-            ps.setOnHiding(event-> cerrarApp());
+            ps.setOnHiding(event-> {
+                vertx.close();
+                System.exit(0);
+            });
         });
     }        
 }
