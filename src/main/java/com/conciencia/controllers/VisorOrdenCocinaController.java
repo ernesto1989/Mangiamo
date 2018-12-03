@@ -18,7 +18,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import static com.conciencia.vertx.VertxConfig.vertx;
-import javafx.application.Platform;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
@@ -58,12 +57,19 @@ public class VisorOrdenCocinaController implements Initializable {
     private TableColumn<ItemOrdenado, String> descripcionColumn3;
     @FXML
     private TableColumn<ItemOrdenado, Integer> cantidadColumn3;
+    @FXML
+    private TextField ordenPara1Textfield;
+    @FXML
+    private TextField ordenPara2Textfield;
+    @FXML
+    private TextField ordenPara3Textfield;
     
     public static Boolean espacioDisponible;
     
     private Orden o1, o2, o3;
     
     private Queue<Orden> listaEspera;
+    
     
     private void initCols(){
         descripcionColumn1.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
@@ -78,6 +84,7 @@ public class VisorOrdenCocinaController implements Initializable {
         if(borrarEn == 1){
             numOrden1TextField.setText("");
             tipoOrden1Textfield.setText("");
+            ordenPara1Textfield.setText("");
             resumeTable1.getItems().removeAll(o1.getOrderedItems());
             o1 = null;
         }
@@ -85,6 +92,7 @@ public class VisorOrdenCocinaController implements Initializable {
         if(borrarEn == 2){
             numOrden2TextField.setText("");
             tipoOrden2Textfield.setText("");
+            ordenPara2Textfield.setText("");
             resumeTable2.getItems().removeAll(o2.getOrderedItems());
             o2 = null;
         }
@@ -92,6 +100,7 @@ public class VisorOrdenCocinaController implements Initializable {
         if(borrarEn == 3){
             numOrden3TextField.setText("");
             tipoOrden3Textfield.setText("");
+            ordenPara3Textfield.setText("");
             resumeTable3.getItems().removeAll(o3.getOrderedItems());
             o3 = null;
         }
@@ -105,6 +114,7 @@ public class VisorOrdenCocinaController implements Initializable {
             o1 = o;
             numOrden1TextField.setText(o.getNumeroOrden().toString());
             tipoOrden1Textfield.setText(o.getTipoOrden().toString());
+            ordenPara1Textfield.setText(o1.toString());
             resumeTable1.getItems().setAll(o.getOrderedItems());
         }
         
@@ -112,6 +122,7 @@ public class VisorOrdenCocinaController implements Initializable {
             o2 = o;
             numOrden2TextField.setText(o.getNumeroOrden().toString());
             tipoOrden2Textfield.setText(o.getTipoOrden().toString());
+            ordenPara2Textfield.setText(o2.toString());
             resumeTable2.getItems().setAll(o.getOrderedItems());
         }
         
@@ -119,6 +130,7 @@ public class VisorOrdenCocinaController implements Initializable {
             o3 = o;
             numOrden3TextField.setText(o.getNumeroOrden().toString());
             tipoOrden3Textfield.setText(o.getTipoOrden().toString());
+            ordenPara3Textfield.setText(o3.toString());
             resumeTable3.getItems().setAll(o.getOrderedItems());
         }
     }

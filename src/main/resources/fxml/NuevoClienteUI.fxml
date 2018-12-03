@@ -35,14 +35,18 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="guardarClienteButton" layoutX="322.0" layoutY="286.0" mnemonicParsing="false" onAction="#agregarCliente" text="Guardar" />
-      <Button fx:id="crearOrdenButton" disable="true" layoutX="390.0" layoutY="286.0" mnemonicParsing="false" onAction="#crearOrden" text="Ordenar" />
+      <TextField fx:id="noTextField" layoutX="375.0" layoutY="135.0" prefHeight="25.0" prefWidth="60.0" />
       <Label layoutX="343.0" layoutY="137.0" text="No.">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="noTextField" layoutX="375.0" layoutY="135.0" prefHeight="25.0" prefWidth="60.0" />
+      <TextField fx:id="coloniaTextField" layoutX="99.0" layoutY="171.0" prefHeight="25.0" prefWidth="227.0" />
+      <Label layoutX="45.0" layoutY="174.0" text="Colonia">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
       <TextField fx:id="ec1TextField" layoutX="99.0" layoutY="205.0" prefHeight="25.0" prefWidth="227.0" />
       <Label layoutX="55.0" layoutY="204.0" text="Entre">
          <font>
@@ -55,11 +59,7 @@
          </font>
       </Label>
       <TextField fx:id="ec2TextField" layoutX="99.0" layoutY="239.0" prefHeight="25.0" prefWidth="227.0" />
-      <TextField fx:id="coloniaTextField" layoutX="99.0" layoutY="171.0" prefHeight="25.0" prefWidth="227.0" />
-      <Label layoutX="45.0" layoutY="174.0" text="Colonia">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
+      <Button fx:id="guardarClienteButton" layoutX="322.0" layoutY="286.0" mnemonicParsing="false" onAction="#agregarCliente" text="Guardar" />
+      <Button fx:id="crearOrdenButton" disable="true" layoutX="390.0" layoutY="286.0" mnemonicParsing="false" onAction="#crearOrden" text="Ordenar" />
    </children>
 </AnchorPane>
