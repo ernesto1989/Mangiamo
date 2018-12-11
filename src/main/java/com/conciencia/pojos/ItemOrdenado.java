@@ -109,6 +109,19 @@ public class ItemOrdenado implements ToJson{
         json.put("numRelacionados",this.numRelacionados);
         return json;
     }
+    
+    public String print(){
+        StringBuilder s = new StringBuilder();
+        int difDesc = 24 - descripcion.length();
+        s.append(descripcion);
+        for(int i = difDesc;i<=24;i++)
+            s.append(" ");
+        s.append(cantidad.toString());
+        for(int i = 0;i<=14;i++)
+            s.append(" ");
+        s.append(total.toString());
+        return s.toString();
+    }
 
     @Override
     public String toString() {

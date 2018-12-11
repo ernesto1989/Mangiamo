@@ -9,12 +9,17 @@ import com.conciencia.pojos.ItemOrdenado;
 import com.conciencia.pojos.Seccion;
 import com.conciencia.pojos.TreeContainer;
 import com.conciencia.utilities.GeneralUtilities;
+import com.conciencia.utilities.PrintableClass;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import io.vertx.core.json.JsonObject;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -111,6 +116,22 @@ public class CreadorOrdenController implements Initializable {
     /**************************************************************************/
     
     /* METODOS UTILITARIOS*/
+    
+    private void printOrder(){
+        PrinterJob job = PrinterJob.getPrinterJob();
+        PrintableClass p = new PrintableClass(this.orden);
+        job.setPrintable(p);
+        boolean doPrint = job.printDialog();
+        
+        if (doPrint) {
+            try {
+                job.print();
+            } catch (PrinterException e) {
+                // The job did not successfully
+                // complete
+            }
+        }
+    }
     
     /**
      * Método que inicializa los headers de la pantalla de creación de órdenes.
@@ -343,6 +364,8 @@ public class CreadorOrdenController implements Initializable {
                 System.out.println("error!!!");
             }
         });
+        
+        printOrder();
     }
     
     /**
