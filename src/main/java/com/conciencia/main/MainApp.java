@@ -32,12 +32,12 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         VertxConfig.config();
         NuevaOrdenLoader.getInstance().load(primaryStage);  
-        Stage s = new Stage();
-        try {
-                VisorOrdenCocinaLoader.getInstance().load(s);
-            } catch (Exception ex) {
-                Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//        Stage s = new Stage();
+//        try {
+//            VisorOrdenCocinaLoader.getInstance().load(s);
+//        } catch (Exception ex) {
+//            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
     
     /**

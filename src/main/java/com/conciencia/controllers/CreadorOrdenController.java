@@ -81,8 +81,6 @@ public class CreadorOrdenController implements Initializable {
     @FXML
     private Button subTotalButton;
     @FXML
-    private CheckBox pagadoCheckBox;
-    @FXML
     private TextField cantidadTextField;
     @FXML
     private Button incrementoButton;
@@ -343,7 +341,6 @@ public class CreadorOrdenController implements Initializable {
      */
     @FXML
     private void saveOrder(ActionEvent event) {
-        this.orden.setPagado(this.pagadoCheckBox.isSelected());
         List<ItemOrdenado> items = resumeTable.getItems();
         this.orden.setOrderedItems(items);
         if(this.orden.isEsNueva()){
