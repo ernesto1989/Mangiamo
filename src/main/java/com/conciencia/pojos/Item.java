@@ -23,6 +23,7 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
     protected BigDecimal precioUnitario;
     protected Boolean esOrden;
     protected Integer cantidadOrden;
+    protected Boolean imprimir;
     protected List<Item> relacionados;
 
     public Item() {
@@ -39,6 +40,7 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         this.precioUnitario = new BigDecimal(object.getDouble("precioUnitario"));
         this.esOrden = object.getBoolean("esOrden");
         this.cantidadOrden = object.getInteger("cantidadOrden");
+        this.imprimir = object.getBoolean("imprimir");
         JsonArray rel = object.getJsonArray("relacionados");
         if(rel != null && !rel.isEmpty()){
             relacionados = new ArrayList<>();
@@ -103,6 +105,14 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         return this.precioUnitario.multiply(new BigDecimal(cantidadOrden));
     }
 
+    public Boolean getImprimir() {
+        return imprimir;
+    }
+
+    public void setImprimir(Boolean imprimir) {
+        this.imprimir = imprimir;
+    }
+
     public List<Item> getRelacionados() {
         return relacionados;
     }
@@ -124,6 +134,7 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
         json.put("precioUnitario", getPrecioUnitario());
         json.put("esOrden", getEsOrden());
         json.put("cantidadOrden", getCantidadOrden());
+        json.put("imprimir", this.getImprimir());
         if(relacionados != null && relacionados.size() > 0){
             JsonArray rel = new JsonArray();
             for(Item i: relacionados){
@@ -147,6 +158,7 @@ public class Item extends TreeContainer implements ToJson,SpectedResult {
             setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
             setEsOrden(rs.getBoolean("es_orden"));
             setCantidadOrden(rs.getInt("cantidad_orden"));
+            setImprimir(rs.getBoolean("imprimir"));
         }catch(SQLException ex){
             //handle exceptions...
         }

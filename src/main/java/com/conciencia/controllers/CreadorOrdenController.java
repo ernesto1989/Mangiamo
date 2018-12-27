@@ -286,6 +286,7 @@ public class CreadorOrdenController implements Initializable {
             oItem.setCantidad(1);
         }
         oItem.setEsOrden(item.getEsOrden());
+        oItem.setImprimir(item.getImprimir());
         resumeTable.getItems().add(oItem);
         curSubtotal = curSubtotal.add(oItem.getTotal());
         BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());

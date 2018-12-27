@@ -16,6 +16,7 @@ public class ItemOrdenado implements ToJson{
     private BigDecimal precioUnitario;
     private BigDecimal total;
     private Boolean esOrden;
+    private Boolean imprimir;
     private Integer numRelacionados = 0;
 
     public ItemOrdenado() {
@@ -29,6 +30,7 @@ public class ItemOrdenado implements ToJson{
         this.precioUnitario = new BigDecimal(object.getDouble("precioUnitario"));
         this.total = new BigDecimal(object.getDouble("total"));
         this.esOrden = object.getBoolean("esOrden");
+        this.imprimir = object.getBoolean("imprimir");
         this.numRelacionados = object.getInteger("numRelacionados");
     }
 
@@ -87,6 +89,14 @@ public class ItemOrdenado implements ToJson{
     public void setEsOrden(Boolean esOrden) {
         this.esOrden = esOrden;
     }
+
+    public Boolean getImprimir() {
+        return imprimir;
+    }
+
+    public void setImprimir(Boolean imprimir) {
+        this.imprimir = imprimir;
+    }
     
     public Integer getNumRelacionados() {
         return numRelacionados;
@@ -106,6 +116,7 @@ public class ItemOrdenado implements ToJson{
         json.put("precioUnitario",this.precioUnitario);
         json.put("total", this.total);
         json.put("esOrden",this.esOrden);
+        json.put("imprimir",this.imprimir);
         json.put("numRelacionados",this.numRelacionados);
         return json;
     }

@@ -29,8 +29,10 @@ public class PrintableClass implements Printable {
         printingString.add("Descripcion*********Cantidad***********Total");
         BigDecimal total = BigDecimal.ZERO;
         for(ItemOrdenado item: o.getOrderedItems()){
-            printingString.add(item.print());
-            total = total.add(item.getTotal());
+            if(item.getImprimir()){
+                printingString.add(item.print());
+                total = total.add(item.getTotal());
+            }
         }
         printingString.add("Total:" + total.toString());
     }    
