@@ -111,13 +111,14 @@ public class ItemOrdenado implements ToJson{
     }
     
     public String print(){
+        System.out.println(descripcion + " length: " + descripcion.length());
         StringBuilder s = new StringBuilder();
-        int difDesc = 24 - descripcion.length();
+        int size = descripcion.length();
         s.append(descripcion);
-        for(int i = difDesc;i<=24;i++)
+        for(int i = size;i<=24;i++)
             s.append(" ");
         s.append(cantidad.toString());
-        for(int i = 0;i<=14;i++)
+        for(int i = 24;i<=35;i++)
             s.append(" ");
         s.append(total.toString());
         return s.toString();

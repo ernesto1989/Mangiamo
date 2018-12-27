@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,11 +23,16 @@ public class PrintableClass implements Printable {
     public List<String> printingString = new ArrayList<>();
 
     public PrintableClass(Orden o) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-aaaa hh:mm");
-        printingString.add("Descripcion*********Cantidad************Total");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+        printingString.add(sdf.format(new Date()));
+        printingString.add("Orden para: " + o.toString());
+        printingString.add("Descripcion*********Cantidad***********Total");
+        BigDecimal total = BigDecimal.ZERO;
         for(ItemOrdenado item: o.getOrderedItems()){
             printingString.add(item.print());
+            total = total.add(item.getTotal());
         }
+        printingString.add("Total:" + total.toString());
     }    
     
     @Override

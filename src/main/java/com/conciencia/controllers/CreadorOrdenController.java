@@ -127,8 +127,8 @@ public class CreadorOrdenController implements Initializable {
             try {
                 job.print();
             } catch (PrinterException e) {
-                // The job did not successfully
-                // complete
+                GeneralUtilities.mostrarAlertDialog("Error de Impresion",
+                        "Error de Impresion" , "Error de Impresion", Alert.AlertType.ERROR);
             }
         }
     }
