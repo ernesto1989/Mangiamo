@@ -52,6 +52,8 @@ public class NuevaOrdenController implements Initializable {
     @FXML
     private Button domicilioButton;
     
+    private final Integer MESAS = 10;
+    
     /**************************************************************************/
     
     /* METODOS INVOCADOS POR JAVAFX */
@@ -152,13 +154,10 @@ public class NuevaOrdenController implements Initializable {
     @FXML
     private void crearOrdenEnMesa(ActionEvent event) {
         Integer mesa = null;
-        while(mesa == null || mesa == 0){
-           Optional<String> result = 
-                GeneralUtilities.mostrarInputDialog("Orden en Mesa", "Orden en Mesa", "No. de Mesa:");
-           try{mesa = Integer.parseInt(result.get());
-           }catch(NumberFormatException e){mesa = 0;}
-           catch(Exception e){return;}
-        }
+        Optional<Integer> result = 
+            GeneralUtilities.mostrarChoiceDialog(MESAS,"Orden en Mesa", 
+                    "Orden en Mesa", "No. de Mesa:");
+        mesa = result.get();
         GeneralUtilities.crearOrden(mesa, null, null, TipoOrden.MESA);
         GeneralUtilities.abrirCreadorOrdenUI();
     }

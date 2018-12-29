@@ -9,12 +9,15 @@ import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
 import static com.conciencia.vertx.VertxConfig.vertx;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
@@ -113,4 +116,25 @@ public class GeneralUtilities {
         return dialog.showAndWait();
     }
     
+    
+    /**
+     * Método que crea un input text dialog genérico para solicitar un dato de entrada.
+     * 
+     * @param title titulo del input dialog
+     * @param headText head text del input dialog
+     * @param contentText contenido del input dialog
+     * @return dato insertado por el usuario
+     */
+    public static Optional<Integer> mostrarChoiceDialog(Integer numOfChoices,String title, 
+                                                    String headText,
+                                                        String contentText){
+        List<Integer> choices = new ArrayList<>();
+        for(int i = 1; i<= numOfChoices; i++)
+            choices.add(i);
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(1,choices);
+        dialog.setTitle(title);
+        dialog.setHeaderText(headText);
+        dialog.setContentText(contentText);
+        return dialog.showAndWait();
+    }
 }

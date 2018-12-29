@@ -158,7 +158,7 @@ public class Orden implements ToJson {
     @Override
     public String toString() {
         if(getTipoOrden() == TipoOrden.MESA){
-            return "MESA: " + getMesa().toString();
+            return "MESA " + getMesa().toString();
         }if(getTipoOrden() == TipoOrden.LLEVAR){
             return getNombre();
         }if(getTipoOrden() == TipoOrden.DOMICILIO){
