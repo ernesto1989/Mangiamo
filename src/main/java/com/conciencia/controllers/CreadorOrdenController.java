@@ -79,8 +79,6 @@ public class CreadorOrdenController implements Initializable {
     @FXML
     private TextField descripcionTextField;
     @FXML
-    private Button subTotalButton;
-    @FXML
     private TextField cantidadTextField;
     @FXML
     private Button incrementoButton;
@@ -320,22 +318,6 @@ public class CreadorOrdenController implements Initializable {
     }
     
     /**
-     * Método que genera el subtotal por persona.
-     * NOT USED YET
-     * @param event 
-     */
-    @FXML
-    private void generarSubtotal(ActionEvent event) {
-//        OrderedItem oItem = new OrderedItem();
-//        oItem.setPersona(this.persona);
-//        oItem.setDescripcion("SUBTOTAL");
-//        resumeTable.getItems().add(oItem);
-//        oItem.setTotal(curSubtotal);
-//        curSubtotal = new BigDecimal("0");
-//        this.persona++;
-    }
-    
-    /**
      * Método que guarda la orden en el repositorio de órdenes
      * @param event 
      */
@@ -345,7 +327,6 @@ public class CreadorOrdenController implements Initializable {
         this.orden.setOrderedItems(items);
         if(this.orden.isEsNueva()){
             this.orden.setHoraRegistro(LocalTime.now());
-//            this.orden.setEsNueva(false);
         }
         vertx.eventBus().send("save_order", this.orden,result->{
             if(result.succeeded()){
@@ -438,6 +419,5 @@ public class CreadorOrdenController implements Initializable {
             Stage ps = (Stage)mainAnchor.getScene().getWindow();
             ps.setOnHiding(event-> ps.close());           
         });
-        subTotalButton.setVisible(false);
     }        
 }

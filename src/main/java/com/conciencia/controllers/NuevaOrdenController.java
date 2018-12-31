@@ -157,7 +157,11 @@ public class NuevaOrdenController implements Initializable {
         Optional<Integer> result = 
             GeneralUtilities.mostrarChoiceDialog(MESAS,"Orden en Mesa", 
                     "Orden en Mesa", "No. de Mesa:");
-        mesa = result.get();
+        try{
+            mesa = result.get();
+        }catch(Exception e){}
+        if(mesa == null)
+            return;
         GeneralUtilities.crearOrden(mesa, null, null, TipoOrden.MESA);
         GeneralUtilities.abrirCreadorOrdenUI();
     }

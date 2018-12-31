@@ -14,12 +14,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="595.0" prefWidth="807.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.CreadorOrdenController">
+<AnchorPane id="AnchorPane" prefHeight="459.0" prefWidth="807.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.CreadorOrdenController">
     <stylesheets>
         <URL value="@/styles/addbook.css" />
     </stylesheets>
     <children>
-        <VBox layoutY="-2.0" prefHeight="595.0" prefWidth="807.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-2.0">
+        <VBox layoutY="-2.0" prefHeight="574.0" prefWidth="807.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-2.0">
             <children>
                 <MenuBar prefHeight="1.0" prefWidth="643.0">
                     <menus>
@@ -35,9 +35,9 @@
                         </Menu>
                     </menus>
                 </MenuBar>
-            <AnchorPane prefHeight="124.0" prefWidth="807.0">
+            <AnchorPane prefHeight="126.0" prefWidth="807.0">
                <children>
-                  <TextField fx:id="tipoOrdenTextfield" alignment="CENTER" editable="false" layoutX="421.0" layoutY="74.0" prefHeight="30.0" prefWidth="149.0">
+                  <TextField fx:id="tipoOrdenTextfield" alignment="CENTER" editable="false" layoutX="423.0" layoutY="72.0" prefHeight="30.0" prefWidth="149.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
@@ -55,11 +55,11 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="descripcionTextField" editable="false" layoutX="421.0" layoutY="26.0" prefHeight="30.0" prefWidth="316.0">
+                  <TextField fx:id="descripcionTextField" editable="false" layoutX="421.0" layoutY="26.0" prefHeight="30.0" prefWidth="304.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
-                  <Label layoutX="320.0" layoutY="73.0" text="Tipo Orden">
+                  <Label layoutX="320.0" layoutY="74.0" text="Tipo Orden">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -74,21 +74,11 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="estatusTextField" alignment="CENTER" editable="false" layoutX="421.0" layoutY="122.0" prefHeight="30.0" prefWidth="149.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <Label fx:id="estatusLabel" layoutX="320.0" layoutY="121.0" text="Estatus">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="mainAnchor" prefHeight="408.0" prefWidth="807.0">
+            <AnchorPane fx:id="mainAnchor" prefHeight="373.0" prefWidth="807.0">
                <children>
-                  <TableView fx:id="resumeTable" layoutX="258.0" layoutY="60.0" prefHeight="193.0" prefWidth="529.0">
+                  <TableView fx:id="resumeTable" layoutX="258.0" layoutY="60.0" prefHeight="159.0" prefWidth="529.0">
                     <columns>
                         <TableColumn fx:id="personaColumn" prefWidth="67.0" text="Persona" />
                       <TableColumn fx:id="descripcionColumn" prefWidth="254.0" text="Descripción" />
@@ -96,15 +86,10 @@
                         <TableColumn fx:id="totalColumn" prefWidth="130.0" text="Total" />
                     </columns>
                   </TableView>
-                  <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="688.0" layoutY="281.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
-                  <Label layoutX="641.0" layoutY="285.0" text="TOTAL" />
-                  <Button fx:id="saveOrderButton" layoutX="688.0" layoutY="322.0" mnemonicParsing="false" onAction="#saveOrder" text="Generar Orden" />
-                  <TreeView fx:id="menuTree" layoutX="14.0" layoutY="61.0" prefHeight="193.0" prefWidth="236.0" />
-                  <Button fx:id="subTotalButton" layoutX="43.0" layoutY="14.0" mnemonicParsing="false" onAction="#generarSubtotal" text="Subtotal">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
+                  <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="688.0" layoutY="234.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
+                  <Label layoutX="641.0" layoutY="238.0" text="TOTAL" />
+                  <Button fx:id="saveOrderButton" layoutX="688.0" layoutY="275.0" mnemonicParsing="false" onAction="#saveOrder" text="Generar Orden" />
+                  <TreeView fx:id="menuTree" layoutX="14.0" layoutY="61.0" prefHeight="159.0" prefWidth="236.0" />
                   <TextField fx:id="cantidadTextField" editable="false" layoutX="602.0" layoutY="19.0" prefHeight="30.0" prefWidth="36.0" />
                   <Button fx:id="incrementoButton" layoutX="650.0" layoutY="19.0" mnemonicParsing="false" onAction="#incrementarCantidad" prefHeight="30.0" prefWidth="36.0" text="+">
                      <font>
@@ -117,6 +102,16 @@
                      </font>
                   </Button>
                   <Button fx:id="modificarButton" layoutX="698.0" layoutY="22.0" mnemonicParsing="false" onAction="#modificarCantidad" prefHeight="25.0" prefWidth="75.0" text="Modificar" />
+                  <TextField fx:id="estatusTextField" alignment="CENTER" editable="false" layoutX="85.0" layoutY="20.0" prefHeight="30.0" prefWidth="149.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label fx:id="estatusLabel" layoutX="14.0" layoutY="21.0" text="Estatus">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
             </children>

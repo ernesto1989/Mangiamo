@@ -2,6 +2,7 @@ package com.conciencia.vertx.verticles;
 
 import com.conciencia.controllers.VisorOrdenCocinaController;
 import com.conciencia.datastructures.queue.Queue;
+import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
