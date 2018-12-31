@@ -11,10 +11,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="459.0" prefWidth="807.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.CreadorOrdenController">
+<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="704.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.CreadorOrdenController">
     <stylesheets>
         <URL value="@/styles/addbook.css" />
     </stylesheets>
@@ -37,7 +38,7 @@
                 </MenuBar>
             <AnchorPane prefHeight="126.0" prefWidth="807.0">
                <children>
-                  <TextField fx:id="tipoOrdenTextfield" alignment="CENTER" editable="false" layoutX="423.0" layoutY="72.0" prefHeight="30.0" prefWidth="149.0">
+                  <TextField fx:id="tipoOrdenTextfield" alignment="CENTER" editable="false" layoutX="394.0" layoutY="73.0" prefHeight="30.0" prefWidth="149.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
@@ -50,16 +51,16 @@
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
-                  <Label layoutX="320.0" layoutY="25.0" text="Orden Para">
+                  <Label layoutX="291.0" layoutY="26.0" text="Orden Para">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="descripcionTextField" editable="false" layoutX="421.0" layoutY="26.0" prefHeight="30.0" prefWidth="304.0">
+                  <TextField fx:id="descripcionTextField" editable="false" layoutX="392.0" layoutY="27.0" prefHeight="30.0" prefWidth="236.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
-                  <Label layoutX="320.0" layoutY="74.0" text="Tipo Orden">
+                  <Label layoutX="291.0" layoutY="75.0" text="Tipo Orden">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -78,30 +79,35 @@
             </AnchorPane>
             <AnchorPane fx:id="mainAnchor" prefHeight="373.0" prefWidth="807.0">
                <children>
-                  <TableView fx:id="resumeTable" layoutX="258.0" layoutY="60.0" prefHeight="159.0" prefWidth="529.0">
+                  <TableView fx:id="resumeTable" layoutX="258.0" layoutY="60.0" prefHeight="159.0" prefWidth="418.0">
                     <columns>
-                        <TableColumn fx:id="personaColumn" prefWidth="67.0" text="Persona" />
-                      <TableColumn fx:id="descripcionColumn" prefWidth="254.0" text="Descripción" />
-                        <TableColumn fx:id="cantidadColumn" prefWidth="77.0" text="Cantidad" />
-                        <TableColumn fx:id="totalColumn" prefWidth="130.0" text="Total" />
+                      <TableColumn fx:id="descripcionColumn" prefWidth="247.0" text="Descripción" />
+                        <TableColumn fx:id="cantidadColumn" prefWidth="72.0" text="Cantidad" />
+                        <TableColumn fx:id="totalColumn" prefWidth="98.0" text="Total" />
                     </columns>
                   </TableView>
-                  <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="688.0" layoutY="234.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
-                  <Label layoutX="641.0" layoutY="238.0" text="TOTAL" />
-                  <Button fx:id="saveOrderButton" layoutX="688.0" layoutY="275.0" mnemonicParsing="false" onAction="#saveOrder" text="Generar Orden" />
+                  <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="580.0" layoutY="234.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
+                  <Label layoutX="523.0" layoutY="238.0" text="TOTAL" />
+                  <HBox layoutX="288.0" layoutY="234.0" prefHeight="25.0" prefWidth="204.0" spacing="10.0">
+                     <children>
+                        <Button fx:id="billOrderButton" mnemonicParsing="false" onAction="#billOrder" prefHeight="25.0" prefWidth="60.0" text="Cobrar" />
+                        <Button fx:id="saveOrderButton" mnemonicParsing="false" onAction="#saveOrder" text="Ordenar" />
+                        <Button fx:id="cancelOrderButton" mnemonicParsing="false" onAction="#cancelOrder" text="Cancelar" />
+                     </children>
+                  </HBox>
                   <TreeView fx:id="menuTree" layoutX="14.0" layoutY="61.0" prefHeight="159.0" prefWidth="236.0" />
-                  <TextField fx:id="cantidadTextField" editable="false" layoutX="602.0" layoutY="19.0" prefHeight="30.0" prefWidth="36.0" />
-                  <Button fx:id="incrementoButton" layoutX="650.0" layoutY="19.0" mnemonicParsing="false" onAction="#incrementarCantidad" prefHeight="30.0" prefWidth="36.0" text="+">
+                  <TextField fx:id="cantidadTextField" editable="false" layoutX="505.0" layoutY="19.0" prefHeight="30.0" prefWidth="36.0" />
+                  <Button fx:id="incrementoButton" layoutX="554.0" layoutY="20.0" mnemonicParsing="false" onAction="#incrementarCantidad" prefHeight="30.0" prefWidth="36.0" text="+">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="decrementoButton" layoutX="560.0" layoutY="19.0" mnemonicParsing="false" onAction="#decrementarCantidad" prefHeight="30.0" prefWidth="36.0" text="-">
+                  <Button fx:id="decrementoButton" layoutX="456.0" layoutY="18.0" mnemonicParsing="false" onAction="#decrementarCantidad" prefHeight="30.0" prefWidth="36.0" text="-">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="modificarButton" layoutX="698.0" layoutY="22.0" mnemonicParsing="false" onAction="#modificarCantidad" prefHeight="25.0" prefWidth="75.0" text="Modificar" />
+                  <Button fx:id="modificarButton" layoutX="600.0" layoutY="22.0" mnemonicParsing="false" onAction="#modificarCantidad" prefHeight="25.0" prefWidth="75.0" text="Modificar" />
                   <TextField fx:id="estatusTextField" alignment="CENTER" editable="false" layoutX="85.0" layoutY="20.0" prefHeight="30.0" prefWidth="149.0">
                      <font>
                         <Font size="14.0" />

@@ -1,6 +1,7 @@
 package com.conciencia.controllers;
 
 import com.conciencia.lookups.LookupClass;
+import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
@@ -16,10 +17,8 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -28,7 +27,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -58,8 +56,6 @@ public class CreadorOrdenController implements Initializable {
     private AnchorPane mainAnchor;
     @FXML
     private TableColumn<ItemOrdenado, String> descripcionColumn;
-    @FXML
-    private TableColumn<ItemOrdenado, Integer> personaColumn;
     @FXML
     private TableColumn<ItemOrdenado,Integer> cantidadColumn;
     @FXML
@@ -94,6 +90,10 @@ public class CreadorOrdenController implements Initializable {
     private TextField estatusTextField;
     @FXML
     private Label estatusLabel;
+    @FXML
+    private Button billOrderButton;
+    @FXML
+    private Button cancelOrderButton;
     
     /* OBJETOS DE LA CLASE */
     
@@ -108,6 +108,7 @@ public class CreadorOrdenController implements Initializable {
     private BigDecimal curSubtotal = new BigDecimal("0.0");
     
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+    
     
     /**************************************************************************/
     
@@ -141,7 +142,8 @@ public class CreadorOrdenController implements Initializable {
         estatusLabel.setVisible(!this.orden.isEsNueva());
         estatusTextField.setVisible(!this.orden.isEsNueva());
         if(!this.orden.isEsNueva())horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
-        estatusTextField.setText(orden.getEstatusOrden().toString());
+        if(orden.getEstatusOrden() != null)
+            estatusTextField.setText(orden.getEstatusOrden().toString());
         descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
     }
     
@@ -149,7 +151,6 @@ public class CreadorOrdenController implements Initializable {
      * Método para inicializar las columnas de la tabla de elementos ordenados.
      */
     private void initCols(){
-        personaColumn.setCellValueFactory(new PropertyValueFactory<>("persona"));
         descripcionColumn.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         cantidadColumn.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
@@ -342,8 +343,7 @@ public class CreadorOrdenController implements Initializable {
                 System.out.println("error!!!");
             }
         });
-        
-        printOrder();
+        //printOrder();
     }
     
     /**
@@ -384,6 +384,19 @@ public class CreadorOrdenController implements Initializable {
         resumeTable.refresh();
     }
     
+    @FXML
+    private void billOrder(ActionEvent event) {
+        this.orden.setEstatusOrden(EstatusOrden.CERRADA);
+        //abrir visor de cobranza
+       
+    }
+
+    @FXML
+    private void cancelOrder(ActionEvent event) {
+        this.orden.setEstatusOrden(EstatusOrden.CANCELADA);
+        //abrir visor de opcion de cancelación. encuesta salida
+    }
+    
     /**
      * Initializes the controller class.
      * @param url
@@ -413,6 +426,13 @@ public class CreadorOrdenController implements Initializable {
             envio.setIdItem(0);  
             resumeTable.getItems().add(envio);
             setCurrentTotal();
+        }
+        
+        if(!this.orden.isEsNueva()){
+            saveOrderButton.setDisable(true);
+        }else{
+            billOrderButton.setDisable(true);
+            cancelOrderButton.setDisable(true);
         }
         
         Platform.runLater(()->{

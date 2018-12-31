@@ -46,7 +46,6 @@ public class GeneralUtilities {
             orden.setTipoOrden(tipo);
             orden.setNumeroOrden(numOrden);
             orden.setEsNueva(true);
-            orden.setEstatusOrden(EstatusOrden.ESPERA);
             LookupClass.current = orden;
         });
     }

@@ -1,7 +1,5 @@
 package com.conciencia.vertx.verticles;
 
-import com.conciencia.controllers.VisorOrdenCocinaController;
-import com.conciencia.datastructures.queue.Queue;
 import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
 import io.vertx.core.AbstractVerticle;
@@ -52,11 +50,8 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             ordenes.put(o.getNumeroOrden(), o);
             if(o.isEsNueva()){
                 o.setEsNueva(false);
-                vertx.eventBus().send("display_order", o);
-            }else{
-                //actualizar en pantalla
+                o.setEstatusOrden(EstatusOrden.COCINA);
             }
-            
             msg.reply(new JsonObject().put("success", Boolean.TRUE));
             //</editor-fold>
         });

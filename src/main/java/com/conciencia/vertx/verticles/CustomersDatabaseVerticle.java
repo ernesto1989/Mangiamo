@@ -68,39 +68,28 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
         vertx.eventBus().consumer("get_customer", msg->{
             // <editor-fold defaultstate="colapsed" desc="handler">
             String phone = (String) msg.body();
-            vertx.executeBlocking(execute->{
-                //el executeBlocking funciona via 2 handlers. El primero se encarga de ejecutar el codigo e indicar el resultado. 
-                execute.complete(getCustomer(phone));
-            }, executionResult->{
-                //este segundo handler recibe el resultado de la ejecución
-                if(executionResult.succeeded() && executionResult.result() != null) //n result != null?
-                    msg.reply(executionResult.result());
-                else
-                    msg.fail(0, "No se encontró el objeto cliente");
-            });   
+            Cliente c = getCustomer(phone);
+            if(c != null){
+                msg.reply(c);
+            }else{
+                msg.fail(0, "No se encontró el cliente solicitado");
+            }   
             //</editor-fold>
         });
         
         vertx.eventBus().consumer("save_customer",msg->{
             // <editor-fold defaultstate="colapsed" desc="handler">
             Cliente customer = (Cliente)msg.body();
-            vertx.executeBlocking(execute->{
-                int result = insertCustomer(customer);
-                if(customer.getId() != null && customer.getId() == result)
-                    execute.complete(result);
-                else{
-                    if(result == -1)
-                        execute.fail(new Throwable("Teléfono existente"));
-                    else{
-                        execute.fail(new Throwable("Error en registro de cliente.Contacte al administrador"));
-                    }
+            int result = insertCustomer(customer);
+            if(customer.getId() != null && customer.getId() == result){
+                msg.reply(result);
+            }else{
+                if(result == -1){
+                    msg.fail(0, "Teléfono existente");
+                }else{
+                    msg.fail(0, "Error en registro del cliente. Contacte al administrador");
                 }
-            }, executionResult->{
-                if(executionResult.succeeded())
-                    msg.reply(executionResult.result());
-                else
-                    msg.fail(0, executionResult.cause().getMessage());
-            });
+            }
             //</editor-fold>
         });
     }

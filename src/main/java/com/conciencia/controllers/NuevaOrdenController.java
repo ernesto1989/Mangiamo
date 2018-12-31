@@ -3,7 +3,6 @@ package com.conciencia.controllers;
 import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.EstatusOrden;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
@@ -23,7 +22,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
 /**
@@ -37,8 +35,6 @@ public class NuevaOrdenController implements Initializable {
 
     @FXML
     private MenuItem buscarOrdenMenuItem;
-    @FXML
-    private MenuItem ordenesPendienteMenuItem;
     @FXML
     private MenuItem registrarClienteMenuItem;
     @FXML
@@ -104,15 +100,6 @@ public class NuevaOrdenController implements Initializable {
                 });  
             }
         });
-    }
-    
-    /**
-     * Método que será llamado para mostrar la lista de órdenes pendientes.
-     * @param event 
-     */
-    @FXML
-    private void verListaOrdenesPendientes(ActionEvent event) {
-        System.out.println("ver lista de ordenes pendientes");
     }
     
     /**
