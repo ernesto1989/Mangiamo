@@ -1,5 +1,6 @@
 package com.conciencia.controllers;
 
+import com.conciencia.loaders.CuentaLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Item;
@@ -21,6 +22,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -387,8 +390,13 @@ public class CreadorOrdenController implements Initializable {
     @FXML
     private void billOrder(ActionEvent event) {
         this.orden.setEstatusOrden(EstatusOrden.CERRADA);
-        //abrir visor de cobranza
-       
+        LookupClass.toBill = this.orden;
+        Stage s = new Stage();
+        try {
+            CuentaLoader.getInstance().load(s);
+        } catch (Exception ex) {
+            Logger.getLogger(CreadorOrdenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -431,7 +439,6 @@ public class CreadorOrdenController implements Initializable {
         if(!this.orden.isEsNueva()){
             saveOrderButton.setDisable(true);
         }else{
-            billOrderButton.setDisable(true);
             cancelOrderButton.setDisable(true);
         }
         

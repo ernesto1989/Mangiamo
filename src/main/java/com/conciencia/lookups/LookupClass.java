@@ -11,5 +11,6 @@ import com.conciencia.pojos.Orden;
 public class LookupClass {
     
     public static Orden current;
+    public static Orden toBill;
     public static String telefono;
 }
