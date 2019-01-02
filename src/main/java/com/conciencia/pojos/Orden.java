@@ -1,10 +1,14 @@
 package com.conciencia.pojos;
 
+import com.conciencia.utilities.GeneralUtilities;
+import com.conciencia.vertx.VertxConfig;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -165,5 +169,18 @@ public class Orden implements ToJson {
             return getCliente().toString();
         }
         return "";
+    }
+    
+    /**
+     * Cada 20 minutos
+     */
+    public void startTimer(){
+        VertxConfig.vertx.setTimer(/*12000000*/60000, event->{
+            if(getEstatusOrden() == EstatusOrden.COCINA)
+                Platform.runLater(()->{
+                    GeneralUtilities.mostrarAlertDialog("Orden con tiempo de espera alto", 
+                            "Orden con tiempo de espera alto", "La orden " + this.toString() + " tiene mucho tiempo en espera", Alert.AlertType.WARNING);
+                });
+        });
     }
 }

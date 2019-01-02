@@ -51,6 +51,7 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             if(o.isEsNueva()){
                 o.setEsNueva(false);
                 o.setEstatusOrden(EstatusOrden.COCINA);
+                o.startTimer();
             }
             msg.reply(new JsonObject().put("success", Boolean.TRUE));
             //</editor-fold>
@@ -68,15 +69,15 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             msg.reply(o);
             //</editor-fold>
         });
-        
-        
-        vertx.setPeriodic(/*300000*/10000, hndlr->{
-            for(Orden o:ordenes.values()){
-//                LocalTime ahora = LocalTime.now();
-//                long minutos = ChronoUnit.SECONDS.between(o.getHoraRegistro(),ahora);
-//                System.out.println(minutos);
-            }
-        });
+//        
+//        
+//        vertx.setPeriodic(/*300000*/10000, hndlr->{
+//            for(Orden o:ordenes.values()){
+////                LocalTime ahora = LocalTime.now();
+////                long minutos = ChronoUnit.SECONDS.between(o.getHoraRegistro(),ahora);
+////                System.out.println(minutos);
+//            }
+//        });
     }
     
     @Override
