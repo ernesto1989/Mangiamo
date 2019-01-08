@@ -4,6 +4,7 @@ import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,8 @@ public class Orden implements ToJson {
     private Integer mesa;
     private String nombre;
     private Cliente cliente;
-    private Boolean pagado;
+    private BigDecimal total;
+    private Boolean pagado = false;
     List<ItemOrdenado> orderedItems;
     private LocalTime horaRegistro;
     private boolean esNueva;
@@ -36,6 +38,7 @@ public class Orden implements ToJson {
         this.mesa = obj.getInteger("mesa");
         this.nombre = obj.getString("nombre");
         this.cliente = new Cliente(obj);
+        this.total = new BigDecimal(obj.getDouble("total"));
         this.pagado = obj.getBoolean("pagado");
         this.orderedItems = getItems(obj);
         this.esNueva = obj.getBoolean("esNueva");
@@ -98,6 +101,14 @@ public class Orden implements ToJson {
         this.cliente = cliente;
     }
 
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
     public Boolean getPagado() {
         return pagado;
     }
@@ -147,6 +158,7 @@ public class Orden implements ToJson {
         obj.put("colonia",this.getCliente().getColonia());
         obj.put("eCalle1",this.getCliente().geteCalle1());
         obj.put("eCalle2",this.getCliente().geteCalle2());
+        obj.put("total", this.getTotal());
         obj.put("pagado",this.getPagado());
         obj.put("esNueva",this.esNueva);
         

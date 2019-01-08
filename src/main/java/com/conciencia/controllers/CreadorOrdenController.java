@@ -30,6 +30,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -96,7 +97,7 @@ public class CreadorOrdenController implements Initializable {
     @FXML
     private Button billOrderButton;
     @FXML
-    private Button cancelOrderButton;
+    private CheckBox pagadoCheckbox;
     
     /* OBJETOS DE LA CLASE */
     
@@ -110,7 +111,7 @@ public class CreadorOrdenController implements Initializable {
     
     private BigDecimal curSubtotal = new BigDecimal("0.0");
     
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");    
     
     
     /**************************************************************************/
@@ -330,16 +331,21 @@ public class CreadorOrdenController implements Initializable {
         List<ItemOrdenado> items = resumeTable.getItems();
         this.orden.setOrderedItems(items);
         if(this.orden.isEsNueva()){
+            this.orden.setTotal(new BigDecimal(totalTextBox.getText()));
             this.orden.setHoraRegistro(LocalTime.now());
         }
         vertx.eventBus().send("save_order", this.orden,result->{
             if(result.succeeded()){
                 Boolean stored = ((JsonObject)result.result().body()).getBoolean("success");
                 if(stored){
-                    System.out.println("Orden generada");
+//                    System.out.println("Orden generada");
                     Platform.runLater(()->{
-                        Stage ps = (Stage)mainAnchor.getScene().getWindow();
-                        ps.close();
+//                        Stage ps = (Stage)mainAnchor.getScene().getWindow();
+//                        ps.close();
+                        GeneralUtilities.mostrarAlertDialog("Orden Creada",
+                            "Orden Creada",
+                            "Orden creada con número " + this.orden.getNumeroOrden()
+                            , Alert.AlertType.CONFIRMATION);
                     });
                 }
             }else{
@@ -389,7 +395,6 @@ public class CreadorOrdenController implements Initializable {
     
     @FXML
     private void billOrder(ActionEvent event) {
-        this.orden.setEstatusOrden(EstatusOrden.CERRADA);
         LookupClass.toBill = this.orden;
         Stage s = new Stage();
         try {
@@ -399,10 +404,9 @@ public class CreadorOrdenController implements Initializable {
         }
     }
 
-    @FXML
-    private void cancelOrder(ActionEvent event) {
-        this.orden.setEstatusOrden(EstatusOrden.CANCELADA);
-        //abrir visor de opcion de cancelación. encuesta salida
+    
+    private void closeOrder(ActionEvent event) {
+        this.orden.setEstatusOrden(EstatusOrden.CERRADA);
     }
     
     /**
@@ -437,9 +441,12 @@ public class CreadorOrdenController implements Initializable {
         }
         
         if(!this.orden.isEsNueva()){
-            saveOrderButton.setDisable(true);
+            //saveOrderButton.setDisable(true);
+            pagadoCheckbox.setVisible(true);
+            pagadoCheckbox.setSelected(orden.getPagado());
+            totalTextBox.setText(orden.getTotal().toString());
         }else{
-            cancelOrderButton.setDisable(true);
+            pagadoCheckbox.setVisible(false);
         }
         
         Platform.runLater(()->{
