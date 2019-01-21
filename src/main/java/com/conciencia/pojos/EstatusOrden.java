@@ -12,15 +12,13 @@ package com.conciencia.pojos;
  * @author Ernesto Cantu
  */
 public enum EstatusOrden {
-    CANCELADA,COCINA,ENTREGADA,CERRADA;
+    COCINA,SERVIDA,CERRADA;
     
     public static EstatusOrden getStatus(String type){
-        if(type.equals("CANCELADA"))
-            return CANCELADA;
         if(type.equals("COCINA"))
             return COCINA;
-        if(type.equals("ENTREGADA"))
-            return ENTREGADA;
+        if(type.equals("SERVIDA"))
+            return SERVIDA;
         if(type.equals("CERRADA"))
             return CERRADA;
         return null;

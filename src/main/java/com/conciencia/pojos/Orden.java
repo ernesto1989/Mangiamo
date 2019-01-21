@@ -188,11 +188,15 @@ public class Orden implements ToJson {
      */
     public void startTimer(){
         VertxConfig.vertx.setTimer(/*12000000*/60000, event->{
-            if(getEstatusOrden() == EstatusOrden.COCINA)
+            if(getEstatusOrden() == EstatusOrden.COCINA){
                 Platform.runLater(()->{
                     GeneralUtilities.mostrarAlertDialog("Orden con tiempo de espera alto", 
-                            "Orden con tiempo de espera alto", "La orden " + this.toString() + " tiene mucho tiempo en espera", Alert.AlertType.WARNING);
+                            "Orden con tiempo de espera alto", "La orden " + this.toString() + 
+                                    " tiene mucho tiempo en espera", Alert.AlertType.WARNING);
                 });
+                startTimer();
+            }
+            
         });
     }
 }

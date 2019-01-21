@@ -47,8 +47,11 @@ public class NuevaOrdenController implements Initializable {
     private Button llevaButton;
     @FXML
     private Button domicilioButton;
+    @FXML
+    private MenuItem adminMenuItem;
     
     private final Integer MESAS = 10;
+   
     
     /**************************************************************************/
     
@@ -110,6 +113,15 @@ public class NuevaOrdenController implements Initializable {
     private void registrarNuevoCliente(ActionEvent event) {
         LookupClass.telefono = "";
         GeneralUtilities.abrirNuevoClienteUI();
+    }
+    
+    /**
+     * 
+     * @param event 
+     */
+    @FXML
+    private void abrirModuloAdministracion(ActionEvent event) {
+        GeneralUtilities.abrirAdminUI();
     }
     
     /**

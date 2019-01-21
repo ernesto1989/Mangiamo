@@ -89,8 +89,9 @@
                   </TableView>
                   <TextField fx:id="totalTextBox" alignment="CENTER" editable="false" layoutX="580.0" layoutY="234.0" prefHeight="25.0" prefWidth="96.0" text="0.0" />
                   <Label layoutX="523.0" layoutY="238.0" text="TOTAL" />
-                  <HBox layoutX="374.0" layoutY="234.0" prefHeight="25.0" prefWidth="130.0" spacing="10.0">
+                  <HBox layoutX="300.0" layoutY="234.0" prefHeight="25.0" prefWidth="204.0" spacing="10.0">
                      <children>
+                        <Button fx:id="deliverOrderButton" mnemonicParsing="false" onAction="#deliverOrder" prefHeight="25.0" prefWidth="60.0" text="Servir" />
                         <Button fx:id="billOrderButton" mnemonicParsing="false" onAction="#billOrder" prefHeight="25.0" prefWidth="60.0" text="Cobrar" />
                         <Button fx:id="saveOrderButton" mnemonicParsing="false" onAction="#saveOrder" text="Ordenar" />
                      </children>

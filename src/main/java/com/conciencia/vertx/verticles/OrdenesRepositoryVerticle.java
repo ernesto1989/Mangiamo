@@ -19,7 +19,7 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
 
         private Long NUMERO_ORDEN = 1L;
         private Long DIA_NUMERO;
-        private Map<Long,Orden> ordenes;
+        private Map<Long,Orden> ordenesAbiertas;
         
 
     /**
@@ -33,7 +33,7 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         DIA_NUMERO = Long.parseLong(sdf.format(new Date()));
         
-        ordenes = new HashMap<>();
+        ordenesAbiertas = new HashMap<>();
         vertx.eventBus().consumer("get_order_num", msg-> {
             Long currOrder;
             if(NUMERO_ORDEN < 10)
@@ -47,12 +47,12 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             // <editor-fold defaultstate="colapsed" desc="handler">
             Orden o = (Orden) msg.body();
             NUMERO_ORDEN++;
-            ordenes.put(o.getNumeroOrden(), o);
+            ordenesAbiertas.put(o.getNumeroOrden(), o);
             if(o.isEsNueva()){
                 o.setEsNueva(false);
-                o.setEstatusOrden(EstatusOrden.COCINA);
-                o.startTimer();
             }
+            o.setEstatusOrden(EstatusOrden.COCINA);
+            o.startTimer();
             msg.reply(new JsonObject().put("success", Boolean.TRUE));
             //</editor-fold>
         });
@@ -65,19 +65,10 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
                 searchOrder = Long.parseLong(DIA_NUMERO + "00" + orderNum);
             else
                 searchOrder = Long.parseLong(DIA_NUMERO + "" + orderNum);
-            Orden o = ordenes.get(searchOrder);
+            Orden o = ordenesAbiertas.get(searchOrder);
             msg.reply(o);
             //</editor-fold>
         });
-//        
-//        
-//        vertx.setPeriodic(/*300000*/10000, hndlr->{
-//            for(Orden o:ordenes.values()){
-////                LocalTime ahora = LocalTime.now();
-////                long minutos = ChronoUnit.SECONDS.between(o.getHoraRegistro(),ahora);
-////                System.out.println(minutos);
-//            }
-//        });
     }
     
     @Override

@@ -98,6 +98,8 @@ public class CreadorOrdenController implements Initializable {
     private Button billOrderButton;
     @FXML
     private CheckBox pagadoCheckbox;
+    @FXML
+    private Button deliverOrderButton;
     
     /* OBJETOS DE LA CLASE */
     
@@ -112,7 +114,6 @@ public class CreadorOrdenController implements Initializable {
     private BigDecimal curSubtotal = new BigDecimal("0.0");
     
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");    
-    
     
     /**************************************************************************/
     
@@ -403,10 +404,23 @@ public class CreadorOrdenController implements Initializable {
             Logger.getLogger(CreadorOrdenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    @FXML
+    private void deliverOrder(ActionEvent event) {
+        for(ItemOrdenado io: this.orden.getOrderedItems()){
+            io.setServido(Boolean.TRUE);
+        }
+        this.orden.setEstatusOrden(EstatusOrden.SERVIDA);
+    }
     
     private void closeOrder(ActionEvent event) {
+        if(!this.orden.getPagado()){
+            GeneralUtilities.mostrarAlertDialog("Cuenta no pagada", "Cuenta no pagada", 
+                    "La cuenta debe ser pagada antes de cerrar la órden.", Alert.AlertType.WARNING);
+            return;
+        }
         this.orden.setEstatusOrden(EstatusOrden.CERRADA);
+        //vertx.eventBus().send("close_order, hdnlr->{});
     }
     
     /**

@@ -17,6 +17,7 @@ public class ItemOrdenado implements ToJson{
     private BigDecimal total;
     private Boolean esOrden;
     private Integer numRelacionados = 0;
+    private Boolean servido = false;
 
     public ItemOrdenado() {
     }
@@ -30,6 +31,7 @@ public class ItemOrdenado implements ToJson{
         this.total = new BigDecimal(object.getDouble("total"));
         this.esOrden = object.getBoolean("esOrden");
         this.numRelacionados = object.getInteger("numRelacionados");
+        this.servido = object.getBoolean("servido");
     }
 
     public Integer getPersona() {
@@ -96,6 +98,14 @@ public class ItemOrdenado implements ToJson{
         this.numRelacionados = numRelacionados;
     }
 
+    public Boolean getServido() {
+        return servido;
+    }
+
+    public void setServido(Boolean servido) {
+        this.servido = servido;
+    }
+
     @Override
     public JsonObject toJson(){
         JsonObject json = new JsonObject();
@@ -107,6 +117,7 @@ public class ItemOrdenado implements ToJson{
         json.put("total", this.total);
         json.put("esOrden",this.esOrden);
         json.put("numRelacionados",this.numRelacionados);
+        json.put("servido", this.servido);
         return json;
     }
     
