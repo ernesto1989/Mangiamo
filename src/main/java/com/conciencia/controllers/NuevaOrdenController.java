@@ -121,7 +121,7 @@ public class NuevaOrdenController implements Initializable {
      */
     @FXML
     private void abrirModuloAdministracion(ActionEvent event) {
-        GeneralUtilities.abrirAdminUI();
+        GeneralUtilities.abrirLoginUI();
     }
     
     /**

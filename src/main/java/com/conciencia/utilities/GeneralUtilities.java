@@ -1,12 +1,12 @@
 package com.conciencia.utilities;
 
 import com.conciencia.controllers.NuevaOrdenController;
+import com.conciencia.loaders.AdminLoader;
 import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.loaders.LoginLoader;
 import com.conciencia.loaders.NuevoClienteLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
 import static com.conciencia.vertx.VertxConfig.vertx;
@@ -82,11 +82,25 @@ public class GeneralUtilities {
     /**
      * 
      */
-    public static void abrirAdminUI(){
+    public static void abrirLoginUI(){
         Platform.runLater(()->{
             Stage ps = new Stage();
             try {
                 LoginLoader.getInstance().load(ps);
+            } catch (Exception ex) {
+                Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+    
+    /**
+     * 
+     */
+    public static void abrirAdminUI(){
+        Platform.runLater(()->{
+            Stage ps = new Stage();
+            try {
+                AdminLoader.getInstance().load(ps);
             } catch (Exception ex) {
                 Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
             }

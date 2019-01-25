@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -31,7 +32,9 @@ public class LogInController implements Initializable {
         String pass = passwordTextField.getText();
         
         if(userName.equals(IN_MEMORY_USER) && pass.equals(IN_MEMORY_PASS)){
-            //openAdminView();
+            Stage ps = (Stage)userTextField.getScene().getWindow();
+            ps.close();
+            GeneralUtilities.abrirAdminUI();
         }else{
             GeneralUtilities.mostrarAlertDialog("Acceso Restringido", 
                     "Acceso Restringido", 
