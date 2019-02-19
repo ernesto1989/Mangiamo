@@ -61,13 +61,13 @@ public class NuevoClienteController implements Initializable {
      * Método que crea el cliente a partir de los datos brindados en la pantalla
      */
     private void creaCliente(){
-        String nombre = nombreTextField.getText();
-        String telefono = telTextfield.getText();
-        String calle = calleTextField.getText();
-        String no = noTextField.getText();
-        String colonia = coloniaTextField.getText();
-        String eCalle1 = ec1TextField.getText();
-        String eCalle2 = ec2TextField.getText();
+        String nombre = !nombreTextField.getText().isEmpty()?nombreTextField.getText():null;
+        String telefono = !telTextfield.getText().isEmpty()?telTextfield.getText():null;
+        String calle = !calleTextField.getText().isEmpty()?calleTextField.getText():null;
+        String no = !noTextField.getText().isEmpty()?noTextField.getText():null;
+        String colonia = !coloniaTextField.getText().isEmpty()?coloniaTextField.getText():null;
+        String eCalle1 = !ec1TextField.getText().isEmpty()?ec1TextField.getText():null;
+        String eCalle2 = !ec2TextField.getText().isEmpty()?ec2TextField.getText():null;
     
         cliente = new Cliente();
         cliente.setNombre(nombre);
@@ -96,6 +96,7 @@ public class NuevoClienteController implements Initializable {
                                 "El cliente se ha registrado exitosamente.",
                                 AlertType.CONFIRMATION);
                         crearOrdenButton.setDisable(false);
+                        guardarClienteButton.setDisable(true);
                         cliente = cliente;
                     });
                 }else{

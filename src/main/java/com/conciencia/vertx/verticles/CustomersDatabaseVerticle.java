@@ -26,10 +26,12 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
      * @return cliente encontrado
      */
     private Cliente getCustomer(String phone){
-        List<Cliente> result = dbConn.
+        if(phone != null){
+            List<Cliente> result = dbConn.
                 executeQueryWithParams(SEARCH_BY_PHONE, Cliente.class, phone);
-        if(!result.isEmpty())
-            return result.get(0);
+            if(!result.isEmpty())
+                return result.get(0);
+        }
         return null;
     }
     
@@ -43,6 +45,8 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
         Cliente clienteExistente =  getCustomer(c.getTelefono());
         if(clienteExistente != null)
             return -1;
+        if(c.hayDatosFaltantes())
+            return -2;
         Integer id = (dbConn.executeInsert(SAVE_CUSTOMER, c.getNombre(),
                                 c.getTelefono(),
                                     c.getCalle(),c.getNumero(),c.getColonia(),c.geteCalle1(),c.geteCalle2())).intValue();
@@ -86,6 +90,8 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
             }else{
                 if(result == -1){
                     msg.fail(0, "Teléfono existente");
+                }if(result == -2){
+                    msg.fail(0, "Hay datos faltantes del cliente");
                 }else{
                     msg.fail(0, "Error en registro del cliente. Contacte al administrador");
                 }

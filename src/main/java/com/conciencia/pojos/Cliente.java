@@ -107,6 +107,13 @@ public class Cliente implements ToJson, SpectedResult {
         this.eCalle2 = eCalle2;
     }  
     
+    public boolean hayDatosFaltantes(){
+        if(nombre == null || telefono == null || calle == null || 
+                numero == null || colonia == null || eCalle1 == null || eCalle2 == null)
+            return true;
+        return false;
+    }
+    
     /**
      * Método que permite convertir un cliente a Json
      * @return cliente en formato json
