@@ -32,7 +32,7 @@ public class PrintableClass implements Printable {
             if(item.getServido()){
                 printingString.add(item.print());
             }
-            total = total.add(item.getTotal());
+            //total = total.add(item.getTotal());
         }
         //printingString.add("Total:" + total.toString());
     }    

@@ -129,9 +129,9 @@ public class ItemOrdenado implements ToJson{
         for(int i = size;i<=24;i++)
             s.append(" ");
         s.append(cantidad.toString());
-        for(int i = 24;i<=35;i++)
-            s.append(" ");
-        s.append(total.toString());
+//        for(int i = 24;i<=35;i++)
+//            s.append(" ");
+//        s.append(total.toString());
         return s.toString();
     }
 

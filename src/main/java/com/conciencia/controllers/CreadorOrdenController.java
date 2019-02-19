@@ -324,39 +324,6 @@ public class CreadorOrdenController implements Initializable {
     }
     
     /**
-     * Método que guarda la orden en el repositorio de órdenes
-     * @param event 
-     */
-    @FXML
-    private void saveOrder(ActionEvent event) {
-        List<ItemOrdenado> items = resumeTable.getItems();
-        this.orden.setOrderedItems(items);
-        if(this.orden.isEsNueva()){
-            this.orden.setTotal(new BigDecimal(totalTextBox.getText()));
-            this.orden.setHoraRegistro(LocalTime.now());
-        }
-        vertx.eventBus().send("save_order", this.orden,result->{
-            if(result.succeeded()){
-                Boolean stored = ((JsonObject)result.result().body()).getBoolean("success");
-                if(stored){
-//                    System.out.println("Orden generada");
-                    Platform.runLater(()->{
-//                        Stage ps = (Stage)mainAnchor.getScene().getWindow();
-//                        ps.close();
-                        GeneralUtilities.mostrarAlertDialog("Orden Creada",
-                            "Orden Creada",
-                            "Orden creada con número " + this.orden.getNumeroOrden()
-                            , Alert.AlertType.CONFIRMATION);
-                    });
-                }
-            }else{
-                System.out.println("error!!!");
-            }
-        });
-        //printOrder();
-    }
-    
-    /**
      * Método que modifica la cantidad de un objeto tipo orden.
      * @param event 
      */
@@ -394,6 +361,38 @@ public class CreadorOrdenController implements Initializable {
         resumeTable.refresh();
     }
     
+    /**
+     * Método que guarda la orden en el repositorio de órdenes
+     * @param event 
+     */
+    @FXML
+    private void saveOrder(ActionEvent event) {
+        List<ItemOrdenado> items = resumeTable.getItems();
+        this.orden.setOrderedItems(items);
+        this.orden.setTotal(new BigDecimal(totalTextBox.getText()));
+        if(this.orden.isEsNueva()){
+            this.orden.setHoraRegistro(LocalTime.now());
+        }
+        vertx.eventBus().send("save_order", this.orden,result->{
+            if(result.succeeded()){
+                Boolean stored = ((JsonObject)result.result().body()).getBoolean("success");
+                if(stored){
+                    Platform.runLater(()->{
+//                        Stage ps = (Stage)mainAnchor.getScene().getWindow();
+//                        ps.close();
+                        GeneralUtilities.mostrarAlertDialog("Orden Creada",
+                            "Orden Creada",
+                            "Orden creada con número " + this.orden.getNumeroOrden()
+                            , Alert.AlertType.CONFIRMATION);
+                    });
+                }
+            }else{
+                System.out.println("error!!!");
+            }
+        });
+        //printOrder();
+    }
+    
     @FXML
     private void billOrder(ActionEvent event) {
         LookupClass.toBill = this.orden;
@@ -411,17 +410,7 @@ public class CreadorOrdenController implements Initializable {
             io.setServido(Boolean.TRUE);
         }
         this.orden.setEstatusOrden(EstatusOrden.SERVIDA);
-    }
-    
-    private void closeOrder(ActionEvent event) {
-        if(!this.orden.getPagado()){
-            GeneralUtilities.mostrarAlertDialog("Cuenta no pagada", "Cuenta no pagada", 
-                    "La cuenta debe ser pagada antes de cerrar la órden.", Alert.AlertType.WARNING);
-            return;
-        }
-        this.orden.setEstatusOrden(EstatusOrden.CERRADA);
-        //vertx.eventBus().send("close_order, hdnlr->{});
-    }
+    }    
     
     /**
      * Initializes the controller class.
@@ -458,9 +447,19 @@ public class CreadorOrdenController implements Initializable {
             //saveOrderButton.setDisable(true);
             pagadoCheckbox.setVisible(true);
             pagadoCheckbox.setSelected(orden.getPagado());
+            pagadoCheckbox.setOnAction(e->{
+                pagadoCheckbox.setSelected(this.orden.getPagado());
+            });
+            
             totalTextBox.setText(orden.getTotal().toString());
         }else{
             pagadoCheckbox.setVisible(false);
+            if(this.orden.getEstatusOrden() != null && 
+                    this.orden.getEstatusOrden().equals(EstatusOrden.CERRADA)){
+                saveOrderButton.setDisable(true);
+                billOrderButton.setDisable(true);
+                deliverOrderButton.setDisable(true);
+            }
         }
         
         Platform.runLater(()->{

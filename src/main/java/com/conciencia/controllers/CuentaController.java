@@ -6,6 +6,7 @@
 package com.conciencia.controllers;
 
 import com.conciencia.lookups.LookupClass;
+import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -42,6 +43,9 @@ public class CuentaController implements Initializable {
     @FXML
     private void pagarCuenta(ActionEvent event) {
         this.o.setPagado(true);
+        this.o.setEstatusOrden(EstatusOrden.CERRADA);
+        //proceso de agregar dinero a la caja
+        //guardar orden en bd
         Platform.runLater(()->{
             Stage ps = (Stage)porPagarTextField.getScene().getWindow();
             ps.close();

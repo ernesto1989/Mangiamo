@@ -49,8 +49,6 @@ public class NuevaOrdenController implements Initializable {
     private Button domicilioButton;
     @FXML
     private MenuItem adminMenuItem;
-    
-    private final Integer MESAS = 10;
    
     
     /**************************************************************************/
@@ -154,7 +152,7 @@ public class NuevaOrdenController implements Initializable {
     private void crearOrdenEnMesa(ActionEvent event) {
         Integer mesa = null;
         Optional<Integer> result = 
-            GeneralUtilities.mostrarChoiceDialog(MESAS,"Orden en Mesa", 
+            GeneralUtilities.mostrarChoiceDialog(AdminController.MESAS,"Orden en Mesa", 
                     "Orden en Mesa", "No. de Mesa:");
         try{
             mesa = result.get();
