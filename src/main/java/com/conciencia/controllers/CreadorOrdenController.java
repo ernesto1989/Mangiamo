@@ -437,7 +437,7 @@ public class CreadorOrdenController implements Initializable {
             envio.setPersona(1);
             envio.setDescripcion("Envío");
             envio.setCantidad(1);
-            envio.setTotal(new BigDecimal("12.0"));
+            envio.setTotal(AdminController.COSTO_ENVIO);
             envio.setIdItem(0);  
             resumeTable.getItems().add(envio);
             setCurrentTotal();

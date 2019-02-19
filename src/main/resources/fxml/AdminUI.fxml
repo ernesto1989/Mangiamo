@@ -34,6 +34,22 @@
                            </font>
                         </Label>
                         <TextField fx:id="costoEnvioTextField" layoutX="109.0" layoutY="81.0" prefHeight="25.0" prefWidth="77.0" />
+                        <Label fx:id="tEsperaLabel" layoutX="22.0" layoutY="108.0" prefHeight="51.0" prefWidth="104.0" text="Tiempo Espera">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tiempoEsperaTextField" layoutX="109.0" layoutY="121.0" prefHeight="25.0" prefWidth="77.0" />
+                        <Label layoutX="189.0" layoutY="108.0" prefHeight="51.0" prefWidth="31.0" text="min.">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="189.0" layoutY="68.0" prefHeight="51.0" prefWidth="31.0" text="mxn">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
                      </children></AnchorPane>
             </content>
           </Tab>
