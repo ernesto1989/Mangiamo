@@ -450,7 +450,7 @@ public class CreadorOrdenController implements Initializable {
             pagadoCheckbox.setOnAction(e->{
                 pagadoCheckbox.setSelected(this.orden.getPagado());
             });
-            
+
             totalTextBox.setText(orden.getTotal().toString());
         }else{
             pagadoCheckbox.setVisible(false);
