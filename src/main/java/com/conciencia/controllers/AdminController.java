@@ -20,7 +20,7 @@ import javafx.scene.control.TextField;
 public class AdminController implements Initializable {
     
     public static Integer MESAS = 10;
-    public static BigDecimal COSTO_ENVIO = new BigDecimal("12.0");
+    public static BigDecimal COSTO_ENVIO = new BigDecimal("15.0");
     public static Integer MINUTOS_ESPERA = 20;
     
     @FXML
