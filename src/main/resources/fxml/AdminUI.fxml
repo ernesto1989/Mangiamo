@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.AdminController">
+<AnchorPane id="AnchorPane" prefHeight="460.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.conciencia.controllers.AdminController">
    <children>
       <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -19,33 +19,43 @@
           </Tab>
           <Tab text="General">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="328.0" prefWidth="600.0">
                      <children>
-                        <Label layoutX="23.0" layoutY="45.0" text="No. Mesas">
+                        <Label layoutX="23.0" layoutY="42.0" text="No. Mesas">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="noMesaTextField" layoutX="110.0" layoutY="45.0" prefHeight="25.0" prefWidth="77.0" />
-                        <Button fx:id="guardarButton" layoutX="468.0" layoutY="305.0" mnemonicParsing="false" onAction="#guardarGeneral" prefHeight="25.0" prefWidth="69.0" text="Guardar" />
-                        <Label layoutX="22.0" layoutY="81.0" text="Costo Envío">
+                        <TextField fx:id="noMesaTextField" layoutX="110.0" layoutY="42.0" prefHeight="25.0" prefWidth="77.0" />
+                        <Label layoutX="22.0" layoutY="89.0" text="Costo Envío">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="costoEnvioTextField" layoutX="109.0" layoutY="81.0" prefHeight="25.0" prefWidth="77.0" />
-                        <Label fx:id="tEsperaLabel" layoutX="22.0" layoutY="108.0" prefHeight="51.0" prefWidth="104.0" text="Tiempo Espera">
+                        <TextField fx:id="costoEnvioTextField" layoutX="109.0" layoutY="89.0" prefHeight="25.0" prefWidth="77.0" />
+                        <Label fx:id="tEsperaLabel" layoutX="22.0" layoutY="124.0" prefHeight="51.0" prefWidth="104.0" text="Tiempo Espera">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tiempoEsperaTextField" layoutX="109.0" layoutY="121.0" prefHeight="25.0" prefWidth="77.0" />
-                        <Label layoutX="189.0" layoutY="108.0" prefHeight="51.0" prefWidth="31.0" text="min.">
+                        <TextField fx:id="tiempoEsperaTextField" layoutX="109.0" layoutY="137.0" prefHeight="25.0" prefWidth="77.0" />
+                        <Label layoutX="189.0" layoutY="124.0" prefHeight="51.0" prefWidth="31.0" text="min.">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <Label layoutX="189.0" layoutY="68.0" prefHeight="51.0" prefWidth="31.0" text="mxn">
+                        <Label layoutX="189.0" layoutY="76.0" prefHeight="51.0" prefWidth="31.0" text="mxn">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="tEsperaMaxLabel" layoutX="22.0" layoutY="177.0" prefHeight="51.0" prefWidth="104.0" text="Tiempo Espera">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tiempoEsperaMaxTextField" layoutX="109.0" layoutY="190.0" prefHeight="25.0" prefWidth="77.0" />
+                        <Label layoutX="189.0" layoutY="177.0" prefHeight="51.0" prefWidth="31.0" text="min.">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -53,7 +63,22 @@
                      </children></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Sistema">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="23.0" layoutY="42.0" text="Base de Datos">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="baseDatosTextField" layoutX="135.0" layoutY="42.0" prefHeight="25.0" prefWidth="235.0" text="C:/Conciencia/files/db/MangiamoDB.db" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
+      <Button fx:id="guardarButton" layoutX="503.0" layoutY="423.0" mnemonicParsing="false" onAction="#guardarGeneral" prefHeight="25.0" prefWidth="69.0" text="Guardar" />
    </children>
 </AnchorPane>

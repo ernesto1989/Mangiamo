@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
@@ -26,7 +27,9 @@ public class Orden implements ToJson {
     private Boolean pagado = false;
     List<ItemOrdenado> orderedItems;
     private LocalTime horaRegistro;
+    private LocalTime horaServicio;
     private boolean esNueva;
+    private Integer tiempoEspera;
 
     public Orden() {
     }
@@ -42,6 +45,9 @@ public class Orden implements ToJson {
         this.pagado = obj.getBoolean("pagado");
         this.orderedItems = getItems(obj);
         this.esNueva = obj.getBoolean("esNueva");
+        this.tiempoEspera = obj.getInteger("tiempoEspera");
+        this.horaRegistro = LocalTime.parse(obj.getString("horaRegistro"));
+        this.horaServicio = LocalTime.parse(obj.getString("horaServicio"));
     }
 
     private List<ItemOrdenado> getItems(JsonObject obj){
@@ -140,7 +146,27 @@ public class Orden implements ToJson {
     public void setEsNueva(boolean esNueva) {
         this.esNueva = esNueva;
     }
+
+    public Integer getTiempoEspera() {
+        return tiempoEspera;
+    }
+
+    public void setTiempoEspera(Integer tiempoEspera) {
+        this.tiempoEspera = tiempoEspera;
+    }
     
+    public LocalTime getHoraServicio() {
+        return horaServicio;
+    }
+
+    public void setHoraServicio(LocalTime horaServicio) {
+        this.horaServicio = horaServicio;
+    }
+    
+    public String getOrdenPara(){
+        return this.toString();
+    }
+
     @Override
     public JsonObject toJson() {
         JsonObject obj = new JsonObject();
@@ -161,6 +187,9 @@ public class Orden implements ToJson {
         obj.put("total", this.getTotal());
         obj.put("pagado",this.getPagado());
         obj.put("esNueva",this.esNueva);
+        obj.put("tiempoEspera",this.tiempoEspera);
+        obj.put("horaRegistro",this.horaRegistro.toString());
+        obj.put("horaServicio",this.horaServicio.toString());
         
         JsonArray a = new JsonArray();
 
@@ -187,7 +216,8 @@ public class Orden implements ToJson {
      * Cada 20 minutos
      */
     public void startTimer(){
-        VertxConfig.vertx.setTimer(/*12000000*/60000, event->{
+        Integer tiempoMili = this.tiempoEspera * 60000;
+        VertxConfig.vertx.setTimer(tiempoMili, event->{
             if(getEstatusOrden() == EstatusOrden.COCINA){
                 Platform.runLater(()->{
                     GeneralUtilities.mostrarAlertDialog("Orden con tiempo de espera alto", 
@@ -199,4 +229,31 @@ public class Orden implements ToJson {
             
         });
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.numeroOrden);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Orden other = (Orden) obj;
+        if (!Objects.equals(this.numeroOrden, other.numeroOrden)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

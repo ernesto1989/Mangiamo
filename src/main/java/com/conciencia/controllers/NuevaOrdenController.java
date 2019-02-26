@@ -3,11 +3,14 @@ package com.conciencia.controllers;
 import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
+import com.conciencia.pojos.EstatusOrden;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
+import io.vertx.core.json.JsonObject;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -22,6 +25,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 /**
@@ -49,7 +55,33 @@ public class NuevaOrdenController implements Initializable {
     private Button domicilioButton;
     @FXML
     private MenuItem adminMenuItem;
+    @FXML
+    private TableView<Orden> ordenesTable;
+    @FXML
+    private TableColumn<Orden, String> ordenParaColumn;
+    @FXML
+    private TableColumn<Orden, BigDecimal> ordenTotalColumn;
+    @FXML
+    private TableColumn<Orden, EstatusOrden> estausColumn;
+    
+    /**
+     * Método para inicializar las columnas de la tabla de elementos ordenados.
+     */
+    private void initCols(){
+        ordenParaColumn.setCellValueFactory(new PropertyValueFactory<>("ordenPara"));
+        ordenTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
+        estausColumn.setCellValueFactory(new PropertyValueFactory<>("estatusOrden"));
+    }
    
+    private void initTableEvent(){
+        ordenesTable.setOnMouseClicked(evt->{
+            if(evt.getClickCount() == 2){
+                Orden selected = ordenesTable.getSelectionModel().getSelectedItem();
+                LookupClass.current = selected;
+                GeneralUtilities.abrirCreadorOrdenUI();
+            }
+        });
+    }
     
     /**************************************************************************/
     
@@ -228,6 +260,25 @@ public class NuevaOrdenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        initCols();
+        initTableEvent();
+        vertx.eventBus().consumer("orders_resume", msg->{
+            // <editor-fold defaultstate="colapsed" desc="handler">
+            Orden o = (Orden) msg.body();
+            Platform.runLater(()->{
+                if(o.isEsNueva()){
+                    this.ordenesTable.getItems().add(o);
+                    o.setEsNueva(false);
+                }else{
+                    if(o.getEstatusOrden() != EstatusOrden.CERRADA)
+                        this.ordenesTable.refresh();
+                    else
+                        this.ordenesTable.getItems().remove(o);
+                }
+            });
+            //</editor-fold>
+        });
+        
         Platform.runLater(()->{
             Stage ps = (Stage)mesaButton.getScene().getWindow();
             ps.setOnHiding(event-> {

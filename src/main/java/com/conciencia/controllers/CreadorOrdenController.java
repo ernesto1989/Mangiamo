@@ -12,6 +12,7 @@ import com.conciencia.pojos.Seccion;
 import com.conciencia.pojos.TreeContainer;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.utilities.PrintableClass;
+import com.conciencia.vertx.VertxConfig;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import io.vertx.core.json.JsonObject;
 import java.awt.print.PrinterException;
@@ -25,12 +26,15 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -73,10 +77,6 @@ public class CreadorOrdenController implements Initializable {
     @FXML
     private Button saveOrderButton;
     @FXML
-    private TextField tipoOrdenTextfield;
-    @FXML
-    private TextField numOrdenTextField;
-    @FXML
     private TextField descripcionTextField;
     @FXML
     private TextField cantidadTextField;
@@ -91,15 +91,13 @@ public class CreadorOrdenController implements Initializable {
     @FXML
     private Label horaLabel;
     @FXML
-    private TextField estatusTextField;
-    @FXML
-    private Label estatusLabel;
-    @FXML
     private Button billOrderButton;
     @FXML
     private CheckBox pagadoCheckbox;
     @FXML
     private Button deliverOrderButton;
+    @FXML
+    private ComboBox<Integer> tiempoEstimadoCombo;
     
     /* OBJETOS DE LA CLASE */
     
@@ -115,41 +113,35 @@ public class CreadorOrdenController implements Initializable {
     
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");    
     
+    
     /**************************************************************************/
     
-    /* METODOS UTILITARIOS*/
-    
-    private void printOrder(){
-        PrinterJob job = PrinterJob.getPrinterJob();
-        PrintableClass p = new PrintableClass(this.orden);
-        job.setPrintable(p);
-        boolean doPrint = job.printDialog();
-        
-        if (doPrint) {
-            try {
-                job.print();
-            } catch (PrinterException e) {
-                GeneralUtilities.mostrarAlertDialog("Error de Impresion",
-                        "Error de Impresion" , "Error de Impresion", Alert.AlertType.ERROR);
-            }
-        }
+    private void getOrder(){
+        this.orden = LookupClass.current;
+        LookupClass.current = null; //limpio la orden que se quedó "preseteada"
     }
     
     /**
      * Método que inicializa los headers de la pantalla de creación de órdenes.
      */
     private void initOrderHeaders(){
-        tipoOrdenTextfield.setText(this.orden.getTipoOrden().toString());
         descripcionTextField.setText(this.orden.toString());
-        numOrdenTextField.setText(this.orden.getNumeroOrden().toString());
         horaLabel.setVisible(!this.orden.isEsNueva());
         horaOrdenTextfield.setVisible(!this.orden.isEsNueva());
-        estatusLabel.setVisible(!this.orden.isEsNueva());
-        estatusTextField.setVisible(!this.orden.isEsNueva());
         if(!this.orden.isEsNueva())horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
-        if(orden.getEstatusOrden() != null)
-            estatusTextField.setText(orden.getEstatusOrden().toString());
         descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
+        ObservableList<Integer> ol = FXCollections.observableArrayList();
+        for(int i = AdminController.MINUTOS_ESPERA; i<=AdminController.MINUTOS_ESPERA_MAX;i+=5){
+            ol.add(i);
+        }
+        tiempoEstimadoCombo.setItems(ol);
+        if(this.orden.isEsNueva()){
+            tiempoEstimadoCombo.setValue(AdminController.MINUTOS_ESPERA);
+        }else{
+            tiempoEstimadoCombo.setValue(orden.getTiempoEspera());
+        }
+       
+        
     }
     
     /**
@@ -162,46 +154,12 @@ public class CreadorOrdenController implements Initializable {
     }
     
     /**
-     * Método que trae el menú desde la bd
-     */
-    private void getMenu() {
-        vertx.eventBus().send("get_menu",null,response -> {
-            Menu menu = (Menu) response.result().body();
-            Platform.runLater(()->{
-                createTree(menu);
-            });
-        });
-    }
-    
-    /**
-     * Método que inicializa el menú en la pantalla
-     * @param menu 
-     */
-    private void createTree(Menu menu){
-        Seccion root = new Seccion();
-        root.setNombre("Menu");
-        TreeItem<TreeContainer> rootNode = new TreeItem<>(root);
-        TreeItem<TreeContainer> node;
-        TreeItem<TreeContainer> leaf;
-        for(Seccion s:menu){
-            node = new TreeItem<>(s);
-            node.setExpanded(true);
-            for(Item i:s.getItems()){
-                leaf = new TreeItem<>(i);
-                node.getChildren().add(leaf);
-            }
-            rootNode.getChildren().add(node);
-        }
-        rootNode.setExpanded(true);
-        menuTree.setRoot(rootNode);
-        menuTree.setShowRoot(false);
-    }
-    
-    /**
      * Método que se ejecuta cuando se selecciona un elemento del menu
      */
     private void setTreeViewEvent(){
         menuTree.setOnMouseClicked(e->{
+            if(this.orden.getEstatusOrden() != null && this.orden.getEstatusOrden().equals(EstatusOrden.CERRADA))
+                return;
             if(e.getClickCount() == 2){
                 if(menuTree.getSelectionModel().getSelectedItem().getValue() instanceof Seccion)
                     return;
@@ -260,6 +218,104 @@ public class CreadorOrdenController implements Initializable {
             setCurrentTotal();
         });
     }
+    
+    /**
+     * Método que trae el menú desde la bd
+     */
+    private void getMenu() {
+        vertx.eventBus().send("get_menu",null,response -> {
+            Menu menu = (Menu) response.result().body();
+            Platform.runLater(()->{
+                createTree(menu);
+            });
+        });
+    }
+    
+    /**
+     * Método que inicializa el menú en la pantalla
+     * @param menu 
+     */
+    private void createTree(Menu menu){
+        Seccion root = new Seccion();
+        root.setNombre("Menu");
+        TreeItem<TreeContainer> rootNode = new TreeItem<>(root);
+        TreeItem<TreeContainer> node;
+        TreeItem<TreeContainer> leaf;
+        for(Seccion s:menu){
+            node = new TreeItem<>(s);
+            node.setExpanded(true);
+            for(Item i:s.getItems()){
+                leaf = new TreeItem<>(i);
+                node.getChildren().add(leaf);
+            }
+            rootNode.getChildren().add(node);
+        }
+        rootNode.setExpanded(true);
+        menuTree.setRoot(rootNode);
+        menuTree.setShowRoot(false);
+    }
+    
+    /**
+     * Método que inicializa a los elementos de la pantalla
+     */
+    private void initElements(){
+        incrementoButton.setDisable(true);
+        decrementoButton.setDisable(true);
+        modificarButton.setDisable(true);
+        pagadoCheckbox.setDisable(true);
+        if(this.orden.getOrderedItems() != null)
+            resumeTable.getItems().addAll(this.orden.getOrderedItems());
+        
+        if(this.orden.isEsNueva() && this.orden.getTipoOrden()== TipoOrden.DOMICILIO){
+            ItemOrdenado envio = new ItemOrdenado();
+            envio.setPersona(1);
+            envio.setDescripcion("Envío");
+            envio.setCantidad(1);
+            envio.setTotal(AdminController.COSTO_ENVIO);
+            envio.setIdItem(0);  
+            resumeTable.getItems().add(envio);
+            setCurrentTotal();
+        }
+        
+        if(!this.orden.isEsNueva()){
+            //saveOrderButton.setDisable(true);
+            pagadoCheckbox.setVisible(true);
+            pagadoCheckbox.setSelected(orden.getPagado());
+            pagadoCheckbox.setOnAction(e->{
+                pagadoCheckbox.setSelected(this.orden.getPagado());
+            });
+
+            totalTextBox.setText(orden.getTotal().toString());
+        }else{
+            pagadoCheckbox.setVisible(false);
+        }
+        
+        if(this.orden.getEstatusOrden() != null && 
+                this.orden.getEstatusOrden().equals(EstatusOrden.CERRADA)){
+            saveOrderButton.setDisable(true);
+            billOrderButton.setDisable(true);
+            deliverOrderButton.setDisable(true);
+        }
+    }
+    
+    
+    /* METODOS UTILITARIOS*/
+    
+    private void printOrder(){
+        PrinterJob job = PrinterJob.getPrinterJob();
+        PrintableClass p = new PrintableClass(this.orden);
+        job.setPrintable(p);
+        boolean doPrint = job.printDialog();
+        
+        if (doPrint) {
+            try {
+                job.print();
+            } catch (PrinterException e) {
+                GeneralUtilities.mostrarAlertDialog("Error de Impresion",
+                        "Error de Impresion" , "Error de Impresion", Alert.AlertType.ERROR);
+            }
+        }
+    }   
     
     /**
      * Método que establece el total para la orden actual
@@ -370,6 +426,7 @@ public class CreadorOrdenController implements Initializable {
         List<ItemOrdenado> items = resumeTable.getItems();
         this.orden.setOrderedItems(items);
         this.orden.setTotal(new BigDecimal(totalTextBox.getText()));
+        this.orden.setTiempoEspera(tiempoEstimadoCombo.getValue());
         if(this.orden.isEsNueva()){
             this.orden.setHoraRegistro(LocalTime.now());
         }
@@ -384,6 +441,7 @@ public class CreadorOrdenController implements Initializable {
                             "Orden Creada",
                             "Orden creada con número " + this.orden.getNumeroOrden()
                             , Alert.AlertType.CONFIRMATION);
+                        VertxConfig.vertx.eventBus().send("orders_resume", this.orden);
                     });
                 }
             }else{
@@ -410,6 +468,8 @@ public class CreadorOrdenController implements Initializable {
             io.setServido(Boolean.TRUE);
         }
         this.orden.setEstatusOrden(EstatusOrden.SERVIDA);
+        this.orden.setHoraServicio(LocalTime.now());
+        VertxConfig.vertx.eventBus().send("orders_resume", this.orden);
     }    
     
     /**
@@ -419,48 +479,13 @@ public class CreadorOrdenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.orden = LookupClass.current;
-        LookupClass.current = null; //limpio la orden que se quedó "preseteada"
+        getOrder();
         initOrderHeaders();
         initCols();
         setTreeViewEvent();
         setTableEvent();
         getMenu();
-        incrementoButton.setDisable(true);
-        decrementoButton.setDisable(true);
-        modificarButton.setDisable(true);
-        if(this.orden.getOrderedItems() != null)
-            resumeTable.getItems().addAll(this.orden.getOrderedItems());
-        
-        if(this.orden.isEsNueva() && this.orden.getTipoOrden()== TipoOrden.DOMICILIO){
-            ItemOrdenado envio = new ItemOrdenado();
-            envio.setPersona(1);
-            envio.setDescripcion("Envío");
-            envio.setCantidad(1);
-            envio.setTotal(AdminController.COSTO_ENVIO);
-            envio.setIdItem(0);  
-            resumeTable.getItems().add(envio);
-            setCurrentTotal();
-        }
-        
-        if(!this.orden.isEsNueva()){
-            //saveOrderButton.setDisable(true);
-            pagadoCheckbox.setVisible(true);
-            pagadoCheckbox.setSelected(orden.getPagado());
-            pagadoCheckbox.setOnAction(e->{
-                pagadoCheckbox.setSelected(this.orden.getPagado());
-            });
-
-            totalTextBox.setText(orden.getTotal().toString());
-        }else{
-            pagadoCheckbox.setVisible(false);
-            if(this.orden.getEstatusOrden() != null && 
-                    this.orden.getEstatusOrden().equals(EstatusOrden.CERRADA)){
-                saveOrderButton.setDisable(true);
-                billOrderButton.setDisable(true);
-                deliverOrderButton.setDisable(true);
-            }
-        }
+        initElements();
         
         Platform.runLater(()->{
             Stage ps = (Stage)mainAnchor.getScene().getWindow();

@@ -8,6 +8,7 @@ package com.conciencia.controllers;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
+import com.conciencia.vertx.VertxConfig;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -44,6 +45,8 @@ public class CuentaController implements Initializable {
     private void pagarCuenta(ActionEvent event) {
         this.o.setPagado(true);
         this.o.setEstatusOrden(EstatusOrden.CERRADA);
+        VertxConfig.vertx.eventBus().send("orders_resume", this.o);
+        VertxConfig.vertx.eventBus().send("close_order", this.o);
         //proceso de agregar dinero a la caja
         //guardar orden en bd
         Platform.runLater(()->{

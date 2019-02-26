@@ -1,5 +1,6 @@
 package com.conciencia.vertx.verticles;
 
+import com.conciencia.controllers.AdminController;
 import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import com.conciencia.pojos.Usuario;
@@ -46,7 +47,7 @@ public class UsersDatabaseVerticle extends AbstractVerticle{
      */
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-        dbConn = new SqliteUtilities("db/MangiamoDB.db");
+        dbConn = new SqliteUtilities(AdminController.DB_URL);
         vertx.eventBus().consumer("get_user", msg->{
             // <editor-fold defaultstate="colapsed" desc="handler">
             Usuario user = (Usuario) msg.body();
