@@ -25,7 +25,7 @@ public class Orden implements ToJson {
     private Cliente cliente;
     private BigDecimal total;
     private Boolean pagado = false;
-    List<ItemOrdenado> orderedItems;
+    private List<ItemOrdenado> orderedItems;
     private LocalTime horaRegistro;
     private LocalTime horaServicio;
     private boolean esNueva;

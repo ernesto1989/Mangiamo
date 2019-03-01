@@ -10,12 +10,12 @@ import io.vertx.core.json.JsonObject;
  * 
  * @author Ernesto Cantu
  */
-public class CustomerCodec implements MessageCodec<Cliente, Cliente> {
+public class ClienteCodec implements MessageCodec<Cliente, Cliente> {
 
     @Override
-    public void encodeToWire(Buffer buffer, Cliente menuCustomer) {
+    public void encodeToWire(Buffer buffer, Cliente customer) {
         // Easiest ways is using JSON object
-        JsonObject jsonToEncode = menuCustomer.toJson();
+        JsonObject jsonToEncode = customer.toJson();
 
         // Encode object to string
         String jsonToStr = jsonToEncode.encode();

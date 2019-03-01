@@ -4,10 +4,9 @@ import com.conciencia.db.SpectedResult;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Objects;
 
 /**
- * Clase que representa a un cliente del restaurante.
+ * Clase que representa a un usuario del sistema.
  * 
  * @author Ernesto Cantú
  */

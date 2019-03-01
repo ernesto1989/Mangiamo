@@ -5,7 +5,7 @@ import com.conciencia.pojos.Item;
 import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.Usuario;
-import com.conciencia.vertx.codecs.CustomerCodec;
+import com.conciencia.vertx.codecs.ClienteCodec;
 import com.conciencia.vertx.codecs.MenuCodec;
 import com.conciencia.vertx.codecs.MenuItemCodec;
 import com.conciencia.vertx.codecs.OrdenCodec;
@@ -72,7 +72,7 @@ public class VertxConfig {
      * 3.- Objeto cliente
      */
     public static void registerCodecs(){
-        vertx.eventBus().registerDefaultCodec(Cliente.class, new CustomerCodec());
+        vertx.eventBus().registerDefaultCodec(Cliente.class, new ClienteCodec());
         vertx.eventBus().registerDefaultCodec(Item.class, new MenuItemCodec());
         vertx.eventBus().registerDefaultCodec(Menu.class, new MenuCodec());
         vertx.eventBus().registerDefaultCodec(Orden.class, new OrdenCodec());
