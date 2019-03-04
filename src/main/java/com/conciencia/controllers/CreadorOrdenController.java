@@ -128,7 +128,8 @@ public class CreadorOrdenController implements Initializable {
         descripcionTextField.setText(this.orden.toString());
         horaLabel.setVisible(!this.orden.isEsNueva());
         horaOrdenTextfield.setVisible(!this.orden.isEsNueva());
-        if(!this.orden.isEsNueva())horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
+        if(!this.orden.isEsNueva())
+            horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
         descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
         ObservableList<Integer> ol = FXCollections.observableArrayList();
         for(int i = AdminController.MINUTOS_ESPERA; i<=AdminController.MINUTOS_ESPERA_MAX;i+=5){
@@ -158,6 +159,10 @@ public class CreadorOrdenController implements Initializable {
      */
     private void setTreeViewEvent(){
         menuTree.setOnMouseClicked(e->{
+            cantidadTextField.setText("");
+            incrementoButton.setDisable(true);
+            decrementoButton.setDisable(true);
+            modificarButton.setDisable(true);
             if(this.orden.getEstatusOrden() != null && this.orden.getEstatusOrden().equals(EstatusOrden.CERRADA))
                 return;
             if(e.getClickCount() == 2){
@@ -199,8 +204,6 @@ public class CreadorOrdenController implements Initializable {
                 int selected = resumeTable.getSelectionModel().getSelectedIndex();
                 ItemOrdenado o = resumeTable.getSelectionModel().getSelectedItem();
                 ItemOrdenado selectedItem = resumeTable.getSelectionModel().getSelectedItem();
-                BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
-                totalTextBox.setText(currentTotal.subtract(selectedItem.getTotal()).toString());
                 resumeTable.getItems().remove(selected);
                 if(o.getEsOrden()){
                     cantidadTextField.setText("");
@@ -415,6 +418,11 @@ public class CreadorOrdenController implements Initializable {
         selected.setTotal(total);
         setCurrentTotal();
         resumeTable.refresh();
+        cantidadTextField.setText("");
+        incrementoButton.setDisable(true);
+        decrementoButton.setDisable(true);
+        modificarButton.setDisable(true);
+        
     }
     
     /**

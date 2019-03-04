@@ -25,9 +25,6 @@ public class LogInController implements Initializable {
     private TextField userTextField;
     @FXML
     private PasswordField passwordTextField;
-//    
-//    private final String IN_MEMORY_USER = "admin";
-//    private final String IN_MEMORY_PASS = "admin";
 
     @FXML
     private void login(ActionEvent event) {

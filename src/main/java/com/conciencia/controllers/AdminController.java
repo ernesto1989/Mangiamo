@@ -35,7 +35,7 @@ public class AdminController implements Initializable {
     private Label tEsperaLabel;
     @FXML
     private TextField tiempoEsperaTextField;
-   @FXML
+    @FXML
     private TextField tiempoEsperaMaxTextField;
     @FXML
     private Label tEsperaMaxLabel;

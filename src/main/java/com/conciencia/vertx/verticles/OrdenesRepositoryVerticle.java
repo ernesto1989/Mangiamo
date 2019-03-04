@@ -23,7 +23,6 @@ import java.util.Map;
 public class OrdenesRepositoryVerticle extends AbstractVerticle{
 
     private Long NUMERO_ORDEN = 1L;
-    private Long DIA_NUMERO;
     private Map<Long,Orden> ordenesAbiertas;
     private final String INSERT_ORDER = "INSERT INTO ordenes "
             + "(numero_orden, tipo_orden, orden_para, cliente, hora_registro, tiempo_espera, hora_cierre,diferencia_mins) "
@@ -38,17 +37,9 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
      */
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        DIA_NUMERO = Long.parseLong(sdf.format(new Date()));
-        
         ordenesAbiertas = new HashMap<>();
         vertx.eventBus().consumer("get_order_num", msg-> {
-            Long currOrder;
-            if(NUMERO_ORDEN < 10)
-                currOrder = Long.parseLong(DIA_NUMERO + "00" + NUMERO_ORDEN);
-            else
-                currOrder = Long.parseLong(DIA_NUMERO + "" + NUMERO_ORDEN);
-            msg.reply(currOrder);
+            msg.reply(NUMERO_ORDEN);
         });
         
         vertx.eventBus().consumer("save_order", msg->{
@@ -60,19 +51,6 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             o.startTimer();
             
             msg.reply(new JsonObject().put("success", Boolean.TRUE));
-            //</editor-fold>
-        });
-        
-        vertx.eventBus().consumer("find_order", msg->{
-            // <editor-fold defaultstate="colapsed" desc="handler">
-            Long orderNum = (Long) msg.body();
-            Long searchOrder;
-            if(NUMERO_ORDEN < 10)
-                searchOrder = Long.parseLong(DIA_NUMERO + "00" + orderNum);
-            else
-                searchOrder = Long.parseLong(DIA_NUMERO + "" + orderNum);
-            Orden o = ordenesAbiertas.get(searchOrder);
-            msg.reply(o);
             //</editor-fold>
         });
         

@@ -1,23 +1,16 @@
 package com.conciencia.controllers;
 
-import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.EstatusOrden;
-import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
-import static com.conciencia.vertx.VertxConfig.vertx;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;

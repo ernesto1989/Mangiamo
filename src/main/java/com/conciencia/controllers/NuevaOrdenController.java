@@ -9,7 +9,6 @@ import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
-import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
@@ -39,8 +38,6 @@ public class NuevaOrdenController implements Initializable {
     
     /* ELEMENTOS DE LA PANTALLA */
 
-    @FXML
-    private MenuItem buscarOrdenMenuItem;
     @FXML
     private MenuItem registrarClienteMenuItem;
     @FXML
@@ -73,6 +70,9 @@ public class NuevaOrdenController implements Initializable {
         estausColumn.setCellValueFactory(new PropertyValueFactory<>("estatusOrden"));
     }
    
+    /**
+     * Método que inicializa el evento del grid de ordenes
+     */
     private void initTableEvent(){
         ordenesTable.setOnMouseClicked(evt->{
             if(evt.getClickCount() == 2){
@@ -83,57 +83,31 @@ public class NuevaOrdenController implements Initializable {
         });
     }
     
+    /**
+     * Método que inicializa servicio de event bus para operar sobre el grid de órdenes
+     */
+    private void initGridListener(){
+        vertx.eventBus().consumer("orders_resume", msg->{
+            // <editor-fold defaultstate="colapsed" desc="handler">
+            Orden o = (Orden) msg.body();
+            Platform.runLater(()->{
+                if(o.isEsNueva()){
+                    this.ordenesTable.getItems().add(o);
+                    o.setEsNueva(false);
+                }else{
+                    if(o.getEstatusOrden() != EstatusOrden.CERRADA)
+                        this.ordenesTable.refresh();
+                    else
+                        this.ordenesTable.getItems().remove(o);
+                }
+            });
+            //</editor-fold>
+        });
+    }
+    
     /**************************************************************************/
     
     /* METODOS INVOCADOS POR JAVAFX */
-    
-    /**
-     * Método que busca una orden con un número dado.
-     * 
-     * @param event 
-     */
-    @FXML
-    private void buscarOrden(ActionEvent event) {
-        Long numeroOrden = null;
-        while(numeroOrden == null || numeroOrden == 0){
-           Optional<String> result = 
-                GeneralUtilities.mostrarInputDialog("No. Orden", "Buscar por No. Orden", "No. de Orden:");
-           try{numeroOrden = Long.parseLong(result.get());
-           }catch(NumberFormatException e){numeroOrden = 0L;}
-           catch(Exception e){return;}
-        }
-        
-        VertxConfig.vertx.eventBus().send("find_order", numeroOrden,response->{
-            if(response.succeeded()){
-                Orden o = (Orden)response.result().body();
-                if(o != null){
-                    Platform.runLater(()->{
-                        LookupClass.current = o;
-                        Stage ps = new Stage();
-                        try {
-                            CreadorOrdenLoader.getInstance().load(ps);
-                        } catch (Exception ex) {
-                            Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    });
-                }else{
-                    Platform.runLater(()->{
-                        GeneralUtilities.mostrarAlertDialog("Orden no encontrada...", 
-                            "No se encontró la orden",
-                            "No se encontró la orden. Favor de validar", 
-                            AlertType.INFORMATION);
-                    });  
-                }
-            } else{
-                Platform.runLater(()->{
-                    GeneralUtilities.mostrarAlertDialog("Error en la busqueda", 
-                        "Error en la busqueda",
-                        "Favor de contactar a soporte", 
-                        AlertType.ERROR);
-                });  
-            }
-        });
-    }
     
     /**
      * Método para registrar un nuevo cliente
@@ -146,7 +120,7 @@ public class NuevaOrdenController implements Initializable {
     }
     
     /**
-     * 
+     * Método que abre la ventana para iniciar sesión en la administración de la aplicación
      * @param event 
      */
     @FXML
@@ -262,23 +236,7 @@ public class NuevaOrdenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initCols();
         initTableEvent();
-        vertx.eventBus().consumer("orders_resume", msg->{
-            // <editor-fold defaultstate="colapsed" desc="handler">
-            Orden o = (Orden) msg.body();
-            Platform.runLater(()->{
-                if(o.isEsNueva()){
-                    this.ordenesTable.getItems().add(o);
-                    o.setEsNueva(false);
-                }else{
-                    if(o.getEstatusOrden() != EstatusOrden.CERRADA)
-                        this.ordenesTable.refresh();
-                    else
-                        this.ordenesTable.getItems().remove(o);
-                }
-            });
-            //</editor-fold>
-        });
-        
+        initGridListener();        
         Platform.runLater(()->{
             Stage ps = (Stage)mesaButton.getScene().getWindow();
             ps.setOnHiding(event-> {
