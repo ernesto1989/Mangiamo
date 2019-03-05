@@ -51,9 +51,10 @@
                         <TableView fx:id="ordenesTable" layoutX="22.0" layoutY="100.0" prefHeight="395.0" prefWidth="488.0">
                             <placeholder><Label text="Sin órdenes pendientes" /></placeholder>
                             <columns>
-                                <TableColumn fx:id="ordenParaColumn" prefWidth="267.0" text="Orden Para" />
-                                <TableColumn fx:id="ordenTotalColumn" minWidth="0.0" prefWidth="118.0" text="Total" />
-                                <TableColumn fx:id="estausColumn" prefWidth="102.0" text="Estatus" />
+                                <TableColumn fx:id="ordenParaColumn" prefWidth="193.0" text="Orden Para" />
+                                <TableColumn fx:id="ordenTotalColumn" prefWidth="113.0" text="Total" />
+                                <TableColumn fx:id="estausColumn" prefWidth="84.0" text="Estatus" />
+                                <TableColumn fx:id="obsColumn" prefWidth="105.0" text="Obs." />
                             </columns>
                         </TableView>
                     </children>

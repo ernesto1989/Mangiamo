@@ -5,13 +5,9 @@ import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
-import com.conciencia.vertx.VertxConfig;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
-import java.text.SimpleDateFormat;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,15 +55,15 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             Orden o = (Orden) msg.body();
             ordenesAbiertas.remove(o.getNumeroOrden());
             DatabaseUtilities dbConn = new SqliteUtilities(AdminController.DB_URL);
-            dbConn.executeInsert(INSERT_ORDER, 
-                    o.getNumeroOrden(),
-                    o.getTipoOrden().toString(),
-                    o.toString(),
-                    o.getCliente() != null? o.getCliente().getId():-1,
-                    o.getHoraRegistro().toString(),
-                    o.getTiempoEspera(),
-                    o.getHoraServicio().toString(),
-                    ChronoUnit.MINUTES.between(o.getHoraRegistro(), o.getHoraServicio()));
+//            dbConn.executeInsert(INSERT_ORDER, 
+//                    o.getNumeroOrden(),
+//                    o.getTipoOrden().toString(),
+//                    o.toString(),
+//                    o.getCliente() != null? o.getCliente().getId():-1,
+//                    o.getHoraRegistro().toString(),
+//                    o.getTiempoEspera(),
+//                    o.getHoraServicio().toString(),
+//                    ChronoUnit.MINUTES.between(o.getHoraRegistro(), o.getHoraServicio()));
             
             msg.reply(o);
             //</editor-fold>

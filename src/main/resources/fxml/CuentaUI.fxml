@@ -29,7 +29,7 @@
          </font>
       </Label>
       <TextField fx:id="porPagarTextField" layoutX="138.0" layoutY="106.0" prefHeight="25.0" prefWidth="130.0" />
-      <Button layoutX="198.0" layoutY="232.0" mnemonicParsing="false" onAction="#pagarCuenta" text="Pagar">
+      <Button fx:id="pagarButton" layoutX="198.0" layoutY="232.0" mnemonicParsing="false" onAction="#pagarCuenta" text="Pagar">
          <font>
             <Font size="14.0" />
          </font>

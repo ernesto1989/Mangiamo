@@ -98,6 +98,10 @@ public class CreadorOrdenController implements Initializable {
     private Button deliverOrderButton;
     @FXML
     private ComboBox<Integer> tiempoEstimadoCombo;
+    @FXML
+    private TextField cambioTextBox;
+    @FXML
+    private Label cambioLabel;
     
     /* OBJETOS DE LA CLASE */
     
@@ -114,8 +118,14 @@ public class CreadorOrdenController implements Initializable {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");    
     
     
+    
+    
     /**************************************************************************/
     
+    /**
+     * Método que trae la órden puesta en la clase Lookup, que es la órden
+     * con la que el usuario interactuará.
+     */
     private void getOrder(){
         this.orden = LookupClass.current;
         LookupClass.current = null; //limpio la orden que se quedó "preseteada"
@@ -128,21 +138,20 @@ public class CreadorOrdenController implements Initializable {
         descripcionTextField.setText(this.orden.toString());
         horaLabel.setVisible(!this.orden.isEsNueva());
         horaOrdenTextfield.setVisible(!this.orden.isEsNueva());
-        if(!this.orden.isEsNueva())
-            horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
         descripcionTextField.setTooltip(new Tooltip(descripcionTextField.getText()));
+        
         ObservableList<Integer> ol = FXCollections.observableArrayList();
         for(int i = AdminController.MINUTOS_ESPERA; i<=AdminController.MINUTOS_ESPERA_MAX;i+=5){
             ol.add(i);
         }
         tiempoEstimadoCombo.setItems(ol);
+
         if(this.orden.isEsNueva()){
             tiempoEstimadoCombo.setValue(AdminController.MINUTOS_ESPERA);
         }else{
+            horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
             tiempoEstimadoCombo.setValue(orden.getTiempoEspera());
         }
-       
-        
     }
     
     /**
@@ -155,19 +164,25 @@ public class CreadorOrdenController implements Initializable {
     }
     
     /**
-     * Método que se ejecuta cuando se selecciona un elemento del menu
+     * Método que se ejecuta cuando se selecciona un elemento del menu.
+     * 1.- Valida que la orden no esté cerrada.
+     * 2.- Valida que el elemento seleccionado no sea una "Sección"
+     * 3.- Desactiva todos los elementos para incrementar la cantidad de los elementos
+     *     tipo orden.
+     * 4.- Crea el Item Ordenado y lo agrega a la tabla
+     * 5.- Agrega los items relacionados
      */
     private void setTreeViewEvent(){
         menuTree.setOnMouseClicked(e->{
-            cantidadTextField.setText("");
-            incrementoButton.setDisable(true);
-            decrementoButton.setDisable(true);
-            modificarButton.setDisable(true);
             if(this.orden.getEstatusOrden() != null && this.orden.getEstatusOrden().equals(EstatusOrden.CERRADA))
                 return;
+            if(menuTree.getSelectionModel().getSelectedItem().getValue() instanceof Seccion)
+                return;
             if(e.getClickCount() == 2){
-                if(menuTree.getSelectionModel().getSelectedItem().getValue() instanceof Seccion)
-                    return;
+                cantidadTextField.setText("");
+                incrementoButton.setDisable(true);
+                decrementoButton.setDisable(true);
+                modificarButton.setDisable(true);
                 Item item = (Item) (menuTree.getSelectionModel().getSelectedItem().getValue());
                 ItemOrdenado o = addItem(item);
                 
@@ -180,7 +195,14 @@ public class CreadorOrdenController implements Initializable {
     }
     
     /**
-     * Método que se ejecuta cuando se selecciona un elemento de la lista de elementos ordenados
+     * Método que se ejecuta cuando se selecciona un elemento de la lista de elementos ordenados.
+     * 1.- Si se realizó 1 click en el elemento de la tabla: 
+     *   1.1.- Habilita los controles de incremento de cantidad si el elemento seleccionado es tipo orden
+     *   1.2.- Deshabilita los controles de incremento de cantidad si el elemento seleccionado no es tipo orden
+     * 2.- Si se realizo doble click en el elemento de la tabla
+     *  2.1.- Elimina el elemento de la tabla
+     *  2.2.- Elimina sus items relacionados
+     * 3.- Fija el total actual
      */
     private void setTableEvent(){
         resumeTable.setOnMouseClicked(e->{
@@ -299,6 +321,39 @@ public class CreadorOrdenController implements Initializable {
             billOrderButton.setDisable(true);
             deliverOrderButton.setDisable(true);
         }
+        
+        if(this.orden.getTipoOrden() == TipoOrden.MESA){
+            saveOrderButton.setVisible(true);
+            deliverOrderButton.setVisible(!this.orden.isEsNueva());
+            deliverOrderButton.setText("Servir");
+            billOrderButton.setVisible(!this.orden.isEsNueva());
+            billOrderButton.setText("Cobrar");
+            cambioLabel.setVisible(false);
+            cambioTextBox.setVisible(false);
+        }
+        
+        if(this.orden.getTipoOrden() == TipoOrden.LLEVAR){
+            saveOrderButton.setVisible(true);
+            deliverOrderButton.setVisible(!this.orden.isEsNueva());
+            deliverOrderButton.setText("Entregar");
+            billOrderButton.setVisible(false);
+            billOrderButton.setText("Cobrar");
+            cambioLabel.setVisible(false);
+            cambioTextBox.setVisible(false);
+        }
+        
+        if(this.orden.getTipoOrden() == TipoOrden.DOMICILIO){
+            saveOrderButton.setVisible(true);
+            deliverOrderButton.setVisible(!this.orden.isEsNueva());
+            deliverOrderButton.setText("Enviar");
+            billOrderButton.setVisible(!this.orden.isEsNueva());
+            billOrderButton.setText("Cerrar");
+            if(!this.orden.isEsNueva()){
+                cambioLabel.setVisible(true);
+                cambioTextBox.setVisible(true);
+                cambioTextBox.setText(this.orden.getCambio().toString());
+            }
+        }
     }
     
     
@@ -350,8 +405,6 @@ public class CreadorOrdenController implements Initializable {
         }
         oItem.setEsOrden(item.getEsOrden());
         resumeTable.getItems().add(oItem);
-        curSubtotal = curSubtotal.add(oItem.getTotal());
-        BigDecimal currentTotal = new BigDecimal(totalTextBox.getText());
         setCurrentTotal();
         return oItem;
     }
@@ -438,18 +491,24 @@ public class CreadorOrdenController implements Initializable {
         if(this.orden.isEsNueva()){
             this.orden.setHoraRegistro(LocalTime.now());
         }
+        
+        if(this.orden.getTipoOrden() == TipoOrden.LLEVAR ||
+                this.orden.getTipoOrden() == TipoOrden.DOMICILIO){
+            billOrder(event);
+        }
+        
         vertx.eventBus().send("save_order", this.orden,result->{
             if(result.succeeded()){
                 Boolean stored = ((JsonObject)result.result().body()).getBoolean("success");
                 if(stored){
                     Platform.runLater(()->{
-//                        Stage ps = (Stage)mainAnchor.getScene().getWindow();
-//                        ps.close();
                         GeneralUtilities.mostrarAlertDialog("Orden Creada",
                             "Orden Creada",
                             "Orden creada con número " + this.orden.getNumeroOrden()
                             , Alert.AlertType.CONFIRMATION);
                         VertxConfig.vertx.eventBus().send("orders_resume", this.orden);
+//                        Stage ps = (Stage)mainAnchor.getScene().getWindow();
+//                        ps.close();                       
                     });
                 }
             }else{
@@ -461,13 +520,24 @@ public class CreadorOrdenController implements Initializable {
     
     @FXML
     private void billOrder(ActionEvent event) {
-        LookupClass.toBill = this.orden;
-        Stage s = new Stage();
-        try {
-            CuentaLoader.getInstance().load(s);
-        } catch (Exception ex) {
-            Logger.getLogger(CreadorOrdenController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        if(this.orden.getTipoOrden() == TipoOrden.DOMICILIO && !this.orden.isEsNueva()){
+            String repartidor = GeneralUtilities.mostrarInputDialog("Repartidor", "Repartidor", "Repartidor").get();
+            String importeRepartidor = GeneralUtilities.mostrarInputDialog("Importe Entregado por Repartidor", "Importe Entregado por Repartidor", "Importe Entregado por Repartidor").get();
+            this.orden.setRepartidor(repartidor);
+            BigDecimal importe = new BigDecimal(importeRepartidor);
+            this.orden.setDiferenciaTotal(this.orden.getTotal().subtract(importe));
+            this.orden.setEstatusOrden(EstatusOrden.CERRADA);
+            VertxConfig.vertx.eventBus().send("close_order", this.orden);
+            VertxConfig.vertx.eventBus().send("orders_resume", this.orden);           
+        }else{
+            LookupClass.toBill = this.orden;
+            Stage s = new Stage();
+            try {
+                CuentaLoader.getInstance().load(s);
+            } catch (Exception ex) {
+                Logger.getLogger(CreadorOrdenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        
     }
     
     @FXML
@@ -475,9 +545,35 @@ public class CreadorOrdenController implements Initializable {
         for(ItemOrdenado io: this.orden.getOrderedItems()){
             io.setServido(Boolean.TRUE);
         }
-        this.orden.setEstatusOrden(EstatusOrden.SERVIDA);
+        
+        if(this.orden.getTipoOrden() == TipoOrden.MESA)
+            this.orden.setEstatusOrden(EstatusOrden.SERVIDA);
+        else{
+            
+            if(this.orden.getTipoOrden() == TipoOrden.LLEVAR){
+                if(!this.orden.getPagado())
+                    billOrder(event);
+                this.orden.setEstatusOrden(EstatusOrden.CERRADA);
+                VertxConfig.vertx.eventBus().send("close_order", this.orden);
+            }
+            
+            if(this.orden.getTipoOrden() == TipoOrden.DOMICILIO){
+                this.orden.setEstatusOrden(EstatusOrden.ENVIADA);
+            }
+            
+        }
         this.orden.setHoraServicio(LocalTime.now());
         VertxConfig.vertx.eventBus().send("orders_resume", this.orden);
+        Platform.runLater(()->{
+            if(this.orden.getTipoOrden() == TipoOrden.MESA)
+                GeneralUtilities.mostrarAlertDialog("Orden Creada",
+                    "Orden Servida",
+                    "Orden servida con número " + this.orden.getNumeroOrden()
+                    , Alert.AlertType.CONFIRMATION);
+            VertxConfig.vertx.eventBus().send("orders_resume", this.orden);
+            Stage ps = (Stage)mainAnchor.getScene().getWindow();
+            ps.close();
+        });
     }    
     
     /**

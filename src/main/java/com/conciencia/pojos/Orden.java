@@ -30,6 +30,9 @@ public class Orden implements ToJson {
     private LocalTime horaServicio;
     private boolean esNueva;
     private Integer tiempoEspera;
+    private BigDecimal cambio = BigDecimal.ZERO;
+    private BigDecimal diferenciaTotal = BigDecimal.ZERO;
+    private String repartidor;
 
     public Orden() {
     }
@@ -48,6 +51,9 @@ public class Orden implements ToJson {
         this.tiempoEspera = obj.getInteger("tiempoEspera");
         this.horaRegistro = LocalTime.parse(obj.getString("horaRegistro"));
         this.horaServicio = LocalTime.parse(obj.getString("horaServicio"));
+        this.cambio = new BigDecimal(obj.getDouble("cambio"));
+        this.diferenciaTotal = new BigDecimal(obj.getDouble("diferenciaTotal"));
+        this.repartidor = obj.getString("repartidor");
     }
 
     private List<ItemOrdenado> getItems(JsonObject obj){
@@ -166,6 +172,38 @@ public class Orden implements ToJson {
     public String getOrdenPara(){
         return this.toString();
     }
+    
+    public String getObservaciones(){
+        if(this.orderType == TipoOrden.DOMICILIO) return "Cambio: " + this.cambio.toString();
+        if(this.pagado) return "PAGADA";
+        return "NO PAGADA";
+    }
+
+    public BigDecimal getCambio() {
+        return cambio;
+    }
+
+    public void setCambio(BigDecimal cambio) {
+        this.cambio = cambio;
+    }
+
+    public BigDecimal getDiferenciaTotal() {
+        return diferenciaTotal;
+    }
+
+    public void setDiferenciaTotal(BigDecimal diferenciaTotal) {
+        this.diferenciaTotal = diferenciaTotal;
+    }
+
+    public String getRepartidor() {
+        return repartidor;
+    }
+
+    public void setRepartidor(String repartidor) {
+        this.repartidor = repartidor;
+    }
+    
+    
 
     @Override
     public JsonObject toJson() {
@@ -190,6 +228,9 @@ public class Orden implements ToJson {
         obj.put("tiempoEspera",this.tiempoEspera);
         obj.put("horaRegistro",this.horaRegistro.toString());
         obj.put("horaServicio",this.horaServicio.toString());
+        obj.put("cambio",this.cambio.toString());
+        obj.put("diferenciaTotal", this.diferenciaTotal);
+        obj.put("repartidor",this.repartidor);
         
         JsonArray a = new JsonArray();
 

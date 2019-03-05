@@ -11,7 +11,7 @@ package com.conciencia.pojos;
  * @author Ernesto Cantu
  */
 public enum EstatusOrden {
-    COCINA,SERVIDA,CERRADA;
+    COCINA,SERVIDA,PAGADA,ENVIADA,CERRADA;
     
     public static EstatusOrden getStatus(String type){
         if(type.equals("COCINA"))

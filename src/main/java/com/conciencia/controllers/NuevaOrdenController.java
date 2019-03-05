@@ -1,6 +1,5 @@
 package com.conciencia.controllers;
 
-import com.conciencia.loaders.CreadorOrdenLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.EstatusOrden;
@@ -13,8 +12,6 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,6 +57,8 @@ public class NuevaOrdenController implements Initializable {
     private TableColumn<Orden, BigDecimal> ordenTotalColumn;
     @FXML
     private TableColumn<Orden, EstatusOrden> estausColumn;
+    @FXML
+    private TableColumn<Orden, String> obsColumn;
     
     /**
      * Método para inicializar las columnas de la tabla de elementos ordenados.
@@ -68,6 +67,7 @@ public class NuevaOrdenController implements Initializable {
         ordenParaColumn.setCellValueFactory(new PropertyValueFactory<>("ordenPara"));
         ordenTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
         estausColumn.setCellValueFactory(new PropertyValueFactory<>("estatusOrden"));
+        obsColumn.setCellValueFactory(new PropertyValueFactory<>("observaciones"));
     }
    
     /**
