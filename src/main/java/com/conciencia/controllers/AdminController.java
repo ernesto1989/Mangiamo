@@ -1,8 +1,11 @@
 package com.conciencia.controllers;
 
+import com.conciencia.pojos.Config;
 import com.conciencia.utilities.GeneralUtilities;
+import com.conciencia.vertx.VertxConfig;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,11 +21,12 @@ import javafx.scene.control.TextField;
  * @author Ernesto Cantu
  */
 public class AdminController implements Initializable {
-    
+        
     public static Integer MESAS = 10;
     public static BigDecimal COSTO_ENVIO = new BigDecimal("15.0");
     public static Integer MINUTOS_ESPERA = 10;
     public static Integer MINUTOS_ESPERA_MAX = 120;
+    public static List<Config> CONF;
     public static String DB_URL = "C:/Conciencia/files/db/MangiamoDB.db";
     
     @FXML
@@ -43,12 +47,19 @@ public class AdminController implements Initializable {
     private TextField baseDatosTextField;
     
     @FXML
-    private void guardarGeneral(ActionEvent event) {
+    private void guardarGeneral(ActionEvent event) {       
         MESAS = Integer.parseInt(noMesaTextField.getText());
         COSTO_ENVIO = new BigDecimal(costoEnvioTextField.getText());
         MINUTOS_ESPERA = Integer.parseInt(tiempoEsperaTextField.getText());
         MINUTOS_ESPERA_MAX = Integer.parseInt(tiempoEsperaMaxTextField.getText());
         DB_URL = baseDatosTextField.getText();
+        
+        CONF.get(0).setValor(MESAS.toString());
+        CONF.get(1).setValor(COSTO_ENVIO.toString());
+        CONF.get(2).setValor(MINUTOS_ESPERA.toString());
+        CONF.get(3).setValor(MINUTOS_ESPERA_MAX.toString());
+        VertxConfig.vertx.eventBus().send("persist_params",null);
+        
         GeneralUtilities.mostrarAlertDialog("Administración", "Administración General", "Configuración Guardada", Alert.AlertType.INFORMATION);
     }
     

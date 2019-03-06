@@ -60,6 +60,11 @@ public class VertxConfig {
         vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");  
         vertx.deployVerticle("com.conciencia.vertx.verticles.OrdenesRepositoryVerticle");  
         vertx.deployVerticle("com.conciencia.vertx.verticles.UsersDatabaseVerticle");  
+        vertx.deployVerticle("com.conciencia.vertx.verticles.AdminDatabaseVerticle",hndlr->{
+            if(hndlr.succeeded()){
+                vertx.eventBus().send("init_params",null);
+            }
+        });  
     }
     
     /**
