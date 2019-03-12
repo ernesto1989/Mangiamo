@@ -1,5 +1,6 @@
 package com.conciencia.lookups;
 
+import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
 
 /**
@@ -13,4 +14,5 @@ public class LookupClass {
     public static Orden current;
     public static Orden toBill;
     public static String telefono;
+    public static Menu menu;
 }

@@ -1,6 +1,5 @@
 package com.conciencia.pojos;
 
-import com.conciencia.db.SpectedResult;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
@@ -9,12 +8,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import com.conciencia.db.ExpectedResult;
 
 /**
  * Item de menu
  * @author usuario
  */
-public class Item extends TreeContainer implements ToJson,SpectedResult {
+public class Item extends TreeContainer implements ToJson,ExpectedResult {
     
     /* PROPIEDADES DEL ITEM */
     protected Integer id;

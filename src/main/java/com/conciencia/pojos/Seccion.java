@@ -1,18 +1,18 @@
 package com.conciencia.pojos;
 
-import com.conciencia.db.SpectedResult;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.conciencia.db.ExpectedResult;
 
 /**
  * Seccion de menu con sus items.
  * @author usuario
  */
-public class Seccion extends TreeContainer implements ToJson,SpectedResult {
+public class Seccion extends TreeContainer implements ToJson,ExpectedResult {
     
     private String nombre;
     private List<Item> items;

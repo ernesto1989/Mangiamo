@@ -2,6 +2,7 @@ package com.conciencia.main;
 
 import com.conciencia.loaders.NuevaOrdenLoader;
 import com.conciencia.vertx.VertxConfig;
+import com.conciencia.repositories.MenuRepository;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -27,6 +28,7 @@ public class MainApp extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        MenuRepository.initMenu();
         VertxConfig.config();
         NuevaOrdenLoader.getInstance().load(primaryStage);  
     }

@@ -1,16 +1,16 @@
 package com.conciencia.pojos;
 
-import com.conciencia.db.SpectedResult;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import com.conciencia.db.ExpectedResult;
 
 /**
  * Clase que representa a un usuario del sistema.
  * 
  * @author Ernesto Cantú
  */
-public class Usuario implements ToJson, SpectedResult {
+public class Usuario implements ToJson, ExpectedResult {
     
     /* PROPIEDADES DEL CLIENTE */
     private Integer id;
@@ -79,6 +79,20 @@ public class Usuario implements ToJson, SpectedResult {
         json.put("password", getPassword());
         return json;
     }
+    
+//    @Override
+//    public void initWithJson(JsonObject json){
+//        this.id = json.getInteger("id");
+//        this.nombre = json.getString("nombre");
+//        this.user = json.getString("user");
+//        this.password = json.getString("password");
+//        json.put("type","Usuario");
+//    }
+//    
+//    @Override
+//    public String getType(){
+//        return "Usuario";
+//    }
     
     /**
      * Método que permite extraer de un ResultSet un cliente.

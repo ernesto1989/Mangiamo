@@ -1,17 +1,17 @@
 package com.conciencia.pojos;
 
-import com.conciencia.db.SpectedResult;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
+import com.conciencia.db.ExpectedResult;
 
 /**
  * Clase que representa a un cliente del restaurante.
  * 
  * @author Ernesto Cantú
  */
-public class Cliente implements ToJson, SpectedResult {
+public class Cliente implements ToJson, ExpectedResult {
     
     /* PROPIEDADES DEL CLIENTE */
     private Integer id;
@@ -129,8 +129,26 @@ public class Cliente implements ToJson, SpectedResult {
         json.put("colonia",getColonia());
         json.put("eCalle1",geteCalle1());
         json.put("eCalle2",geteCalle2());
+        json.put("type","Cliente");
         return json;
     }
+    
+//    @Override
+//    public void initWithJson(JsonObject json){
+//        this.id = json.getInteger("id");
+//        this.nombre = json.getString("nombre");
+//        this.telefono = json.getString("telefono");
+//        this.calle = json.getString("calle");
+//        this.numero = json.getString("numero");
+//        this.colonia = json.getString("colonia");
+//        this.eCalle1 = json.getString("eCalle1");
+//        this.eCalle2 = json.getString("eCalle2");
+//    }
+//    
+//    @Override
+//    public String getType(){
+//        return "Cliente";
+//    }
     
     /**
      * Método que permite extraer de un ResultSet un cliente.
@@ -185,6 +203,4 @@ public class Cliente implements ToJson, SpectedResult {
         }
         return true;
     }
-    
-    
 }

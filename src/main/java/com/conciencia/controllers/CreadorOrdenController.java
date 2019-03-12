@@ -104,7 +104,7 @@ public class CreadorOrdenController implements Initializable {
     private Label cambioLabel;
     
     /* OBJETOS DE LA CLASE */
-    
+        
     private Orden orden;
     
     private ItemOrdenado selected;
@@ -248,12 +248,8 @@ public class CreadorOrdenController implements Initializable {
      * Método que trae el menú desde la bd
      */
     private void getMenu() {
-        vertx.eventBus().send("get_menu",null,response -> {
-            Menu menu = (Menu) response.result().body();
-            Platform.runLater(()->{
-                createTree(menu);
-            });
-        });
+        Menu m = LookupClass.menu;
+        createTree(m);
     }
     
     /**

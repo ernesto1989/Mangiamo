@@ -6,10 +6,8 @@ import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.Usuario;
 import com.conciencia.vertx.codecs.ClienteCodec;
-import com.conciencia.vertx.codecs.MenuCodec;
-import com.conciencia.vertx.codecs.MenuItemCodec;
 import com.conciencia.vertx.codecs.OrdenCodec;
-import com.conciencia.vertx.codecs.UsersCodec;
+import com.conciencia.vertx.codecs.UsuarioCodec;
 import io.vertx.core.Vertx;
 
 /**
@@ -57,7 +55,6 @@ public class VertxConfig {
      */
     private static void deployVerticles() {
         vertx.deployVerticle("com.conciencia.vertx.verticles.CustomersDatabaseVerticle");
-        vertx.deployVerticle("com.conciencia.vertx.verticles.MenuDatabaseVerticle");  
         vertx.deployVerticle("com.conciencia.vertx.verticles.OrdenesRepositoryVerticle");  
         vertx.deployVerticle("com.conciencia.vertx.verticles.UsersDatabaseVerticle");  
         vertx.deployVerticle("com.conciencia.vertx.verticles.AdminDatabaseVerticle",hndlr->{
@@ -78,9 +75,7 @@ public class VertxConfig {
      */
     public static void registerCodecs(){
         vertx.eventBus().registerDefaultCodec(Cliente.class, new ClienteCodec());
-        vertx.eventBus().registerDefaultCodec(Item.class, new MenuItemCodec());
-        vertx.eventBus().registerDefaultCodec(Menu.class, new MenuCodec());
         vertx.eventBus().registerDefaultCodec(Orden.class, new OrdenCodec());
-        vertx.eventBus().registerDefaultCodec(Usuario.class, new UsersCodec());
+        vertx.eventBus().registerDefaultCodec(Usuario.class, new UsuarioCodec());
     }
 }

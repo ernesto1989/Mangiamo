@@ -1,19 +1,19 @@
 package com.conciencia.pojos;
 
 import com.conciencia.controllers.AdminController;
-import com.conciencia.db.SpectedResult;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.conciencia.db.ExpectedResult;
 
 /**
  * Clase utilitaria que permite interactuar con la tabla de parámetros.
  *
  * @author Ernesto Cantu
  */
-public class Config implements ToJson,SpectedResult {
+public class Config implements ToJson,ExpectedResult {
 
     private int id;
     private String parametro;
