@@ -1,5 +1,6 @@
 package com.conciencia.pojos;
 
+import com.conciencia.pojos.interfaces.ToJson;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;

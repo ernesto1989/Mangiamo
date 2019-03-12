@@ -6,9 +6,9 @@
 package com.conciencia.controllers;
 
 import com.conciencia.lookups.LookupClass;
-import com.conciencia.pojos.EstatusOrden;
+import com.conciencia.pojos.enums.EstatusOrden;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.TipoOrden;
+import com.conciencia.pojos.enums.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
 import java.math.BigDecimal;

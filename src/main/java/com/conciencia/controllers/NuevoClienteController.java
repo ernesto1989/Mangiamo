@@ -2,7 +2,7 @@ package com.conciencia.controllers;
 
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.TipoOrden;
+import com.conciencia.pojos.enums.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
 import java.net.URL;

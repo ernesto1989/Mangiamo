@@ -1,6 +1,6 @@
 package com.conciencia.lookups;
 
-import com.conciencia.pojos.Menu;
+import com.conciencia.pojos.menu.Menu;
 import com.conciencia.pojos.Orden;
 
 /**

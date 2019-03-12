@@ -1,8 +1,8 @@
 package com.conciencia.vertx;
 
 import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.Item;
-import com.conciencia.pojos.Menu;
+import com.conciencia.pojos.menu.Item;
+import com.conciencia.pojos.menu.Menu;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.Usuario;
 import com.conciencia.vertx.codecs.ClienteCodec;

@@ -1,4 +1,4 @@
-package com.conciencia.pojos;
+package com.conciencia.pojos.enums;
 
 /**
  * Define los tipos de ordenes que existen

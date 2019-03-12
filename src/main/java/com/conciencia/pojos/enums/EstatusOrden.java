@@ -1,4 +1,4 @@
-package com.conciencia.pojos;
+package com.conciencia.pojos.enums;
 
 /**
  * ENUM que define los estados de una orden.
@@ -18,6 +18,10 @@ public enum EstatusOrden {
             return COCINA;
         if(type.equals("SERVIDA"))
             return SERVIDA;
+        if(type.equals("PAGADA"))
+            return PAGADA;
+        if(type.equals("ENVIADA"))
+            return ENVIADA;
         if(type.equals("CERRADA"))
             return CERRADA;
         return null;

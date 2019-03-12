@@ -1,4 +1,4 @@
-package com.conciencia.pojos;
+package com.conciencia.pojos.menu;
 
 import java.util.ArrayList;
 

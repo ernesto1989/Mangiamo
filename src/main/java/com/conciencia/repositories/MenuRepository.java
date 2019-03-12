@@ -4,9 +4,9 @@ import com.conciencia.controllers.AdminController;
 import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import static com.conciencia.lookups.LookupClass.menu;
-import com.conciencia.pojos.Item;
-import com.conciencia.pojos.Menu;
-import com.conciencia.pojos.Seccion;
+import com.conciencia.pojos.menu.Item;
+import com.conciencia.pojos.menu.Menu;
+import com.conciencia.pojos.menu.Seccion;
 import java.util.ArrayList;
 import java.util.List;
 

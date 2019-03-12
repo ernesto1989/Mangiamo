@@ -8,7 +8,7 @@ import com.conciencia.loaders.NuevoClienteLoader;
 import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.TipoOrden;
+import com.conciencia.pojos.enums.TipoOrden;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import java.util.ArrayList;
 import java.util.List;

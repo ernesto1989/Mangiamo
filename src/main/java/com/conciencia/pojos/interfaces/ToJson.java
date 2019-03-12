@@ -1,4 +1,4 @@
-package com.conciencia.pojos;
+package com.conciencia.pojos.interfaces;
 
 import io.vertx.core.json.JsonObject;
 
@@ -7,7 +7,7 @@ import io.vertx.core.json.JsonObject;
  * 
  * @author Ernesto Cantú
  */
-interface ToJson {
+public interface ToJson {
     
     /**
      * Método que permite define como un objeto se convierte en Json

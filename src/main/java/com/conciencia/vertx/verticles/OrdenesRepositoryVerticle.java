@@ -3,7 +3,7 @@ package com.conciencia.vertx.verticles;
 import com.conciencia.controllers.AdminController;
 import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
-import com.conciencia.pojos.EstatusOrden;
+import com.conciencia.pojos.enums.EstatusOrden;
 import com.conciencia.pojos.Orden;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;

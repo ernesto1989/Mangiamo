@@ -1,5 +1,6 @@
 package com.conciencia.pojos;
 
+import com.conciencia.pojos.interfaces.ToJson;
 import com.conciencia.controllers.AdminController;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
@@ -45,8 +46,6 @@ public class Config implements ToJson,ExpectedResult {
     public void setValor(String valor) {
         this.valor = valor;
     }
-
-    
     
     @Override
     public void mapResult(ResultSet rs) {
