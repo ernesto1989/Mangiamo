@@ -1,6 +1,5 @@
-package com.conciencia.pojos.menu;
+package com.conciencia.pojos;
 
-import com.conciencia.pojos.interfaces.TreeContainer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;

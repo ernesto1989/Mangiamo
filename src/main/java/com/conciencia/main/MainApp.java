@@ -1,6 +1,6 @@
 package com.conciencia.main;
 
-import com.conciencia.loaders.NuevaOrdenLoader;
+import com.conciencia.utilities.GenericLoader;
 import com.conciencia.vertx.VertxConfig;
 import com.conciencia.repositories.MenuRepository;
 import javafx.application.Application;
@@ -30,7 +30,9 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         MenuRepository.initMenu();
         VertxConfig.config();
-        NuevaOrdenLoader.getInstance().load(primaryStage);  
+        GenericLoader nuevaOrdenLoader = new GenericLoader("/fxml/NuevaOrdenUI.fxml", 
+                "/styles/addbook.css", "Mangiamo") ;
+        nuevaOrdenLoader.load(primaryStage);  
     }
     
     /**

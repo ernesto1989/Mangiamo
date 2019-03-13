@@ -1,4 +1,4 @@
-package com.conciencia.loaders;
+package com.conciencia.utilities;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,12 +9,18 @@ import javafx.stage.Stage;
  * Clase abstracta que define como cargar un stage.
  * @author Ernesto Cantu
  */
-public abstract class Loader {
+public class GenericLoader {
     
     /**
      * Atributos necesarios para cargar un fxml.
      */
-    protected String fxmlRoute,styleRoute,title;
+    private String fxmlRoute,styleRoute,title;
+    
+    public GenericLoader(String fxmlRoute,String styleRoute,String title){
+        this.fxmlRoute = fxmlRoute;
+        this.styleRoute = styleRoute;
+        this.title = title;
+    }
         
     /**
      * Método que cargar un FXML y generar el controlador necesario.

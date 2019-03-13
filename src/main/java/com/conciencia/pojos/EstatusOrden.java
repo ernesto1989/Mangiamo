@@ -1,4 +1,4 @@
-package com.conciencia.pojos.enums;
+package com.conciencia.pojos;
 
 /**
  * ENUM que define los estados de una orden.

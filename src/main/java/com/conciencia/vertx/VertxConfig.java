@@ -1,13 +1,9 @@
 package com.conciencia.vertx;
 
-import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.menu.Item;
-import com.conciencia.pojos.menu.Menu;
+import com.conciencia.vertx.eventbus.EventBusWrapper;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.Usuario;
-import com.conciencia.vertx.codecs.ClienteCodec;
-import com.conciencia.vertx.codecs.OrdenCodec;
-import com.conciencia.vertx.codecs.UsuarioCodec;
+import com.conciencia.vertx.eventbus.EventBusWrapperCodec;
+import com.conciencia.vertx.eventbus.OrdenCodec;
 import io.vertx.core.Vertx;
 
 /**
@@ -74,8 +70,7 @@ public class VertxConfig {
      * 3.- Objeto cliente
      */
     public static void registerCodecs(){
-        vertx.eventBus().registerDefaultCodec(Cliente.class, new ClienteCodec());
+        vertx.eventBus().registerDefaultCodec(EventBusWrapper.class, new EventBusWrapperCodec());
         vertx.eventBus().registerDefaultCodec(Orden.class, new OrdenCodec());
-        vertx.eventBus().registerDefaultCodec(Usuario.class, new UsuarioCodec());
     }
 }

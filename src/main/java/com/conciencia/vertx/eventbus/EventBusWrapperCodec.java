@@ -1,4 +1,4 @@
-package com.conciencia.vertx.codecs;
+package com.conciencia.vertx.eventbus;
 
 import com.conciencia.pojos.Cliente;
 import io.vertx.core.buffer.Buffer;
@@ -10,12 +10,12 @@ import io.vertx.core.json.JsonObject;
  * 
  * @author Ernesto Cantu
  */
-public class ClienteCodec implements MessageCodec<Cliente, Cliente> {
+public class EventBusWrapperCodec implements MessageCodec<EventBusWrapper, EventBusWrapper> {
 
     
     @Override
-    public void encodeToWire(Buffer buffer, Cliente cliente) {
-        JsonObject jsonToEncode = cliente.toJson();
+    public void encodeToWire(Buffer buffer, EventBusWrapper obj) {
+        JsonObject jsonToEncode = obj.toJson();
         String jsonToStr = jsonToEncode.encode();
         int length = jsonToStr.getBytes().length;
         buffer.appendInt(length);
@@ -23,17 +23,19 @@ public class ClienteCodec implements MessageCodec<Cliente, Cliente> {
     }
 
     @Override
-    public Cliente decodeFromWire(int position, Buffer buffer) {
+    public EventBusWrapper decodeFromWire(int position, Buffer buffer) {
         int _pos = position;
         int length = buffer.getInt(_pos);
         String jsonStr = buffer.getString(_pos += 4, _pos += length);
         JsonObject contentJson = new JsonObject(jsonStr);     
-        return new Cliente(contentJson);
+        EventBusWrapper wrapper = new EventBusWrapper();
+        wrapper.initWithJson(contentJson);
+        return wrapper;
     }
 
     @Override
-    public Cliente transform(Cliente cliente) {
-        return cliente;
+    public EventBusWrapper transform(EventBusWrapper obj) {
+        return obj;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.conciencia.pojos;
 
-import com.conciencia.pojos.interfaces.ToJson;
+import com.conciencia.vertx.eventbus.EventBusObject;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +12,7 @@ import com.conciencia.db.ExpectedResult;
  * 
  * @author Ernesto Cantú
  */
-public class Cliente implements ToJson, ExpectedResult {
+public class Cliente extends EventBusObject implements ExpectedResult {
     
     /* PROPIEDADES DEL CLIENTE */
     private Integer id;
@@ -134,22 +134,17 @@ public class Cliente implements ToJson, ExpectedResult {
         return json;
     }
     
-//    @Override
-//    public void initWithJson(JsonObject json){
-//        this.id = json.getInteger("id");
-//        this.nombre = json.getString("nombre");
-//        this.telefono = json.getString("telefono");
-//        this.calle = json.getString("calle");
-//        this.numero = json.getString("numero");
-//        this.colonia = json.getString("colonia");
-//        this.eCalle1 = json.getString("eCalle1");
-//        this.eCalle2 = json.getString("eCalle2");
-//    }
-//    
-//    @Override
-//    public String getType(){
-//        return "Cliente";
-//    }
+    @Override
+    public void initWithJson(JsonObject json){
+        this.id = json.getInteger("id");
+        this.nombre = json.getString("nombre");
+        this.telefono = json.getString("telefono");
+        this.calle = json.getString("calle");
+        this.numero = json.getString("numero");
+        this.colonia = json.getString("colonia");
+        this.eCalle1 = json.getString("eCalle1");
+        this.eCalle2 = json.getString("eCalle2");
+    }
     
     /**
      * Método que permite extraer de un ResultSet un cliente.

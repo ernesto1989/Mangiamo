@@ -1,6 +1,6 @@
 package com.conciencia.pojos;
 
-import com.conciencia.pojos.interfaces.ToJson;
+import com.conciencia.utilities.ToJson;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 

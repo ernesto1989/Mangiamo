@@ -1,11 +1,12 @@
 package com.conciencia.controllers;
 
-import com.conciencia.lookups.LookupClass;
+import com.conciencia.utilities.LookupClass;
 import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.enums.EstatusOrden;
+import com.conciencia.pojos.EstatusOrden;
+import com.conciencia.vertx.eventbus.EventBusWrapper;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.enums.TipoOrden;
+import com.conciencia.pojos.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
 import java.math.BigDecimal;
@@ -203,7 +204,8 @@ public class NuevaOrdenController implements Initializable {
         LookupClass.telefono = telefono;
         VertxConfig.vertx.eventBus().send("get_customer",telefono,response->{
             if(response.succeeded()){
-                Cliente c = (Cliente) response.result().body();
+                EventBusWrapper wrapper = (EventBusWrapper) response.result().body();
+                Cliente c = (Cliente)wrapper.getPojo();
                 Platform.runLater(()->{
                     Alert alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Confirmar Cliente");

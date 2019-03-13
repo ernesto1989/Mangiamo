@@ -1,15 +1,15 @@
 package com.conciencia.controllers;
 
-import com.conciencia.loaders.CuentaLoader;
-import com.conciencia.lookups.LookupClass;
-import com.conciencia.pojos.enums.EstatusOrden;
-import com.conciencia.pojos.menu.Item;
-import com.conciencia.pojos.menu.Menu;
+import com.conciencia.utilities.GenericLoader;
+import com.conciencia.utilities.LookupClass;
+import com.conciencia.pojos.EstatusOrden;
+import com.conciencia.pojos.Item;
+import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.enums.TipoOrden;
+import com.conciencia.pojos.TipoOrden;
 import com.conciencia.pojos.ItemOrdenado;
-import com.conciencia.pojos.menu.Seccion;
-import com.conciencia.pojos.interfaces.TreeContainer;
+import com.conciencia.pojos.Seccion;
+import com.conciencia.pojos.TreeContainer;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.utilities.PrintableClass;
 import com.conciencia.vertx.VertxConfig;
@@ -529,7 +529,9 @@ public class CreadorOrdenController implements Initializable {
             LookupClass.toBill = this.orden;
             Stage s = new Stage();
             try {
-                CuentaLoader.getInstance().load(s);
+                GenericLoader cuentaLoader = new GenericLoader("/fxml/CuentaUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo") ;
+                cuentaLoader.load(s);
             } catch (Exception ex) {
                 Logger.getLogger(CreadorOrdenController.class.getName()).log(Level.SEVERE, null, ex);
             }

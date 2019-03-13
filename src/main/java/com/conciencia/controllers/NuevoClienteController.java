@@ -1,8 +1,9 @@
 package com.conciencia.controllers;
 
-import com.conciencia.lookups.LookupClass;
+import com.conciencia.utilities.LookupClass;
 import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.enums.TipoOrden;
+import com.conciencia.vertx.eventbus.EventBusWrapper;
+import com.conciencia.pojos.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
 import java.net.URL;
@@ -79,7 +80,10 @@ public class NuevoClienteController implements Initializable {
     @FXML
     private void agregarCliente(ActionEvent event) {
         creaCliente();
-        VertxConfig.vertx.eventBus().send("save_customer",cliente,response->{
+        EventBusWrapper wrapper = new EventBusWrapper();
+        wrapper.setType("Cliente");
+        wrapper.setPojo(cliente);
+        VertxConfig.vertx.eventBus().send("save_customer",wrapper,response->{
             if(response.succeeded()){
                 int result = (int) response.result().body();
                 if(cliente.getId() != null && cliente.getId() == result){

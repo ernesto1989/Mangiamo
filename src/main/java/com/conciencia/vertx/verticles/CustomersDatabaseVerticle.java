@@ -4,6 +4,7 @@ import com.conciencia.controllers.AdminController;
 import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import com.conciencia.pojos.Cliente;
+import com.conciencia.vertx.eventbus.EventBusWrapper;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import java.util.List;
@@ -75,7 +76,10 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
             String phone = (String) msg.body();
             Cliente c = getCustomer(phone);
             if(c != null){
-                msg.reply(c);
+                EventBusWrapper wrapper = new EventBusWrapper();
+                wrapper.setType("Cliente");
+                wrapper.setPojo(c);
+                msg.reply(wrapper);
             }else{
                 msg.fail(0, "No se encontró el cliente solicitado");
             }   
@@ -84,7 +88,8 @@ public class CustomersDatabaseVerticle extends AbstractVerticle{
         
         vertx.eventBus().consumer("save_customer",msg->{
             // <editor-fold defaultstate="colapsed" desc="handler">
-            Cliente customer = (Cliente)msg.body();
+            EventBusWrapper wrapper = (EventBusWrapper) msg.body();
+            Cliente customer = (Cliente)wrapper.getPojo();
             int result = insertCustomer(customer);
             if(customer.getId() != null && customer.getId() == result){
                 msg.reply(result);

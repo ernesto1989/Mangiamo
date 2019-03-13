@@ -1,5 +1,6 @@
 package com.conciencia.controllers;
 
+import com.conciencia.vertx.eventbus.EventBusWrapper;
 import com.conciencia.pojos.Usuario;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
@@ -34,10 +35,14 @@ public class LogInController implements Initializable {
         Usuario s = new Usuario();
         s.setUser(userName);
         s.setPassword(pass);
+        EventBusWrapper wrapper = new EventBusWrapper();
+        wrapper.setType("Usuario");
+        wrapper.setPojo(s);
         
-        VertxConfig.vertx.eventBus().send("get_user",s,hndlr->{
+        VertxConfig.vertx.eventBus().send("get_user",wrapper,hndlr->{
             if(hndlr.succeeded()){
-                Usuario user = (Usuario)hndlr.result().body();
+                EventBusWrapper w = (EventBusWrapper)hndlr.result().body();
+                Usuario user = (Usuario) w.getPojo();
                 System.out.println(user);
                 Platform.runLater(()->{
                     Stage ps = (Stage)userTextField.getScene().getWindow();

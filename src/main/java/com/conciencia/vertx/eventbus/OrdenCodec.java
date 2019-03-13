@@ -1,6 +1,6 @@
-package com.conciencia.vertx.codecs;
+package com.conciencia.vertx.eventbus;
 
-import com.conciencia.pojos.Usuario;
+import com.conciencia.pojos.Orden;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonObject;
@@ -10,11 +10,11 @@ import io.vertx.core.json.JsonObject;
  * 
  * @author Ernesto Cantu
  */
-public class UsuarioCodec implements MessageCodec<Usuario, Usuario> {
+public class OrdenCodec implements MessageCodec<Orden, Orden> {
 
     @Override
-    public void encodeToWire(Buffer buffer, Usuario usuario) {
-        JsonObject jsonToEncode = usuario.toJson();
+    public void encodeToWire(Buffer buffer, Orden orden) {
+        JsonObject jsonToEncode = orden.toJson();
         String jsonToStr = jsonToEncode.encode();
         int length = jsonToStr.getBytes().length;
         buffer.appendInt(length);
@@ -22,18 +22,18 @@ public class UsuarioCodec implements MessageCodec<Usuario, Usuario> {
     }
 
     @Override
-    public Usuario decodeFromWire(int position, Buffer buffer) {
+    public Orden decodeFromWire(int position, Buffer buffer) {
         int _pos = position;
         int length = buffer.getInt(_pos);
         String jsonStr = buffer.getString(_pos += 4, _pos += length);
         JsonObject contentJson = new JsonObject(jsonStr);     
         
-        return new Usuario(contentJson);
+        return new Orden(contentJson);
     }
 
     @Override
-    public Usuario transform(Usuario usuario) {
-        return usuario;
+    public Orden transform(Orden orden) {
+        return orden;
     }
 
     @Override

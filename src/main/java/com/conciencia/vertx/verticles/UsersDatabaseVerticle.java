@@ -3,6 +3,7 @@ package com.conciencia.vertx.verticles;
 import com.conciencia.controllers.AdminController;
 import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
+import com.conciencia.vertx.eventbus.EventBusWrapper;
 import com.conciencia.pojos.Usuario;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -50,10 +51,12 @@ public class UsersDatabaseVerticle extends AbstractVerticle{
         dbConn = new SqliteUtilities(AdminController.DB_URL);
         vertx.eventBus().consumer("get_user", msg->{
             // <editor-fold defaultstate="colapsed" desc="handler">
-            Usuario user = (Usuario) msg.body();
+            EventBusWrapper wrapper = (EventBusWrapper) msg.body();
+            Usuario user = (Usuario)wrapper.getPojo();
             Usuario u = getUser(user.getUser(),user.getPassword());
             if(u != null){
-                msg.reply(u);
+                wrapper.setPojo(u);
+                msg.reply(wrapper);
             }else{
                 msg.fail(0, "No se encontró el usuario solicitado");
             }   

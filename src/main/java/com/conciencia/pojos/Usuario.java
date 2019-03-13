@@ -1,6 +1,6 @@
 package com.conciencia.pojos;
 
-import com.conciencia.pojos.interfaces.ToJson;
+import com.conciencia.vertx.eventbus.EventBusObject;
 import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import com.conciencia.db.ExpectedResult;
  * 
  * @author Ernesto Cantú
  */
-public class Usuario implements ToJson, ExpectedResult {
+public class Usuario extends EventBusObject implements ExpectedResult {
     
     /* PROPIEDADES DEL CLIENTE */
     private Integer id;
@@ -81,19 +81,14 @@ public class Usuario implements ToJson, ExpectedResult {
         return json;
     }
     
-//    @Override
-//    public void initWithJson(JsonObject json){
-//        this.id = json.getInteger("id");
-//        this.nombre = json.getString("nombre");
-//        this.user = json.getString("user");
-//        this.password = json.getString("password");
-//        json.put("type","Usuario");
-//    }
-//    
-//    @Override
-//    public String getType(){
-//        return "Usuario";
-//    }
+    @Override
+    public void initWithJson(JsonObject json){
+        this.id = json.getInteger("id");
+        this.nombre = json.getString("nombre");
+        this.user = json.getString("user");
+        this.password = json.getString("password");
+        json.put("type","Usuario");
+    }
     
     /**
      * Método que permite extraer de un ResultSet un cliente.

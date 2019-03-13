@@ -1,4 +1,4 @@
-package com.conciencia.pojos.interfaces;
+package com.conciencia.utilities;
 
 import io.vertx.core.json.JsonObject;
 

@@ -1,8 +1,6 @@
 package com.conciencia.pojos;
 
-import com.conciencia.pojos.interfaces.ToJson;
-import com.conciencia.pojos.enums.EstatusOrden;
-import com.conciencia.pojos.enums.TipoOrden;
+import com.conciencia.utilities.ToJson;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
 import io.vertx.core.json.JsonArray;

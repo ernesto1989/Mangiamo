@@ -1,14 +1,9 @@
 package com.conciencia.utilities;
 
 import com.conciencia.controllers.NuevaOrdenController;
-import com.conciencia.loaders.AdminLoader;
-import com.conciencia.loaders.CreadorOrdenLoader;
-import com.conciencia.loaders.LoginLoader;
-import com.conciencia.loaders.NuevoClienteLoader;
-import com.conciencia.lookups.LookupClass;
 import com.conciencia.pojos.Cliente;
 import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.enums.TipoOrden;
+import com.conciencia.pojos.TipoOrden;
 import static com.conciencia.vertx.VertxConfig.vertx;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +54,9 @@ public class GeneralUtilities {
     public static void abrirCreadorOrdenUI(){
         Stage ps = new Stage();
         try {
-            CreadorOrdenLoader.getInstance().load(ps);
+            GenericLoader nuevaOrdenLoader = new GenericLoader("/fxml/CreadorOrdenUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo") ;
+            nuevaOrdenLoader.load(ps);
         } catch (Exception ex) {
             Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
         } 
@@ -72,7 +69,9 @@ public class GeneralUtilities {
         Platform.runLater(()->{
             Stage ps = new Stage();
             try {
-                NuevoClienteLoader.getInstance().load(ps);
+                GenericLoader nuevoClienteLoader = new GenericLoader("/fxml/NuevoClienteUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo") ;
+                nuevoClienteLoader.load(ps);
             } catch (Exception ex) {
                 Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -86,7 +85,9 @@ public class GeneralUtilities {
         Platform.runLater(()->{
             Stage ps = new Stage();
             try {
-                LoginLoader.getInstance().load(ps);
+                GenericLoader loginLoader = new GenericLoader("/fxml/LogInUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo") ;
+                loginLoader.load(ps);
             } catch (Exception ex) {
                 Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -100,7 +101,9 @@ public class GeneralUtilities {
         Platform.runLater(()->{
             Stage ps = new Stage();
             try {
-                AdminLoader.getInstance().load(ps);
+                GenericLoader adminLoader = new GenericLoader("/fxml/AdminUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo") ;
+                adminLoader.load(ps);
             } catch (Exception ex) {
                 Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
             }
