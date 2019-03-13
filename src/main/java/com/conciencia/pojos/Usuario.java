@@ -13,6 +13,8 @@ import com.conciencia.db.ExpectedResult;
  */
 public class Usuario extends EventBusObject implements ExpectedResult {
     
+    public static String TYPE = "Usuario";
+    
     /* PROPIEDADES DEL CLIENTE */
     private Integer id;
     private String nombre;
@@ -88,6 +90,11 @@ public class Usuario extends EventBusObject implements ExpectedResult {
         this.user = json.getString("user");
         this.password = json.getString("password");
         json.put("type","Usuario");
+    }
+    
+    @Override
+    public String getType(){
+        return Usuario.TYPE;
     }
     
     /**

@@ -35,7 +35,7 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
     public void start(Future<Void> startFuture) throws Exception {
         ordenesAbiertas = new HashMap<>();
         vertx.eventBus().consumer("get_order_num", msg-> {
-            msg.reply(NUMERO_ORDEN);
+            msg.reply(NUMERO_ORDEN);                                     
         });
         
         vertx.eventBus().consumer("save_order", msg->{

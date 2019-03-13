@@ -1,6 +1,5 @@
 package com.conciencia.vertx.eventbus;
 
-import com.conciencia.pojos.Cliente;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonObject;

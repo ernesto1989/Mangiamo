@@ -81,7 +81,7 @@ public class NuevoClienteController implements Initializable {
     private void agregarCliente(ActionEvent event) {
         creaCliente();
         EventBusWrapper wrapper = new EventBusWrapper();
-        wrapper.setType("Cliente");
+        wrapper.setType(cliente.getType());
         wrapper.setPojo(cliente);
         VertxConfig.vertx.eventBus().send("save_customer",wrapper,response->{
             if(response.succeeded()){

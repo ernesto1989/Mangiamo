@@ -4,7 +4,6 @@ import com.conciencia.utilities.GenericLoader;
 import com.conciencia.utilities.LookupClass;
 import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Item;
-import com.conciencia.pojos.Menu;
 import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
 import com.conciencia.pojos.ItemOrdenado;
@@ -248,15 +247,15 @@ public class CreadorOrdenController implements Initializable {
      * Método que trae el menú desde la bd
      */
     private void getMenu() {
-        Menu m = LookupClass.menu;
-        createTree(m);
+        List<Seccion> menu = LookupClass.menu;
+        createTree(menu);
     }
     
     /**
      * Método que inicializa el menú en la pantalla
      * @param menu 
      */
-    private void createTree(Menu menu){
+    private void createTree(List<Seccion> menu){
         Seccion root = new Seccion();
         root.setNombre("Menu");
         TreeItem<TreeContainer> rootNode = new TreeItem<>(root);

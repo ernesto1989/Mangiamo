@@ -14,7 +14,7 @@ public class EventBusWrapper implements JsonConverter{
     private EventBusObject pojo;
     
     public EventBusWrapper(){
-    
+          
     }
 
     public String getType() {

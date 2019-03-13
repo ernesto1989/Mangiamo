@@ -14,6 +14,8 @@ import com.conciencia.db.ExpectedResult;
  */
 public class Cliente extends EventBusObject implements ExpectedResult {
     
+    public static String TYPE = "Cliente";
+    
     /* PROPIEDADES DEL CLIENTE */
     private Integer id;
     private String nombre;
@@ -144,6 +146,11 @@ public class Cliente extends EventBusObject implements ExpectedResult {
         this.colonia = json.getString("colonia");
         this.eCalle1 = json.getString("eCalle1");
         this.eCalle2 = json.getString("eCalle2");
+    }
+    
+    @Override
+    public String getType(){
+        return Cliente.TYPE;
     }
     
     /**
