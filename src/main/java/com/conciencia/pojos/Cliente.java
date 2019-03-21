@@ -25,25 +25,14 @@ public class Cliente extends EventBusObject implements ExpectedResult {
     private String colonia;
     private String eCalle1;
     private String eCalle2;
+    
+    /* CONSTRUCTORES */
 
     public Cliente() {
     }
     
-    /**
-     * Constructor que permite crear un objeto cliente a partir de un objeto json
-     * @param json objeto Json de entrada
-     */
-    public Cliente(JsonObject json) {
-        this.id = json.getInteger("id");
-        this.nombre = json.getString("nombre");
-        this.telefono = json.getString("telefono");
-        this.calle = json.getString("calle");
-        this.numero = json.getString("numero");
-        this.colonia = json.getString("colonia");
-        this.eCalle1 = json.getString("eCalle1");
-        this.eCalle2 = json.getString("eCalle2");
-    }   
-
+    // <editor-fold defaultstate="collapsed" desc="METODOS DE LA CLASE">
+    
     /* MÉTODOS DE ACCESO */
     
     public Integer getId() {
@@ -110,6 +99,12 @@ public class Cliente extends EventBusObject implements ExpectedResult {
         this.eCalle2 = eCalle2;
     }  
     
+    /**
+     * Método que permite saber si un clente está completo.
+     * @return 
+     *      True si está completo. 
+     *      False si hay un dato faltante
+     */
     public boolean hayDatosFaltantes(){
         if(nombre == null || telefono == null || calle == null || 
                 numero == null || colonia == null || eCalle1 == null || eCalle2 == null)
@@ -136,6 +131,12 @@ public class Cliente extends EventBusObject implements ExpectedResult {
         return json;
     }
     
+    /**
+     * Método que permite inicializar este objeto con las propiedades de un objeto
+     * JSON
+     * 
+     * @param json objeto con las propiedades requeridas
+     */
     @Override
     public void initWithJson(JsonObject json){
         this.id = json.getInteger("id");
@@ -148,6 +149,12 @@ public class Cliente extends EventBusObject implements ExpectedResult {
         this.eCalle2 = json.getString("eCalle2");
     }
     
+    /**
+     * Método que permite saber qué tipo de objeto es un cliente en tiempo
+     * de ejecución.
+     * 
+     * @return CLIENTE. Para uso de bus de eventos.
+     */
     @Override
     public String getType(){
         return Cliente.TYPE;
@@ -172,20 +179,14 @@ public class Cliente extends EventBusObject implements ExpectedResult {
             //handle exceptions...
         }
     }
+    
+    /* MÉTODOS GENERALES */
 
     @Override
     public String toString() {
         return calle + " " + numero + "," + colonia;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + Objects.hashCode(this.nombre);
-        hash = 89 * hash + Objects.hashCode(this.telefono);
-        return hash;
-    }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -206,4 +207,14 @@ public class Cliente extends EventBusObject implements ExpectedResult {
         }
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 89 * hash + Objects.hashCode(this.nombre);
+        hash = 89 * hash + Objects.hashCode(this.telefono);
+        return hash;
+    } 
+    
+    // </editor-fold>
 }

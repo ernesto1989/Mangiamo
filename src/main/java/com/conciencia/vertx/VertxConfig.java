@@ -1,9 +1,7 @@
 package com.conciencia.vertx;
 
 import com.conciencia.vertx.eventbus.EventBusWrapper;
-import com.conciencia.pojos.Orden;
 import com.conciencia.vertx.eventbus.EventBusWrapperCodec;
-import com.conciencia.vertx.eventbus.OrdenCodec;
 import io.vertx.core.Vertx;
 
 /**
@@ -71,6 +69,5 @@ public class VertxConfig {
      */
     public static void registerCodecs(){
         vertx.eventBus().registerDefaultCodec(EventBusWrapper.class, new EventBusWrapperCodec());
-        vertx.eventBus().registerDefaultCodec(Orden.class, new OrdenCodec());
     }
 }

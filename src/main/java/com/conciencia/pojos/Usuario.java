@@ -21,19 +21,12 @@ public class Usuario extends EventBusObject implements ExpectedResult {
     private String user;
     private String password;
 
+    /* CONSTRUCTORES */
+    
     public Usuario() {
     }
     
-    /**
-     * Constructor que permite crear un objeto cliente a partir de un objeto json
-     * @param json objeto Json de entrada
-     */
-    public Usuario(JsonObject json) {
-        this.id = json.getInteger("id");
-        this.nombre = json.getString("nombre");
-        this.user = json.getString("user");
-        this.password = json.getString("password");
-    }   
+    // <editor-fold defaultstate="collapsed" desc="METODOS DE LA CLASE">
 
     /* MÉTODOS DE ACCESO */
     
@@ -112,4 +105,5 @@ public class Usuario extends EventBusObject implements ExpectedResult {
             //handle exceptions...
         }
     }    
+    // </editor-fold>
 }

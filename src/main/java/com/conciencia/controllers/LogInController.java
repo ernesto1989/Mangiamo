@@ -47,7 +47,8 @@ public class LogInController implements Initializable {
                 Platform.runLater(()->{
                     Stage ps = (Stage)userTextField.getScene().getWindow();
                     ps.close();
-                    GeneralUtilities.abrirAdminUI();
+                    GeneralUtilities.abrirVentana("/fxml/AdminUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
                 });
             }else{
                 Platform.runLater(()->{

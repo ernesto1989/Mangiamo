@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +29,7 @@ public class AdminController implements Initializable {
     public static Integer MINUTOS_ESPERA = 10;
     public static Integer MINUTOS_ESPERA_MAX = 120;
     public static List<Config> CONF;
+    public static ObservableList<Integer> TIEMPOS_ESPERA = FXCollections.observableArrayList();
     public static String DB_URL = "C:/Conciencia/files/db/MangiamoDB.db";
     
     @FXML

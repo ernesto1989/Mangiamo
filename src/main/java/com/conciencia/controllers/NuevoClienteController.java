@@ -120,7 +120,8 @@ public class NuevoClienteController implements Initializable {
     @FXML
     private void crearOrden(ActionEvent event) {
         GeneralUtilities.crearOrden(null, null, cliente, TipoOrden.DOMICILIO);
-        GeneralUtilities.abrirCreadorOrdenUI();
+        GeneralUtilities.abrirVentana("/fxml/CreadorOrdenUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
         Button b = (Button)event.getSource();
         Stage s = (Stage)b.getScene().getWindow();
         s.close();

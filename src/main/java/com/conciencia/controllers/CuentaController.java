@@ -11,6 +11,7 @@ import com.conciencia.pojos.Orden;
 import com.conciencia.pojos.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
+import com.conciencia.vertx.eventbus.EventBusWrapper;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -50,17 +51,20 @@ public class CuentaController implements Initializable {
     
     @FXML
     private void pagarCuenta(ActionEvent event) {
+        EventBusWrapper wrapper = new EventBusWrapper();
+        wrapper.setType(Orden.TYPE);
+        wrapper.setPojo(this.o);
         this.o.setPagado(true);
         if(this.o.getTipoOrden() == TipoOrden.MESA){
             this.o.setEstatusOrden(EstatusOrden.CERRADA);
-            VertxConfig.vertx.eventBus().send("close_order", this.o);
+            VertxConfig.vertx.eventBus().send("close_order", wrapper);
         }
         else{
             this.o.setEstatusOrden(EstatusOrden.COCINA);
             if(this.o.getTipoOrden() == TipoOrden.DOMICILIO)
                 this.o.setCambio(new BigDecimal(cambioTextField.getText()));
         }
-        VertxConfig.vertx.eventBus().send("orders_resume", this.o);
+        VertxConfig.vertx.eventBus().send("orders_resume", wrapper);
         //proceso de agregar dinero a la caja
         //guardar orden en bd
         Platform.runLater(()->{

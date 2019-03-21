@@ -1,8 +1,8 @@
 package com.conciencia.pojos;
 
-import com.conciencia.utilities.ToJson;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
+import com.conciencia.vertx.eventbus.EventBusObject;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
@@ -14,74 +14,70 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 /**
- *
- * @author usuario
+ * Clase que representa una orden realizada por un cliente.
+ * 
+ * @author Ernesto Cantú
  */
-public class Orden implements ToJson {
-    private TipoOrden orderType;
-    private EstatusOrden estatusOrden;
+public class Orden extends EventBusObject {
+    
+    public static String TYPE = "ORDEN";
+    
+    /* PROPIEDADES DEL CLIENTE */
+    
+    //número de orden
     private Long numeroOrden;
+    
+    //mesa a la que va la orden. Puede ser null
     private Integer mesa;
+    
+    //nombre del cliente que pidió para llevar. Puede ser null
     private String nombre;
+    
+    //cliente que pidió por teléfono
     private Cliente cliente;
+    
+    //tipo de órden (Mesa,Llevar,Domicilio)
+    private TipoOrden tipoOrden;
+    
+    //Permite conocer si la órden es nueva o no. Para uso del creador de órdenes.
+    private boolean esNueva = true;
+    
+    //Estatus que permite saber dónde está ubicada la órden. 
+    private EstatusOrden estatusOrden;
+    
+    //El total de la cuenta
     private BigDecimal total;
+    
+    //Permite saber si la órden ya fue pagada
     private Boolean pagado = false;
+    
+    //Elementos ordenados
     private List<ItemOrdenado> orderedItems;
+    
+    //La hora en que la orden fue tomada
     private LocalTime horaRegistro;
+    
+    //La hora en que la orden se sirvió
     private LocalTime horaServicio;
-    private boolean esNueva;
+    
+    //Diferencia entre hora de registro y servicio
     private Integer tiempoEspera;
+    
+    //Cambio, para las órdenes a domicilio
     private BigDecimal cambio = BigDecimal.ZERO;
+    
+    //Elemento agregado para guardar la diferencia con el total cuando el envío es a domicilio.
     private BigDecimal diferenciaTotal = BigDecimal.ZERO;
+    
+    //el repartidor que llevó la orden
     private String repartidor;
 
+    /* CONSTRUCTORES */
     public Orden() {
     }
+
+     /* MÉTODOS DE ACCESO */
     
-    public Orden(JsonObject obj) {
-        this.orderType = TipoOrden.getTipo(obj.getString("tipo"));
-        this.estatusOrden = estatusOrden.getStatus(obj.getString("estatus"));
-        this.numeroOrden =obj.getLong("numeroOrden");
-        this.mesa = obj.getInteger("mesa");
-        this.nombre = obj.getString("nombre");
-        this.cliente = new Cliente(obj);
-        this.total = new BigDecimal(obj.getDouble("total"));
-        this.pagado = obj.getBoolean("pagado");
-        this.orderedItems = getItems(obj);
-        this.esNueva = obj.getBoolean("esNueva");
-        this.tiempoEspera = obj.getInteger("tiempoEspera");
-        this.horaRegistro = LocalTime.parse(obj.getString("horaRegistro"));
-        this.horaServicio = LocalTime.parse(obj.getString("horaServicio"));
-        this.cambio = new BigDecimal(obj.getDouble("cambio"));
-        this.diferenciaTotal = new BigDecimal(obj.getDouble("diferenciaTotal"));
-        this.repartidor = obj.getString("repartidor");
-    }
-
-    private List<ItemOrdenado> getItems(JsonObject obj){
-        List<ItemOrdenado> items = new ArrayList<>();
-        JsonArray itemsJson = obj.getJsonArray("items");
-        for(Object i : itemsJson){
-            items.add(new ItemOrdenado((JsonObject)i));
-        }
-        return items;
-    }
-    
-    public TipoOrden getTipoOrden() {
-        return orderType;
-    }
-
-    public void setTipoOrden(TipoOrden orderType) {
-        this.orderType = orderType;
-    }
-
-    public EstatusOrden getEstatusOrden() {
-        return estatusOrden;
-    }
-
-    public void setEstatusOrden(EstatusOrden estatusOrden) {
-        this.estatusOrden = estatusOrden;
-    }    
-
     public Long getNumeroOrden() {
         return numeroOrden;
     }
@@ -89,7 +85,7 @@ public class Orden implements ToJson {
     public void setNumeroOrden(Long numeroOrden) {
         this.numeroOrden = numeroOrden;
     }
-
+    
     public Integer getMesa() {
         return mesa;
     }
@@ -113,6 +109,30 @@ public class Orden implements ToJson {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
+    
+    public TipoOrden getTipoOrden() {
+        return tipoOrden;
+    }
+
+    public void setTipoOrden(TipoOrden tipoOrden) {
+        this.tipoOrden = tipoOrden;
+    }
+    
+    public boolean isEsNueva() {
+        return esNueva;
+    }
+
+    public void setEsNueva(boolean esNueva) {
+        this.esNueva = esNueva;
+    }
+
+    public EstatusOrden getEstatusOrden() {
+        return estatusOrden;
+    }
+
+    public void setEstatusOrden(EstatusOrden estatusOrden) {
+        this.estatusOrden = estatusOrden;
+    }    
 
     public BigDecimal getTotal() {
         return total;
@@ -145,13 +165,13 @@ public class Orden implements ToJson {
     public void setHoraRegistro(LocalTime horaRegistro) {
         this.horaRegistro = horaRegistro;
     }
-
-    public boolean isEsNueva() {
-        return esNueva;
+    
+    public LocalTime getHoraServicio() {
+        return horaServicio;
     }
 
-    public void setEsNueva(boolean esNueva) {
-        this.esNueva = esNueva;
+    public void setHoraServicio(LocalTime horaServicio) {
+        this.horaServicio = horaServicio;
     }
 
     public Integer getTiempoEspera() {
@@ -162,24 +182,6 @@ public class Orden implements ToJson {
         this.tiempoEspera = tiempoEspera;
     }
     
-    public LocalTime getHoraServicio() {
-        return horaServicio;
-    }
-
-    public void setHoraServicio(LocalTime horaServicio) {
-        this.horaServicio = horaServicio;
-    }
-    
-    public String getOrdenPara(){
-        return this.toString();
-    }
-    
-    public String getObservaciones(){
-        if(this.orderType == TipoOrden.DOMICILIO) return "Cambio: " + this.cambio.toString();
-        if(this.pagado) return "PAGADA";
-        return "NO PAGADA";
-    }
-
     public BigDecimal getCambio() {
         return cambio;
     }
@@ -205,6 +207,56 @@ public class Orden implements ToJson {
     }
     
     
+     /* MÉTODOS DE APOYO A LA CLASE */
+    
+    /**
+     * Método de apoyo que permite obtener una lista de Elementos Ordenados a
+     * partir de un objeto Json.
+     * 
+     * @param obj
+     * @return 
+     */
+    private List<ItemOrdenado> getItems(JsonObject obj){
+        List<ItemOrdenado> items = new ArrayList<>();
+        JsonArray itemsJson = obj.getJsonArray("items");
+        for(Object i : itemsJson){
+            items.add(new ItemOrdenado((JsonObject)i));
+        }
+        return items;
+    }
+    
+    /**
+     * Método usado por la pantalla principal para asignar el valor "Orden Para"
+     * en el resumen de órdenes.
+     * @return 
+     */
+    public String getOrdenPara(){
+        return this.toString();
+    }
+    
+    public String getObservaciones(){
+        if(this.tipoOrden == TipoOrden.DOMICILIO) return "Cambio: " + this.cambio.toString();
+        if(this.pagado) return "PAGADA";
+        return "NO PAGADA";
+    }
+    
+    /**
+     * Timer de tempo de espera para la orden
+     */
+    public void startTimer(){
+        Integer tiempoMili = this.tiempoEspera * 60000;
+        VertxConfig.vertx.setTimer(tiempoMili, event->{
+            if(getEstatusOrden() == EstatusOrden.COCINA){
+                Platform.runLater(()->{
+                    GeneralUtilities.mostrarAlertDialog("Orden con tiempo de espera alto", 
+                            "Orden con tiempo de espera alto", "La orden " + this.toString() + 
+                                    " tiene mucho tiempo en espera", Alert.AlertType.WARNING);
+                });
+                startTimer();
+            }
+            
+        });
+    }
 
     @Override
     public JsonObject toJson() {
@@ -241,6 +293,38 @@ public class Orden implements ToJson {
         obj.put("items", a);
         return obj;
     }
+    
+    @Override
+    public void initWithJson(JsonObject json){
+        this.tipoOrden = TipoOrden.getTipo(json.getString("tipo"));
+        this.estatusOrden = estatusOrden.getStatus(json.getString("estatus"));
+        this.numeroOrden =json.getLong("numeroOrden");
+        this.mesa = json.getInteger("mesa");
+        this.nombre = json.getString("nombre");
+        this.cliente = new Cliente();
+        this.cliente.initWithJson(json);
+        this.total = new BigDecimal(json.getDouble("total"));
+        this.pagado = json.getBoolean("pagado");
+        this.orderedItems = getItems(json);
+        this.esNueva = json.getBoolean("esNueva");
+        this.tiempoEspera = json.getInteger("tiempoEspera");
+        this.horaRegistro = LocalTime.parse(json.getString("horaRegistro"));
+        this.horaServicio = LocalTime.parse(json.getString("horaServicio"));
+        this.cambio = new BigDecimal(json.getDouble("cambio"));
+        this.diferenciaTotal = new BigDecimal(json.getDouble("diferenciaTotal"));
+        this.repartidor = json.getString("repartidor");
+    }
+    
+    /**
+     * Método que permite saber qué tipo de objeto es una orden en tiempo
+     * de ejecución.
+     * 
+     * @return ORDEN. Para uso de bus de eventos.
+     */
+    @Override
+    public String getType(){
+        return Orden.TYPE;
+    }
 
     @Override
     public String toString() {
@@ -254,24 +338,6 @@ public class Orden implements ToJson {
         return "";
     }
     
-    /**
-     * Cada 20 minutos
-     */
-    public void startTimer(){
-        Integer tiempoMili = this.tiempoEspera * 60000;
-        VertxConfig.vertx.setTimer(tiempoMili, event->{
-            if(getEstatusOrden() == EstatusOrden.COCINA){
-                Platform.runLater(()->{
-                    GeneralUtilities.mostrarAlertDialog("Orden con tiempo de espera alto", 
-                            "Orden con tiempo de espera alto", "La orden " + this.toString() + 
-                                    " tiene mucho tiempo en espera", Alert.AlertType.WARNING);
-                });
-                startTimer();
-            }
-            
-        });
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;

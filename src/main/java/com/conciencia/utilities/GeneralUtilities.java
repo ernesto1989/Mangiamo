@@ -10,18 +10,55 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
 /**
- *
+ * Clase que contiene métodos genéricos que sirven para la operación de Mangiamo.
+ * 
  * @author Ernesto Cantu
+ * 18 de marzo 2019
  */
 public class GeneralUtilities {
+    
+    /**
+     * Método que permite abrir de manera genérica una ventana con un fxml dado.
+     * 
+     * @param fxml ruta del fxml
+     * @param style ruta de la hoja de estilos
+     * @param title titulo de la ventana
+     */
+    public static void abrirVentana(String fxml, String style,String title){
+        Stage stage = new Stage();
+        try {
+            GenericLoader loader = new GenericLoader(fxml,style,title);
+            loader.load(stage);
+        } catch (Exception ex) {
+            Logger.getLogger(GeneralUtilities.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    /**
+     * Método que permite abrir de manera genérica una ventana con un fxml y un stage
+     * dados
+     * 
+     * @param stage stage provisto para el método
+     * @param fxml ruta del fxml
+     * @param style ruta de la hoja de estilos
+     * @param title titulo de la ventana
+     */
+    public static void abrirVentana(Stage stage,String fxml, String style,String title){
+        try {
+            GenericLoader loader = new GenericLoader(fxml,style,title);
+            loader.load(stage);
+        } catch (Exception ex) {
+            Logger.getLogger(GeneralUtilities.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
     
     /**
      * Método que crea un objeto orden. Este método NO regresa el objeto órden,
@@ -29,87 +66,22 @@ public class GeneralUtilities {
      * 
      * @param mesa mesa a asignar a la orden
      * @param nombre nombre de la persona que ordena
-     * @param c cliente a domicilio
+     * @param cliente cliente a domicilio
      * @param tipo tipo de orden
      */
-    public static void crearOrden(Integer mesa, String nombre, Cliente c, TipoOrden tipo){
+    public static void crearOrden(Integer mesa, String nombre, Cliente cliente, TipoOrden tipo){
         vertx.eventBus().send("get_order_num",null,response -> {
             Long numOrden = (Long) response.result().body();
             Orden orden = new Orden();
+            orden.setNumeroOrden(numOrden);
             orden.setMesa(mesa);
             orden.setNombre(nombre);
-            orden.setCliente(c);
+            orden.setCliente(cliente);
             orden.setTipoOrden(tipo);
-            orden.setNumeroOrden(numOrden);
-            orden.setEsNueva(true);
             LookupClass.current = orden;
         });
     }
-    
-    /**
-     * Método que crea el objeto Orden segun el tipo de orden a crear y carga la
-     * pantalla para agregar elementos del menu a la orden
-     * @param type Tipo de Orden Seleccionado
-     */    
-    public static void abrirCreadorOrdenUI(){
-        Stage ps = new Stage();
-        try {
-            GenericLoader nuevaOrdenLoader = new GenericLoader("/fxml/CreadorOrdenUI.fxml"
-                        ,"/styles/addbook.css", "Mangiamo") ;
-            nuevaOrdenLoader.load(ps);
-        } catch (Exception ex) {
-            Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    /**
-     * Método que permite abrir la pantalla para registrar un cliente nuevo
-     */
-    public static void abrirNuevoClienteUI(){
-        Platform.runLater(()->{
-            Stage ps = new Stage();
-            try {
-                GenericLoader nuevoClienteLoader = new GenericLoader("/fxml/NuevoClienteUI.fxml"
-                        ,"/styles/addbook.css", "Mangiamo") ;
-                nuevoClienteLoader.load(ps);
-            } catch (Exception ex) {
-                Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
-    
-    /**
-     * 
-     */
-    public static void abrirLoginUI(){
-        Platform.runLater(()->{
-            Stage ps = new Stage();
-            try {
-                GenericLoader loginLoader = new GenericLoader("/fxml/LogInUI.fxml"
-                        ,"/styles/addbook.css", "Mangiamo") ;
-                loginLoader.load(ps);
-            } catch (Exception ex) {
-                Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
-    
-    /**
-     * 
-     */
-    public static void abrirAdminUI(){
-        Platform.runLater(()->{
-            Stage ps = new Stage();
-            try {
-                GenericLoader adminLoader = new GenericLoader("/fxml/AdminUI.fxml"
-                        ,"/styles/addbook.css", "Mangiamo") ;
-                adminLoader.load(ps);
-            } catch (Exception ex) {
-                Logger.getLogger(NuevaOrdenController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
-    
+      
     /**
      * Método que crea un alert dialog genérico para mostrar un msg.
      * 
@@ -167,5 +139,31 @@ public class GeneralUtilities {
         dialog.setHeaderText(headText);
         dialog.setContentText(contentText);
         return dialog.showAndWait();
+    }
+    
+    /**
+     * Método que permite confirmar un elemento o entidad seleccionado.
+     * 
+     * @param title título del alert
+     * @param headText header del alert
+     * @param contentText contenido del alert
+     * @param okButtonMsg mensaje a mostrarse en el boton de aceptar
+     * @param cancelButtonMsg mensaje a mostrarse en el boton de cancelar
+     * @return boton seleccionado
+     */
+    public static Boolean mostrarConfirmDialog(String title,String headText,
+                                                            String contentText,String okButtonMsg,
+                                                            String cancelButtonMsg){
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(headText);
+        alert.setContentText(contentText);
+        ButtonType ok = new ButtonType(okButtonMsg);
+        ButtonType cancel = new ButtonType(cancelButtonMsg);
+        alert.getButtonTypes().setAll(ok,cancel);
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ok) 
+            return true;
+        return false;
     }
 }

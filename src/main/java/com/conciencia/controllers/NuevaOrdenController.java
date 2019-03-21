@@ -39,6 +39,8 @@ public class NuevaOrdenController implements Initializable {
     @FXML
     private MenuItem registrarClienteMenuItem;
     @FXML
+    private MenuItem adminMenuItem;
+    @FXML
     private MenuItem closeMenuItem;
     @FXML
     private MenuItem aboutMenuItem;
@@ -48,8 +50,6 @@ public class NuevaOrdenController implements Initializable {
     private Button llevaButton;
     @FXML
     private Button domicilioButton;
-    @FXML
-    private MenuItem adminMenuItem;
     @FXML
     private TableView<Orden> ordenesTable;
     @FXML
@@ -61,10 +61,12 @@ public class NuevaOrdenController implements Initializable {
     @FXML
     private TableColumn<Orden, String> obsColumn;
     
+    /* METODOS DE INICIO DE PANTALLA */
+    
     /**
-     * Método para inicializar las columnas de la tabla de elementos ordenados.
+     * Método para inicializar las columnas de la tabla de órdenes abiertas.
      */
-    private void initCols(){
+    private void inicializaColumnas(){
         ordenParaColumn.setCellValueFactory(new PropertyValueFactory<>("ordenPara"));
         ordenTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
         estausColumn.setCellValueFactory(new PropertyValueFactory<>("estatusOrden"));
@@ -72,27 +74,31 @@ public class NuevaOrdenController implements Initializable {
     }
    
     /**
-     * Método que inicializa el evento del grid de ordenes
+     * Método que inicializa el evento de la tabla de órdenes.
      */
-    private void initTableEvent(){
+    private void inicializaListenerTablaOrdenes(){
         ordenesTable.setOnMouseClicked(evt->{
             if(evt.getClickCount() == 2){
                 Orden selected = ordenesTable.getSelectionModel().getSelectedItem();
                 LookupClass.current = selected;
-                GeneralUtilities.abrirCreadorOrdenUI();
-            }
+                GeneralUtilities.abrirVentana("/fxml/CreadorOrdenUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
+            }else
+                return;
         });
     }
     
     /**
      * Método que inicializa servicio de event bus para operar sobre el grid de órdenes
      */
-    private void initGridListener(){
+    private void inicializaResumenOrdenesConsumer(){
         vertx.eventBus().consumer("orders_resume", msg->{
-            // <editor-fold defaultstate="colapsed" desc="handler">
-            Orden o = (Orden) msg.body();
+            // <editor-fold defaultstate="collapsed" desc="handler">
+            EventBusWrapper wrapper = (EventBusWrapper)msg.body();
+            Orden o = (Orden) wrapper.getPojo();
             Platform.runLater(()->{
-                if(o.isEsNueva()){
+                // si la órden es nueva, la agrego a la tabla de órdenes
+                if(o.isEsNueva()){ 
                     this.ordenesTable.getItems().add(o);
                     o.setEsNueva(false);
                 }else{
@@ -117,7 +123,8 @@ public class NuevaOrdenController implements Initializable {
     @FXML
     private void registrarNuevoCliente(ActionEvent event) {
         LookupClass.telefono = "";
-        GeneralUtilities.abrirNuevoClienteUI();
+        GeneralUtilities.abrirVentana("/fxml/NuevoClienteUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
     }
     
     /**
@@ -126,7 +133,8 @@ public class NuevaOrdenController implements Initializable {
      */
     @FXML
     private void abrirModuloAdministracion(ActionEvent event) {
-        GeneralUtilities.abrirLoginUI();
+        GeneralUtilities.abrirVentana("/fxml/LogInUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
     }
     
     /**
@@ -167,7 +175,8 @@ public class NuevaOrdenController implements Initializable {
         if(mesa == null)
             return;
         GeneralUtilities.crearOrden(mesa, null, null, TipoOrden.MESA);
-        GeneralUtilities.abrirCreadorOrdenUI();
+        GeneralUtilities.abrirVentana("/fxml/CreadorOrdenUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
     }
     
     /**
@@ -184,7 +193,8 @@ public class NuevaOrdenController implements Initializable {
             }catch(Exception e){return;}
         }
         GeneralUtilities.crearOrden(null, nombreCliente, null, TipoOrden.LLEVAR);
-        GeneralUtilities.abrirCreadorOrdenUI();
+        GeneralUtilities.abrirVentana("/fxml/CreadorOrdenUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
     }
 
     /**
@@ -207,23 +217,28 @@ public class NuevaOrdenController implements Initializable {
                 EventBusWrapper wrapper = (EventBusWrapper) response.result().body();
                 Cliente c = (Cliente)wrapper.getPojo();
                 Platform.runLater(()->{
-                    Alert alert = new Alert(AlertType.CONFIRMATION);
-                    alert.setTitle("Confirmar Cliente");
-                    alert.setHeaderText("Confirmar Cliente");
-                    alert.setContentText("Dirección: " + c.toString());
-                    ButtonType ok = new ButtonType("Ordenar");
-                    ButtonType cancel = new ButtonType("Cancel");
-                    alert.getButtonTypes().setAll(ok,cancel);
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if(result.get() == ok){
+                    Boolean confirmaCliente = 
+                        GeneralUtilities.mostrarConfirmDialog("Confirmar Cliente", 
+                            "Confirmar Cliente", "Dirección: " + c.toString(), 
+                                "Ordenar", "Cancel");
+                    if(confirmaCliente){
                         GeneralUtilities.crearOrden(null, null, c, TipoOrden.DOMICILIO);
-                        GeneralUtilities.abrirCreadorOrdenUI();
+                        GeneralUtilities.abrirVentana("/fxml/CreadorOrdenUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
                     }else{
-                        GeneralUtilities.abrirNuevoClienteUI();
+                        LookupClass.telefono = null;
+                        GeneralUtilities.mostrarAlertDialog("Telefono registrado", "Telefono registrado", 
+                                "El telefono ya está registrado con otra dirección", AlertType.WARNING);
+                        GeneralUtilities.abrirVentana("/fxml/NuevoClienteUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
                     }
                 });      
             }else{
-                GeneralUtilities.abrirNuevoClienteUI();
+                Platform.runLater(()->{
+                    GeneralUtilities.abrirVentana("/fxml/NuevoClienteUI.fxml"
+                        ,"/styles/addbook.css", "Mangiamo");
+                });
+                
             }
         });
     }
@@ -236,9 +251,9 @@ public class NuevaOrdenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        initCols();
-        initTableEvent();
-        initGridListener();        
+        inicializaColumnas();
+        inicializaListenerTablaOrdenes();
+        inicializaResumenOrdenesConsumer();        
         Platform.runLater(()->{
             Stage ps = (Stage)mesaButton.getScene().getWindow();
             ps.setOnHiding(event-> {

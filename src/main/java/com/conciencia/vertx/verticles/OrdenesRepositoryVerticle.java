@@ -5,6 +5,8 @@ import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
+import com.conciencia.vertx.VertxConfig;
+import com.conciencia.vertx.eventbus.EventBusWrapper;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
@@ -39,22 +41,24 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
         });
         
         vertx.eventBus().consumer("save_order", msg->{
-            // <editor-fold defaultstate="colapsed" desc="handler">
-            Orden o = (Orden) msg.body();
+            // <editor-fold defaultstate="collapsed" desc="handler">
+            EventBusWrapper wrapper = (EventBusWrapper) msg.body();
+            Orden orden = (Orden)wrapper.getPojo();
             NUMERO_ORDEN++;
-            ordenesAbiertas.put(o.getNumeroOrden(), o);
-            o.setEstatusOrden(EstatusOrden.COCINA);
-            o.startTimer();
-            
+            ordenesAbiertas.put(orden.getNumeroOrden(), orden);
+            orden.setEstatusOrden(EstatusOrden.COCINA);
+            orden.startTimer();
+            VertxConfig.vertx.eventBus().send("orders_resume", wrapper);
             msg.reply(new JsonObject().put("success", Boolean.TRUE));
             //</editor-fold>
         });
         
         vertx.eventBus().consumer("close_order", msg->{
-            // <editor-fold defaultstate="colapsed" desc="handler">
-            Orden o = (Orden) msg.body();
+            // <editor-fold defaultstate="collapsed" desc="handler">
+            EventBusWrapper wrapper = (EventBusWrapper) msg.body();
+            Orden o = (Orden)wrapper.getPojo();
             ordenesAbiertas.remove(o.getNumeroOrden());
-            DatabaseUtilities dbConn = new SqliteUtilities(AdminController.DB_URL);
+//            DatabaseUtilities dbConn = new SqliteUtilities(AdminController.DB_URL);
 //            dbConn.executeInsert(INSERT_ORDER, 
 //                    o.getNumeroOrden(),
 //                    o.getTipoOrden().toString(),

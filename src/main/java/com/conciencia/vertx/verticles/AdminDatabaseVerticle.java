@@ -6,6 +6,7 @@ import static com.conciencia.controllers.AdminController.MESAS;
 import static com.conciencia.controllers.AdminController.MINUTOS_ESPERA;
 import static com.conciencia.controllers.AdminController.MINUTOS_ESPERA_MAX;
 import static com.conciencia.controllers.AdminController.CONF;
+import static com.conciencia.controllers.AdminController.TIEMPOS_ESPERA;
 import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import com.conciencia.pojos.Config;
@@ -44,6 +45,9 @@ public class AdminDatabaseVerticle extends AbstractVerticle{
             COSTO_ENVIO = new BigDecimal(CONF.get(1).getValor());
             MINUTOS_ESPERA = Integer.parseInt(CONF.get(2).getValor());
             MINUTOS_ESPERA_MAX  = Integer.parseInt(CONF.get(3).getValor());
+            for(int i = MINUTOS_ESPERA; i <= MINUTOS_ESPERA_MAX;i+=5){
+                TIEMPOS_ESPERA.add(i);
+            }
         });
         
         vertx.eventBus().consumer("persist_params", msg->{
