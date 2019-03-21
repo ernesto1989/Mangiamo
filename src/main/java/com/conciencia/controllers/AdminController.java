@@ -30,7 +30,7 @@ public class AdminController implements Initializable {
     public static Integer MINUTOS_ESPERA_MAX = 120;
     public static List<Config> CONF;
     public static ObservableList<Integer> TIEMPOS_ESPERA = FXCollections.observableArrayList();
-    public static String DB_URL = "C:/Conciencia/files/db/MangiamoDB.db";
+    public static String DB_URL = "db/MangiamoDB.db";
     
     @FXML
     private TextField noMesaTextField;

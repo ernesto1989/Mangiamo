@@ -10,8 +10,7 @@ import com.conciencia.vertx.eventbus.EventBusWrapper;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Verticle que funciona como repositorio de órdenes "abiertas"
@@ -21,10 +20,13 @@ import java.util.Map;
 public class OrdenesRepositoryVerticle extends AbstractVerticle{
 
     private Long NUMERO_ORDEN = 1L;
-    private Map<Long,Orden> ordenesAbiertas;
-    private final String INSERT_ORDER = "INSERT INTO ordenes "
-            + "(numero_orden, tipo_orden, orden_para, cliente, hora_registro, tiempo_espera, hora_cierre,diferencia_mins) "
-            + "values (?,?,?,?,?,?,?,?)";
+    //private Map<Long,Orden> ordenesAbiertas;
+    private final String INSERT_ORDER = "INSERT INTO ordenes " +
+                                            "(numero_orden, "
+            + "mesa, nombre, cliente, tipo_orden, "
+            + "total, hora_registro, hora_servicio, "
+            + "tiempo_espera, cambio, diferencia_total, repartidor) " +
+              "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
 
     /**
@@ -35,7 +37,6 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
      */
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-        ordenesAbiertas = new HashMap<>();
         vertx.eventBus().consumer("get_order_num", msg-> {
             msg.reply(NUMERO_ORDEN);                                     
         });
@@ -45,7 +46,6 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             EventBusWrapper wrapper = (EventBusWrapper) msg.body();
             Orden orden = (Orden)wrapper.getPojo();
             NUMERO_ORDEN++;
-            ordenesAbiertas.put(orden.getNumeroOrden(), orden);
             orden.setEstatusOrden(EstatusOrden.COCINA);
             orden.startTimer();
             VertxConfig.vertx.eventBus().send("orders_resume", wrapper);
@@ -57,17 +57,18 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             // <editor-fold defaultstate="collapsed" desc="handler">
             EventBusWrapper wrapper = (EventBusWrapper) msg.body();
             Orden o = (Orden)wrapper.getPojo();
-            ordenesAbiertas.remove(o.getNumeroOrden());
-//            DatabaseUtilities dbConn = new SqliteUtilities(AdminController.DB_URL);
-//            dbConn.executeInsert(INSERT_ORDER, 
-//                    o.getNumeroOrden(),
-//                    o.getTipoOrden().toString(),
-//                    o.toString(),
-//                    o.getCliente() != null? o.getCliente().getId():-1,
-//                    o.getHoraRegistro().toString(),
-//                    o.getTiempoEspera(),
-//                    o.getHoraServicio().toString(),
-//                    ChronoUnit.MINUTES.between(o.getHoraRegistro(), o.getHoraServicio()));
+            DatabaseUtilities dbConn = new SqliteUtilities(AdminController.DB_URL);
+            dbConn.executeInsert(INSERT_ORDER, 
+                    o.getNumeroOrden().intValue(),
+                    o.getMesa()!= null? o.getMesa():-1,
+                    o.getNombre()!=null?o.getNombre():"",
+                    o.getCliente()!=null?o.getCliente().getId():-1,
+                    o.getTipoOrden().toString(),
+                    o.getTotal().doubleValue(),o.getHoraRegistro().toString(),
+                    o.getHoraServicio().toString(),
+                    ChronoUnit.MINUTES.between(o.getHoraRegistro(), o.getHoraServicio()),
+                    o.getCambio().doubleValue(),o.getDiferenciaTotal().doubleValue(),
+                    o.getRepartidor()!= null?o.getRepartidor():"");
             
             msg.reply(o);
             //</editor-fold>

@@ -139,16 +139,19 @@ public class CreadorOrdenController implements Initializable {
     private void initOrderHeaders(){
         descripcionTextField.setText(this.orden.toString());
         tiempoEstimadoCombo.setItems(AdminController.TIEMPOS_ESPERA);
+        this.orden.setHoraRegistro(LocalTime.now());
+        horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
+        pagadoCheckbox.setSelected(orden.getPagado());
+        pagadoCheckbox.setOnAction(e->{
+            pagadoCheckbox.setSelected(this.orden.getPagado());
+        });
         
-        horaLabel.setVisible(!this.orden.isEsNueva());
-        horaOrdenTextfield.setVisible(!this.orden.isEsNueva());
-        pagadoCheckbox.setVisible(!this.orden.isEsNueva());
-        
-        if(this.orden.isEsNueva())
+        if(this.orden.isEsNueva()){
             tiempoEstimadoCombo.setValue(AdminController.MINUTOS_ESPERA);
-        else{
-            horaOrdenTextfield.setText(this.orden.getHoraRegistro().format(dtf));
+            pagadoCheckbox.setDisable(true);
+        }else{
             tiempoEstimadoCombo.setValue(orden.getTiempoEspera());
+            pagadoCheckbox.setDisable(false);
         }
     }
     
@@ -284,10 +287,7 @@ public class CreadorOrdenController implements Initializable {
         incrementoButton.setDisable(true);
         decrementoButton.setDisable(true);
         modificarButton.setDisable(true);
-        
-        if(this.orden.getOrderedItems() != null)
-            resumeTable.getItems().addAll(this.orden.getOrderedItems());
-        
+                
         if(this.orden.isEsNueva()){
             if(this.orden.getTipoOrden()== TipoOrden.DOMICILIO){
                 ItemOrdenado envio = new ItemOrdenado();
@@ -300,10 +300,7 @@ public class CreadorOrdenController implements Initializable {
                 
             }
         }else{
-            pagadoCheckbox.setSelected(orden.getPagado());
-            pagadoCheckbox.setOnAction(e->{
-                pagadoCheckbox.setSelected(this.orden.getPagado());
-            });
+            resumeTable.getItems().addAll(this.orden.getOrderedItems());
             totalTextBox.setText(orden.getTotal().toString());
             if(this.orden.getEstatusOrden() != null && 
                     this.orden.getEstatusOrden().equals(EstatusOrden.CERRADA)){
@@ -480,9 +477,6 @@ public class CreadorOrdenController implements Initializable {
         this.orden.setOrderedItems(items);
         this.orden.setTotal(new BigDecimal(totalTextBox.getText()));
         this.orden.setTiempoEspera(tiempoEstimadoCombo.getValue());
-        if(this.orden.isEsNueva()){
-            this.orden.setHoraRegistro(LocalTime.now());
-        }
         
         if(this.orden.getTipoOrden() == TipoOrden.LLEVAR ||
                 this.orden.getTipoOrden() == TipoOrden.DOMICILIO){
