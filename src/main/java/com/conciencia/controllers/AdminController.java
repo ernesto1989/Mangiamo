@@ -30,6 +30,9 @@ public class AdminController implements Initializable {
     public static Integer MINUTOS_ESPERA_MAX = 120;
     public static List<Config> CONF;
     public static ObservableList<Integer> TIEMPOS_ESPERA = FXCollections.observableArrayList();
+    public static BigDecimal CANTIDAD_INICIAL_CAJA_CHICA;
+    public static BigDecimal CANTIDAD_CAJA_CHICA;
+    public static Integer EN_RESTAURANTE = 0, PARA_LLEVAR = 0, DOMICILIO = 0, TOTAL = 0;
     public static String DB_URL = "db/MangiamoDB.db";
     
     @FXML
@@ -48,6 +51,18 @@ public class AdminController implements Initializable {
     private Label tEsperaMaxLabel;
     @FXML
     private TextField baseDatosTextField;
+    @FXML
+    private TextField cantidadInicialTextField;
+    @FXML
+    private TextField cantidadActualTextField;
+    @FXML
+    private TextField enRestTextField;
+    @FXML
+    private TextField llevarTextField;
+    @FXML
+    private TextField domicilioTextField;
+    @FXML
+    private TextField totalTextField;
     
     @FXML
     private void guardarGeneral(ActionEvent event) {       
@@ -77,6 +92,12 @@ public class AdminController implements Initializable {
         tEsperaMaxLabel.setText("Tiempo\nEspera Max.");
         tiempoEsperaTextField.setText(MINUTOS_ESPERA.toString());
         tiempoEsperaMaxTextField.setText(MINUTOS_ESPERA_MAX.toString());
+        cantidadInicialTextField.setText(CANTIDAD_INICIAL_CAJA_CHICA.toString());
+        cantidadActualTextField.setText(CANTIDAD_CAJA_CHICA.toString());
+        enRestTextField.setText(EN_RESTAURANTE.toString());
+        llevarTextField.setText(PARA_LLEVAR.toString());
+        domicilioTextField.setText(DOMICILIO.toString());
+        totalTextField.setText(TOTAL.toString());
         baseDatosTextField.setText(DB_URL);
     }    
 

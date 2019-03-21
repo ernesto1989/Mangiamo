@@ -1,10 +1,14 @@
 package com.conciencia.vertx.verticles;
 
 import com.conciencia.controllers.AdminController;
+import static com.conciencia.controllers.AdminController.CANTIDAD_CAJA_CHICA;
+import static com.conciencia.controllers.AdminController.DB_URL;
+import static com.conciencia.controllers.AdminController.TOTAL;
 import com.conciencia.db.DatabaseUtilities;
 import com.conciencia.db.impl.SqliteUtilities;
 import com.conciencia.pojos.EstatusOrden;
 import com.conciencia.pojos.Orden;
+import com.conciencia.pojos.TipoOrden;
 import com.conciencia.vertx.VertxConfig;
 import com.conciencia.vertx.eventbus.EventBusWrapper;
 import io.vertx.core.AbstractVerticle;
@@ -57,7 +61,17 @@ public class OrdenesRepositoryVerticle extends AbstractVerticle{
             // <editor-fold defaultstate="collapsed" desc="handler">
             EventBusWrapper wrapper = (EventBusWrapper) msg.body();
             Orden o = (Orden)wrapper.getPojo();
-            DatabaseUtilities dbConn = new SqliteUtilities(AdminController.DB_URL);
+            DatabaseUtilities dbConn = new SqliteUtilities(DB_URL);
+            
+            CANTIDAD_CAJA_CHICA = CANTIDAD_CAJA_CHICA.add(o.getTotal());
+            TOTAL++;
+            if(o.getTipoOrden().equals(TipoOrden.MESA))
+                AdminController.EN_RESTAURANTE++;
+            if(o.getTipoOrden().equals(TipoOrden.LLEVAR))
+                AdminController.PARA_LLEVAR++;
+            if(o.getTipoOrden().equals(TipoOrden.DOMICILIO))
+                AdminController.DOMICILIO++;
+            
             dbConn.executeInsert(INSERT_ORDER, 
                     o.getNumeroOrden().intValue(),
                     o.getMesa()!= null? o.getMesa():-1,
