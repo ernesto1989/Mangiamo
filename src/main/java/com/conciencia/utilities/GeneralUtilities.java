@@ -1,10 +1,5 @@
 package com.conciencia.utilities;
 
-import com.conciencia.controllers.NuevaOrdenController;
-import com.conciencia.pojos.Cliente;
-import com.conciencia.pojos.Orden;
-import com.conciencia.pojos.TipoOrden;
-import static com.conciencia.vertx.VertxConfig.vertx;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,28 +53,6 @@ public class GeneralUtilities {
         } catch (Exception ex) {
             Logger.getLogger(GeneralUtilities.class.getName()).log(Level.SEVERE, null, ex);
         } 
-    }
-    
-    /**
-     * Método que crea un objeto orden. Este método NO regresa el objeto órden,
-     * más lo pone en el lookup.
-     * 
-     * @param mesa mesa a asignar a la orden
-     * @param nombre nombre de la persona que ordena
-     * @param cliente cliente a domicilio
-     * @param tipo tipo de orden
-     */
-    public static void crearOrden(Integer mesa, String nombre, Cliente cliente, TipoOrden tipo){
-        vertx.eventBus().send("get_order_num",null,response -> {
-            Long numOrden = (Long) response.result().body();
-            Orden orden = new Orden();
-            orden.setNumeroOrden(numOrden);
-            orden.setMesa(mesa);
-            orden.setNombre(nombre);
-            orden.setCliente(cliente);
-            orden.setTipoOrden(tipo);
-            LookupClass.current = orden;
-        });
     }
       
     /**
@@ -165,5 +138,11 @@ public class GeneralUtilities {
         if(result.get() == ok) 
             return true;
         return false;
+    }
+    
+    public static void cierraMangiamo(){
+        Boolean cerrar = mostrarConfirmDialog("Salir?", "Salir de Mangiamo?", 
+                "Desea Salir de Mangiamo?", "Si", "No");
+        if(cerrar) System.exit(0);
     }
 }

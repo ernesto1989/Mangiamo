@@ -1,9 +1,6 @@
 package com.conciencia.controllers;
 
-import com.conciencia.utilities.LookupClass;
 import com.conciencia.pojos.Cliente;
-import com.conciencia.vertx.eventbus.EventBusWrapper;
-import com.conciencia.pojos.TipoOrden;
 import com.conciencia.utilities.GeneralUtilities;
 import com.conciencia.vertx.VertxConfig;
 import java.net.URL;
@@ -80,48 +77,12 @@ public class NuevoClienteController implements Initializable {
     @FXML
     private void agregarCliente(ActionEvent event) {
         creaCliente();
-        EventBusWrapper wrapper = new EventBusWrapper();
-        wrapper.setType(cliente.getType());
-        wrapper.setPojo(cliente);
-        VertxConfig.vertx.eventBus().send("save_customer",wrapper,response->{
-            if(response.succeeded()){
-                int result = (int) response.result().body();
-                if(cliente.getId() != null && cliente.getId() == result){
-                    Platform.runLater(()->{
-                        GeneralUtilities.mostrarAlertDialog("Registro de Cliente",
-                                "Cliente registrado exitosamente",
-                                "El cliente se ha registrado exitosamente.",
-                                AlertType.CONFIRMATION);
-                        crearOrdenButton.setDisable(false);
-                        guardarClienteButton.setDisable(true);
-                        cliente = cliente;
-                    });
-                }else{
-                    Platform.runLater(()->{
-                        GeneralUtilities.mostrarAlertDialog("Error en registro de cliente",
-                                "Contacte al administrador",
-                                "Contacte al administrador",
-                                AlertType.ERROR);
-                    }); 
-                }
-            }else{
-                String mensajeError = response.cause().getMessage();
-                Platform.runLater(()->{
-                    GeneralUtilities.mostrarAlertDialog("Error en registro de cliente",
-                                mensajeError,
-                                mensajeError,
-                                AlertType.ERROR);
-                }); 
-            }
-        });
         
     }
     
     @FXML
     private void crearOrden(ActionEvent event) {
-        GeneralUtilities.crearOrden(null, null, cliente, TipoOrden.DOMICILIO);
-        GeneralUtilities.abrirVentana("/fxml/CreadorOrdenUI.fxml"
-                        ,"/styles/addbook.css", "Mangiamo");
+       
         Button b = (Button)event.getSource();
         Stage s = (Stage)b.getScene().getWindow();
         s.close();
@@ -132,8 +93,6 @@ public class NuevoClienteController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if(LookupClass.telefono != null && LookupClass.telefono != "")
-            telTextfield.setText(LookupClass.telefono);
         crearOrdenButton.setDisable(true);
     }    
 }

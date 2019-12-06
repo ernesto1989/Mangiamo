@@ -7,7 +7,9 @@ import javafx.stage.Stage;
 
 /**
  * Clase abstracta que define como cargar un stage.
+ * 
  * @author Ernesto Cantu
+ * 06 Diciembre 2019
  */
 public class GenericLoader {
     

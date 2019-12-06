@@ -1,7 +1,5 @@
 package com.conciencia.pojos;
 
-import com.conciencia.vertx.eventbus.EventBusObject;
-import io.vertx.core.json.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -12,7 +10,7 @@ import com.conciencia.db.ExpectedResult;
  * 
  * @author Ernesto Cantú
  */
-public class Cliente extends EventBusObject implements ExpectedResult {
+public class Cliente implements ExpectedResult {
     
     public static String TYPE = "Cliente";
     
@@ -110,54 +108,6 @@ public class Cliente extends EventBusObject implements ExpectedResult {
                 numero == null || colonia == null || eCalle1 == null || eCalle2 == null)
             return true;
         return false;
-    }
-    
-    /**
-     * Método que permite convertir un cliente a Json
-     * @return cliente en formato json
-     */
-    @Override
-    public JsonObject toJson(){
-        JsonObject json = new JsonObject();
-        json.put("id",getId());
-        json.put("nombre", getNombre());
-        json.put("telefono", getTelefono());
-        json.put("calle",getCalle());
-        json.put("numero",getNumero());
-        json.put("colonia",getColonia());
-        json.put("eCalle1",geteCalle1());
-        json.put("eCalle2",geteCalle2());
-        json.put("type","Cliente");
-        return json;
-    }
-    
-    /**
-     * Método que permite inicializar este objeto con las propiedades de un objeto
-     * JSON
-     * 
-     * @param json objeto con las propiedades requeridas
-     */
-    @Override
-    public void initWithJson(JsonObject json){
-        this.id = json.getInteger("id");
-        this.nombre = json.getString("nombre");
-        this.telefono = json.getString("telefono");
-        this.calle = json.getString("calle");
-        this.numero = json.getString("numero");
-        this.colonia = json.getString("colonia");
-        this.eCalle1 = json.getString("eCalle1");
-        this.eCalle2 = json.getString("eCalle2");
-    }
-    
-    /**
-     * Método que permite saber qué tipo de objeto es un cliente en tiempo
-     * de ejecución.
-     * 
-     * @return CLIENTE. Para uso de bus de eventos.
-     */
-    @Override
-    public String getType(){
-        return Cliente.TYPE;
     }
     
     /**

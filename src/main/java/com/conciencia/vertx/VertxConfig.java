@@ -1,7 +1,5 @@
 package com.conciencia.vertx;
 
-import com.conciencia.vertx.eventbus.EventBusWrapper;
-import com.conciencia.vertx.eventbus.EventBusWrapperCodec;
 import io.vertx.core.Vertx;
 
 /**
@@ -49,13 +47,7 @@ public class VertxConfig {
      */
     private static void deployVerticles() {
         vertx.deployVerticle("com.conciencia.vertx.verticles.CustomersDatabaseVerticle");
-        vertx.deployVerticle("com.conciencia.vertx.verticles.OrdenesRepositoryVerticle");  
-        vertx.deployVerticle("com.conciencia.vertx.verticles.UsersDatabaseVerticle");  
-        vertx.deployVerticle("com.conciencia.vertx.verticles.AdminDatabaseVerticle",hndlr->{
-            if(hndlr.succeeded()){
-                vertx.eventBus().send("init_params",null);
-            }
-        });  
+       
     }
     
     /**
@@ -68,6 +60,6 @@ public class VertxConfig {
      * 3.- Objeto cliente
      */
     public static void registerCodecs(){
-        vertx.eventBus().registerDefaultCodec(EventBusWrapper.class, new EventBusWrapperCodec());
+        
     }
 }
