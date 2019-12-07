@@ -1,8 +1,6 @@
 package com.conciencia.main;
 
 import com.conciencia.utilities.GeneralUtilities;
-import java.math.BigDecimal;
-import java.util.Optional;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -25,7 +23,7 @@ public class MainApp extends Application {
         primaryStage.setOnHiding(evt->{
             GeneralUtilities.cierraMangiamo();
         });
-        GeneralUtilities.abrirVentana(primaryStage, "/fxml/NuevaOrdenUI.fxml",
+        GeneralUtilities.abrirVentana(primaryStage, "/fxml/MainUI.fxml",
                 "/styles/addbook.css", "Mangiamo");
     }
 
